@@ -29,12 +29,15 @@ public class AppSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http
                 //.cors().and()
-                .csrf().disable()
+                //.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/home", "/login").permitAll()
-                .requestMatchers("/account/**").hasAuthority("USER")
+                //.requestMatchers("/home", "/login").permitAll()
+                .requestMatchers("/resources/**").permitAll()
+                .requestMatchers("/account/**").authenticated()
+                //.hasAuthority("USER")
+                .anyRequest().permitAll()
                 .and()
-                .authenticationManager(authManager(userDetailsService))
+                //.authenticationManager(authManager(userDetailsService))
                 .formLogin(form -> form
                         .defaultSuccessUrl("/account/homeuser")
                         .loginPage("/login")
