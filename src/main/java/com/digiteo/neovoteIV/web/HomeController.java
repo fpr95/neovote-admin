@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+@RequestMapping("/")
 @Controller
 //@Validated -> this annotation was the cause of the field(s) constraint-errors not showing up in the view!!!!
-//@RequestMapping("/")
 @AllArgsConstructor // check if this autowire the fields, if not,
 // try 'onConstructor' attribute, if still not work,
 // create custom constructor with @Autowired annotation

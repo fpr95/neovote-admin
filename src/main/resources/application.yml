@@ -36,3 +36,7 @@ logging:
       hibernate:
         SQL: DEBUG
         type: TRACE
+      springframework:
+        security:
+          web:
+            FilterChainProxy: DEBUG
