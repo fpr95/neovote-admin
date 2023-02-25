@@ -88,10 +88,8 @@
                 </li>
               </ul>
             </li>
-
             <!-- Avatar -->
             <li class="nav-item dropdown mt-1 mb-1 px-1 mx-2" >
-              <!-- id="navbarDropdownMenuLink" -->
               <a
                       class="nav-link dropdown-toggle hidden-arrow me-lg-3 d-flex align-items-center"
                       href="#"
@@ -112,11 +110,10 @@
                       aria-labelledby="navbarDropdownMenuLink"
               >
                 <li><a class="dropdown-item" href="#">Actualizar Perfil</a></li>
-                <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
+                <li><a class="dropdown-item" th:href="@{/logout}">Cerrar Sesión</a></li>
               </ul>
             </li>
           </ul>
-
           <!-- FAQ -->
           <a
                   class="btn btn-dark px-3 me-lg-3 mt-0"
@@ -124,7 +121,6 @@
                   role="button"
                   style="color: white; font-weight: bold;"
           ><i class="fa fa-question-circle"></i> FAQ</a>
-
         </div>
         <!-- Right links -->
       </div>
