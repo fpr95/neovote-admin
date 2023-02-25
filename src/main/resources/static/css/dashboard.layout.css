@@ -1,0 +1,61 @@
+@media (min-width: 991.98px) {
+  .row {
+    padding-left: 240px;
+  }
+}
+
+.navbar {
+  z-index: 601;
+}
+
+.bg-primary {
+  position: absolute;
+  z-index: 601;
+  width: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  height: 100%;
+  bottom: 0;
+  left: 0;
+  padding: 80px 0 0; /* App height of navbar */
+  box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);
+  width: 240px;
+  z-index: 50;
+  overflow-y: auto;
+}
+
+
+@media (max-width: 991.98px) {
+  .sidebar {
+    width: 100%;
+    padding-top: 175px;
+    position: absolute;
+    height: 70%;
+  }
+
+  .list-group {
+    width: 90%;
+  }
+
+  #sidebar-container {
+    width: 70%;
+    align-items: center;
+    margin: 0px 15% 0px;
+  }  
+}
+.sidebar .active {
+  border-radius: 5px;
+  box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+}
+
+.sidebar-sticky {
+  position: relative;
+  top: 0;
+  padding-top: 0.2rem;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+}
