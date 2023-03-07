@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <title>Registro</title>
+</head>
+<body>
+<!--:::: Main ::::-->
+<main>
+    <div layout:fragment="body" class="container">
+        <div class="row py-5">
+            <div class="col-md-6 d-wrap me-7">
+                <div class="text-left col-mx-2 px-5 py-5 mt-2" data-aos="fade-right" data-aos-duration="700">
+                    <h1 class="body-brand me-4 mx-5">
+                <span class="bg-light rounded px-0 py-1 mb-1 fs-1"
+                      style="font-weight: bold; font-size: 50px;">neovote</span>
+                    </h1>
+                    <hr class="h-color mx-4">
+                    <p class="mx-5 fs-5 mt-4">Sistema de votación en línea.</p>
+                    <p class="mx-5 fs-5">Simple. Seguro.</p>
+                </div>
+            </div>
+
+            <!-- Register Form -->
+            <div class="col-md-5 d-wrap mb-8">
+
+                <!-- Form content -->
+                <div class="tab-content" data-aos="fade-in">
+                    <form action="#" th:action="@{/register}" th:object="${userData}" method="post" role="form">
+                        <!-- <div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+                            <p th:each="err : ${#fields.allErrors()}" th:text="${err}"></p>
+                        </div> -->
+                        <!-- OAuth register -->
+                        <div class="text-center mb-3">
+                            <p>Regístrate con:</p>
+                            <button type="button" class="btn btn-secondary btn-floating mx-1">
+                                <i class="fab fa-facebook-f"></i>
+                            </button>
+
+                            <button type="button" class="btn btn-secondary btn-floating mx-1">
+                                <i class="fab fa-google"></i>
+                            </button>
+                        </div>
+
+                        <p class="text-center">o :</p>
+
+                        <!-- Names input -->
+                        <div class="row mb-4">
+                            <!-- Name input -->
+                            <div class="col">
+                                <!-- validation error display -->
+                                <div class="alert alert-danger" th:if="${#fields.hasErrors('firstName')}">
+                                    <p th:errors="*{firstName}"></p>
+                                </div>
+                                <div class="form-outline">
+                                    <input type="text" id="registerName" class="form-control" th:field="*{firstName}"
+                                           th:errorclass="is-invalid">
+                                    <label class="form-label" for="registerName">Nombre(s)</label>
+                                </div>
+                            </div>
+                            <!-- Lastname input -->
+                            <div class="col">
+                                <!-- baeldung validation error display -->
+                                <div class="alert alert-danger" th:if="${#fields.hasErrors('lastName')}">
+                                    <p th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></p>
+                                </div>
+                                <div class="form-outline">
+                                    <input type="text" id="registerLastname" class="form-control" th:field="*{lastName}"
+                                           th:errorclass="is-invalid">
+                                    <label class="form-label" for="registerLastname">Apellido(s)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Username input -->
+                        <!-- validation error display -->
+                        <div class="alert alert-danger" th:if="${#fields.hasErrors('username')}">
+                            <p th:errors="*{username}"></p>
+                        </div>
+                        <div class="form-outline mb-4">
+                            <input type="text" id="registerUsername" class="form-control" th:field="*{username}"
+                                   th:errorclass="is-invalid">
+                            <label class="form-label" for="registerUsername">Nombre de Usuario</label>
+                        </div>
+
+                        <!-- Email input -->
+                        <!-- validation error display -->
+                        <div class="alert alert-danger" th:if="${#fields.hasErrors('email')}">
+                            <p th:errors="*{email}"></p>
+                        </div>
+                        <div class="form-outline mb-4">
+                            <input type="email" id="registerEmail" class="form-control" th:field="*{email}"
+                                   th:errorclass="is-invalid"/>
+                            <label class="form-label" for="registerEmail">Correo</label>
+                        </div>
+
+                        <!-- Password input -->
+                        <!-- validation error display -->
+                        <div class="alert alert-danger" th:if="${#fields.hasErrors('pwd')}">
+                            <p th:errors="*{pwd}"></p>
+                        </div>
+                        <div class="form-outline mb-4">
+                            <input type="password" id="registerPassword" class="form-control" th:field="*{pwd}"
+                                   th:errorclass="is-invalid"/>
+                            <label class="form-label" for="registerPassword">Contraseña</label>
+                        </div>
+
+                        <!-- Repeat Password input -->
+                        <div class="form-outline mb-4">
+                            <input type="password" id="registerRepeatPassword" class="form-control"/>
+                            <label class="form-label" for="registerRepeatPassword">Repetir Contraseña</label>
+                        </div>
+
+                        <!-- Gender input -->
+                        <div class="form-floating mb-4">
+                            <select class="select-picker form-control" id="genderInput" th:field="*{gender}"
+                                    th:errorclass="is-invalid">
+                                <i class="fa fa-caret"></i>
+                                <option class="option" th:value="'-'" selected>-</option>
+                                <option class="option" th:value="Mujer">Mujer</option>
+                                <option class="option" th:value="Hombre">Hombre</option>
+                                <option class="option" th:value="Custom">Custom</option>
+                            </select>
+                            <label class="form-label" for="genderInput">Género</label>
+                        </div>
+
+                        <!-- Checkbox -->
+                        <div class="form-check d-flex justify-content-center mb-4">
+                            <input
+                                    class="form-check-input me-2"
+                                    type="checkbox"
+                                    value=""
+                                    id="registerCheck"
+                                    checked
+                                    aria-describedby="registerCheckHelpText"
+                            />
+                            <label class="form-check-label" for="registerCheck">
+                                He leído y estoy de acuerdo con los términos y condiciones
+                            </label>
+                        </div>
+
+                        <!-- Submit button -->
+                        <button type="submit" class="btn btn-primary btn-block mb-3 fs-6">Registrarme</button>
+
+                        <!-- Login button -->
+                        <div class="text-center">
+                            <p>¿Ya tienes una cuenta? <a href="login">Iniciar Sesión</a></p>
+                        </div>
+                    </form>
+                </div>
+                <!-- Form content -->
+            </div>
+            <!-- Register Form -->
+        </div>
+    </div>
+</main>
+<!--:::: Main ::::-->
+</body>
+</html>

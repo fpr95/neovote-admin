@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout_dash}">
+<head>
+    <title>Bienvenido</title>
+</head>
+<body style="min-height:100vh;">
+<!--:::: Main ::::-->
+<main>
+    <div layout:fragment="body" class="container">
+        <!--Section: Inicio -->
+        <section class="content pt-5 mb-9 mx-auto">
+            <h3 class="text-left mb-4 pb-2 text-primary fw-bold">Bienvenido/a Administrador/a</h3>
+            <p class="text-left mb-5">
+                Estimad@, con el fin de facilitar su tarea le explicaremos brevemente
+                cada sección en el menú a su izquierda:
+            </p>
+
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <h6 class="mb-3 text-primary"><i class="fas fa-tachometer-alt text-primary pe-2"></i> Inicio</h6>
+                    <p>
+                        Esta es la sección en la que se encuentra
+                        ahora mismo y solo explica detalles generales de como funciona el panel de control.
+                    </p>
+                </div>
+
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <h6 class="mb-3 text-primary"><i class="fas fa-chart-bar text-primary pe-2"></i> Elecciones</h6>
+                    <p>
+                        Aquí podrá ver todas las elecciones, las activas, inactivas y finalizadas.
+                        Podrá igualmente editar campos como la descripción
+                        general, el status de cada una, definir/agregar/remover <strong><u>propuestas</u></strong>
+                        y ver el padrón electoral para cada una.
+                    </p>
+                </div>
+
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <h6 class="mb-3 text-primary"><i class="fas fa-tag text-primary pe-2"></i> Nueva Elección
+                    </h6>
+                    <p>
+                        Esto es un 'atajo' a la vista que le permitirá crear una nueva elección,
+                        esto incluye agregar una descripción general y definir
+                        las propuestas iniciales con las que la elección pasará al status 'activa'.
+                    </p>
+                </div>
+
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <h6 class="mb-3 text-primary"><i class="fas fa-calendar text-primary pe-2"></i> Calendario
+                    </h6>
+                    <p>
+                        En este espacio encontrará una <strong><u>agenda incorporada</u></strong> con las fechas de
+                        los procesos electorales que se contemplan celebrar en el presente año.
+                    </p>
+                </div>
+
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <h6 class="mb-3 text-primary"><i class="fas fa-users text-primary pe-2"></i> Padrón Electoral
+                    </h6>
+                    <p>
+                        Esta sección incluye un registro global del padrón electoral para votantes
+                        (tanto habilitados como no habilitados) registrados en la aplicación.
+                        Además de información adicional sobre cada usuario como la fecha de registro o
+                        número de procesos en el que ha participado.
+                    </p>
+                </div>
+
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <h6 class="mb-3 text-primary"><i class="fas fa-chart-line text-primary pe-2"></i> Estadísticas
+                    </h6>
+                    <p>
+                        Aquí encontrará un <strong><u>centro de análisis</u></strong> con indicadores,
+                        porcentajes de participación, segmentación y más.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <!--Section: Inicio -->
+    </div>
+</main>
+<!--:::: Main ::::-->
+</body>
+</html>

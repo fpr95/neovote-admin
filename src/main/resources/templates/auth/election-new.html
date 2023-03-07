@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout_dash}">
+<head>
+    <title>Nueva Eleccion</title>
+</head>
+<body style="min-height:100vh;">
+<!--:::: Main ::::-->
+<main>
+    <div layout:fragment="body" class="container">
+        <!--Section: Nueva Elección -->
+        <section class="content pt-5 mb-9 mx-auto">
+            <h3 class="text-left mb-4 pb-2 text-primary fw-bold">Nueva Elección</h3>
+            <p class="text-left mb-5">
+                Rellene <strong>todos</strong> los campos indicados en el formulario debajo para crear un nuevo proceso electoral.
+                Éste tendrá por defecto un status <strong>NO INICIADO</strong> el cual cambiará automáticamente a
+                <strong>EN PROGRESO</strong> una vez alcance el momento definido en el campo
+                '<strong>Fecha y Hora Inicio</strong>' y a <strong>FINALIZADO</strong> una vez alcance el momento
+                definido en el campo '<strong>Fecha y Hora Término</strong>'.
+            </p>
+
+            <form action="#" th:action="@{/auth/election-new}" th:object="${electionData}" method="post" role="form">
+                <!-- <div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+                    <p th:each="err : ${#fields.allErrors()}" th:text="${err}"></p>
+                </div> -->
+                <div th:if="${param.success}">
+                    <div class="alert alert-info">Se ha registrado una nueva elección</div>
+                </div>
+
+                <!-- title input 1 -->
+                <!-- validation error display -->
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('title')}">
+                    <p th:errors="*{title}"></p>
+                </div>
+                <div class="form-outline mb-4">
+                    <input type="text" id="titleInput" class="form-control" th:field="*{title}" th:errorclass="is-invalid"/>
+                    <label class="form-label" for="titleInput">Título Elección</label>
+                </div>
+
+                <!-- topic input 1
+                <div class="input-group">
+                    <div class="input-group-text">#</div>
+                    <div class="form-outline mb-4">
+                        <input type="text" id="topicInput" class="form-control" th:field="*{topics}" th:errorclass="is-invalid"/>
+                        <label class="form-label" for="topicInput">Tópico</label>
+                    </div>
+                </div> -->
+
+
+                <!-- topic input 2 -->
+                <!-- validation error display -->
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('topics')}">
+                    <p th:errors="*{topics}"></p>
+                </div>
+                <div class="input-group mw-100">
+                    <span class="input-group-text me-2" data-target="topicsInputs"><i class="fa-solid fa-hashtag"></i></span>
+                    <div class="form-floating input-group mb-4">
+                        <!-- <input type="text" id="topicInput" class="form-control"/> -->
+                        <select class="select-picker form-control"
+                                style="width: 100%;"
+                                name="topicsInput"
+                                id="topicsInput"
+                                multiple=""
+                                tabindex="-1"
+                                th:field="*{topics}"
+                                th:errorclass="is-invalid"
+                        >
+                            <option th:value="política">POLÍTICA</option>
+                            <option th:value="social">SOCIAL</option>
+                            <option th:value="salud">SALUD</option>
+                            <option th:value="ambiental">AMBIENTAL</option>
+                            <option th:value="administración">ADMINISTRACIÓN</option>
+                            <option th:value="educación">EDUCACIÓN</option>
+                            <option th:value="seguridad">SEGURIDAD</option>
+                            <option th:value="entretención">ENTRETENCIÓN</option>
+                            <option th:value="institucional">INSTITUCIONAL</option>
+                            <option th:value="laboral">LABORAL</option>
+                            <option th:value="florayfauna">FLORA Y FAUNA</option>
+                            <option th:value="urbano">URBANO</option>
+                            <option th:value="rural">RURAL</option>
+                        </select>
+                        <label class="form-label" for="topicsInput"></label>
+                    </div>
+                </div>
+
+
+                <!-- briefDescription input -->
+                <!-- validation error display -->
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('briefDescription')}">
+                    <p th:errors="*{briefDescription}"></p>
+                </div>
+                <div class="form-outline mb-4">
+                    <input type="text" id="briefDescriptionInput" class="form-control" th:field="*{briefDescription}" th:errorclass="is-invalid"/>
+                    <label class="form-label" for="briefDescriptionInput">Descripción Breve</label>
+                </div>
+                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                <div class="row mb-4">
+                    <!-- initTimestamp input -->
+                    <!-- validation error display -->
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('initTimestamp')}">
+                        <p th:errors="*{initTimestamp}"></p>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="initTimestampInput" class="form-label">Fecha y Hora Inicio</label>
+                        <div
+                                class="input-group log-event mb-4"
+                                id="linkedPickers1"
+                                data-td-target-input="nearest"
+                                data-td-target-toggle="nearest"
+                        >
+                            <input
+                                    id="initTimestampInput"
+                                    type="text"
+                                    class="form-control"
+                                    data-td-target="#linkedPickers1"
+                                    placeholder="dd-mm-aaaa, hh:mm"
+                                    th:field="*{initTimestamp}"
+                                    th:errorclass="is-invalid"
+                            />
+                            <span
+                                    class="input-group-text"
+                                    data-td-target="#linkedPickers1"
+                                    data-td-toggle="datetimepicker"
+                            >
+	                      <span class="fa-solid fa-calendar"></span>
+	                      </span>
+                        </div>
+                    </div>
+
+                    <!-- finishTimestamp input -->
+                    <!-- validation error display -->
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('finishTimestamp')}">
+                        <p th:errors="*{finishTimestamp}"></p>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="finishTimestampInput" class="form-label">Fecha y Hora Término</label>
+                        <div
+                                class="input-group log-event mb-4"
+                                id="linkedPickers2"
+                                data-td-target-input="nearest"
+                                data-td-target-toggle="nearest"
+                        >
+                            <input
+                                    id="finishTimestampInput"
+                                    type="text"
+                                    class="form-control"
+                                    data-td-target="#linkedPickers2"
+                                    placeholder="dd-mm-aaaa, hh:mm"
+                                    th:field="*{finishTimestamp}"
+                                    th:errorclass="is-invalid"
+                            />
+                            <span
+                                    class="input-group-text"
+                                    data-td-target="#linkedPickers2"
+                                    data-td-toggle="datetimepicker"
+                            >
+	                      <span class="fa-solid fa-calendar"></span>
+	                      </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+                <!-- details input -->
+                <!-- validation error display -->
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('details')}">
+                    <p th:errors="*{details}"></p>
+                </div>
+                <div class="form-outline mb-4">
+                    <textarea class="form-control" id="detailsInput" rows="7" th:field="*{details}" th:errorclass="is-invalid"></textarea>
+                    <label class="form-label" for="detailsInput">Detalles</label>
+                </div>
+
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary btn-block mb-4" data-mdb-toggle="modal" data-mdb-target="#confirmationModal">
+                    Crear Elección</button>
+                <!-- Confirmation Modal -->
+                <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabel">Nueva Elección</h5>
+                                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">Se guardará un nuevo proceso con los datos ingresados, incluyendo
+                                su nombre de usuario como creador de éste. Para agregar propuestas dirígase a la sección
+                                <strong>Elecciones</strong> del menú.</div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Volver</button>
+                                <!-- Submit button -->
+                                <button type="submit" class="btn btn-primary">Guardar Nueva Elección</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+        <!--Section: Nueva Elección -->
+    </div>
+</main>
+<!--:::: Main ::::-->
+</body>
+</html>

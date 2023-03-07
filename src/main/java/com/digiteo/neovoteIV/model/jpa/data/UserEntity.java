@@ -30,7 +30,7 @@ public class UserEntity extends BaseEntity {
     private String gender; // change this for an ENUM
 
     @Column(
-            name = "register_date_time",
+            name = "register_timestamp",
             nullable = false,
             insertable = false,
             updatable = false,

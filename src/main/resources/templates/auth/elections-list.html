@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout_dash}">
+<head>
+    <title>Elecciones</title>
+</head>
+<body style="min-height:100vh;">
+<!--:::: Main ::::-->
+<main>
+    <div layout:fragment="body" class="container">
+        <!-- Section: Elecciones -->
+        <section class="content pt-5 mb-9 mx-auto">
+            <h3 class="text-left mb-4 pb-2 text-primary fw-bold">Elecciones</h3>
+            <p class="text-left mb-5">
+                En esta sección podrá ver y editar <strong>todos</strong> los procesos disponibles en el sistema.
+                Como administrador/a usted está habilitado/a para <strong>crear</strong>, <strong>suspender</strong>,
+                <strong>remover</strong>, y <strong>editar</strong> los campos definidos al momento del registro de
+                la elección, además de poder <strong>agregar</strong>, <strong>editar</strong> y
+                <strong>remover</strong> las <strong>propuestas</strong> que serán expuestas a los votantes registrados
+                para poder ser electas al momento de iniciar el proceso.
+            </p>
+
+            <!-- The overflow-scroll attribute is meanwhile i found a better way to make the table responsive -->
+            <div class="shadow-4 rounded-5 overflow-scroll">
+                <table class="table align-middle mb-0 bg-white">
+                    <thead class="bg-light">
+                    <tr>
+                        <th class="w-50">Título</th>
+                        <th class="w-50">Descripción</th>
+                        <th class="w-25">Status</th>
+                        <th class="w-25">Encargado</th>
+                        <th class="w-25">Editar</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${electionsList.isEmpty() }">
+                        <td colspan="5">Aquí podrá ver el detalle de las elecciones registradas</td>
+                    </tr>
+                    <tr th:each="election : ${electionsList}">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img
+                                        th:src="@{/static/img/E-logo.jpg}"
+                                        alt="election-default"
+                                        style="width: 45px; height: 45px"
+                                        class="rounded-pill"
+                                />
+                                <div class="ms-3">
+                                    <p class="fw-bold mb-1" th:text="${election.title}">${election.title}</p>
+                                        <p class="badge badge-light text-muted mb-0"
+                                           th:each="topic : ${election.topics}"
+                                           th:text="'#' + ${topic}"></p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <p class="text-muted mb-0" th:text="${election.briefDescription}"></p>
+                        </td>
+                        <td th:switch="${election.status}">
+                            <span th:case="'NO INICIADO'" class="badge badge-primary rounded-pill">NO INICIADO</span>
+                            <span th:case="'EN PROGRESO'" class="badge badge-success rounded-pill">EN PROGRESO</span>
+                            <span th:case="'FINALIZADO'" class="badge badge-warning rounded-pill">FINALIZADO</span>
+                            <span th:case="'SUSPENDIDO'" class="badge badge-secondary rounded-pill">SUSPENDIDO</span>
+                        </td>
+                        <td th:text="${election.creatorUsername}"></td>
+                        <td>
+                            <button type="button" class="btn btn-link btn-sm btn-rounded">
+                                Editar
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <!-- Section: Elecciones -->
+    </div>
+</main>
+<!--:::: Main ::::-->
+</body>
+</html>

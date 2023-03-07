@@ -1,8 +1,14 @@
 @media (min-width: 991.98px) {
-  .row {
+  .content {
     padding-left: 240px;
   }
 }
+
+/*
+.section {
+  padding-left: 240px;
+}
+*/
 
 .navbar {
   z-index: 601;
@@ -28,8 +34,36 @@
   overflow-y: auto;
 }
 
+/* This is for the height of the box */
+.select2-selection, .select-container--open {
+    line-height: 23px !important;
+    max-width: 100%;
+}
 
+/* This is for control the height of the displayed items box */
+.select2-container--default .select2-results > .select2-results__options {
+    line-height: 20px;
+    max-height: 10px;
+    overflow-y: auto;
+}
+
+/* This is for control the selected tags height and border */
+.select2-selection__choice {
+    line-height: 22px;
+    border-radius: 20px !important;
+}
+
+/* To separate the input box from the box with the options */
+.select2-container--below{
+    padding-bottom: 5px;
+}
+
+/*:::: Responsive ::::*/
 @media (max-width: 991.98px) {
+  .content{
+    padding-left: 5px;
+  }
+
   .sidebar {
     width: 100%;
     padding-top: 175px;
@@ -45,7 +79,11 @@
     width: 70%;
     align-items: center;
     margin: 0px 15% 0px;
-  }  
+  }
+
+  .section {
+
+  }
 }
 .sidebar .active {
   border-radius: 5px;

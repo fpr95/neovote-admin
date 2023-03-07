@@ -4,12 +4,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@RequestMapping("/account")
+@RequestMapping("/auth")
 @Controller
 public class AuthController {
 
-    @GetMapping("/homeuser")
+    // this endpoint redirects to the default-success-logged-in ADMIN view, VOTERS must have another one.
+    @GetMapping("/welcome-admin")
     public String loggedInUser(){
-        return "account/homeuser";
+        return "auth/welcome-admin";
     }
+
 }
