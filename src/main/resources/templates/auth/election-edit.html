@@ -4,13 +4,743 @@
       layout:decorate="~{layouts/layout_dash}">
 <head>
     <title>Editar Elección</title>
+    <script type="text/javascript" th:inline="javascript">
+        var err = [(${proposalRegistrationValidationErrors})];
+        if(err){
+            $(document).ready(function() {
+                $('#newProposalModal').modal('show');
+            });
+        }
+    </script>
 </head>
 <body style="min-height:100vh;">
 <!--:::: Main ::::-->
 <main>
     <div layout:fragment="body" class="container">
+        <!--Section: Propuestas -->
+        <section class="content pt-5 mb-9 mx-auto" data-aos="fade-in">
+            <h4 class="text-left mb-3 pb-2 text-primary fw-bold">Propuestas</h4>
+            <p class="text-left mb-5">
+                <i class="fa-regular fa-hand-point-right me-1"></i> En esta sección usted, como creador/a del proceso,
+                podrá <strong>agregar</strong>, <strong>modificar</strong> y <strong>remover</strong> propuestas.
+            </p>
+
+            <div class="shadow-4 rounded-5 overflow-auto">
+                <table class="table table-borderless table-responsive-md table-striped align-middle mb-0 bg-white">
+                    <thead class="bg-light">
+                    <tr>
+                        <th class="w-25 fw-bold">Nombre y Contacto</th>
+                        <th class="w-50 fw-bold">Detalles Propuesta</th>
+                        <th class="fw-bold" style="width: 20%;">Fecha y Hora Ingreso</th>
+                        <th class="w-25 fw-bold">Editar</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${proposalsList.isEmpty() }">
+                        <td colspan="5">Aún no hay propuestas registradas, haz click en "AGREGAR NUEVA PROPUESTA" para registrar una.</td>
+                    </tr>
+                    <tr th:each="proposal : ${proposalsList}">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img
+                                        th:src="@{/static/img/proposal-default.jpg}"
+                                        alt=""
+                                        style="width: 45px; height: 45px"
+                                        class="rounded-circle"
+                                />
+                                <div class="ms-3">
+                                    <p class="fw-bold mb-1" th:text="${proposal.name}"></p>
+                                    <div>
+                                        <p class="badge badge-light text-muted mb-0" th:text="${proposal.contactEmail}"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <p class="text-muted mb-0" th:text="${proposal.details}"></p>
+                        </td>
+                        <td>
+                            <span class="badge badge-secondary rounded-pill"
+                                  style="font-size: 13px;" th:text="${#temporals.format(proposal.createdAt, 'dd-MM-yyyy HH:mm')}"></span>
+                        </td>
+                        <td>
+                            <button type="button"
+                                    class="btn text-primary btn-sm btn-rounded d-flex"
+                                    data-mdb-ripple-color="dark"
+                                    data-mdb-toggle="modal"
+                                    data-mdb-target="#editProposalModal">
+                                Editar
+                                <i class="fa fa-marker ms-4"></i>
+                            </button>
+                            <!-- Edit Proposal Form Modal -->
+                            <div class="modal fade" id="editProposalModal" tabindex="-1" aria-labelledby="proposalModalLabel2"
+                                 aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+
+                                        <form action="#"
+                                              th:action="@{/auth/election-edit/edit-p(pid=${proposal.name}, uid=${currentElection.title})}"
+                                              th:object="${editableProposal}"
+                                              th:method="patch">
+                                            <!-- ATTR REMOVED FROM form ABOVE : role="form" -->
+                                            <!-- <script th:inline="javascript" th:if="${#fields.hasErrors('*')}">$("#newProposalModal").modal("show");</script> -->
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="proposalModalLabel2">Formulario de Edición</h5>
+                                                <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+
+                                            <div class="modal-body">
+
+                                                <!-- validation error display - CHANGE 6: DISPLAYING ERROR MSGS FROM CONTROLLER INSITHE DE modal-body-->
+                                                <!-- <div th:if="${proposalRegistrationValidationErrors}">
+                                                    <div th:each="error : ${proposalRegistrationValidationErrors}" class="alert alert-danger">
+                                                        <p th:text="${error.defaultMessage}"></p>
+                                                    </div>
+                                                </div> -->
+                                                <div class="card card-form mt-2 mb-4">
+                                                    <div class="card-body rounded-top darken-4" style="background-color: #008B8B;">
+                                                        <h3 class="font-weight-bold text-center text-uppercase text-light my-4">Editar
+                                                            Propuesta</h3>
+                                                        <!-- <form class="pb-5 px-2"> -->
+                                                        <div class="pb-5 px-2">
+
+                                                            <!-- validation error display - THIS BLOCK WAS MOVED INSIDE THE form-outline CONTAINER -->
+                                                            <!-- <div class="alert alert-danger" th:if="${#fields.hasErrors('name')}">
+                                                                <p th:errors="*{name}" th:text="${err}"></p>
+                                                            </div> -->
+                                                            <!-- validation error display - CHANGE 1: PUT ONLY THE <p> TAG(OUTSIDE THE DIV) -->
+                                                            <!-- <p class="alert alert-danger mb-1"
+                                                               th:if="${#fields.hasErrors('contactEmail')}"
+                                                               th:errors="*{contactEmail}">
+                                                            </p> -->
+
+                                                            <!-- validation error display WITHOUT THE th:text="${err}"-->
+                                                            <div class="alert alert-danger" th:if="${#fields.hasErrors('name')}">
+                                                                <p th:errors="*{name}" th:text="${err}"></p>
+                                                            </div>
+
+                                                            <div class="d-flex justify-content-start align-items-center mb-4">
+                                                                <i class="fa fa-tag fa-lg text-white fa-fw me-3"></i>
+                                                                <div class="form-outline form-white w-100">
+                                                                    <!-- validation error display - CHANGE 5:
+                                                                    INCLUDE: @ModelAttribute IN CONTROLLER
+                                                                    INCLUDE: th:text AND PUT DIV INSIDE form-outline CONTAINER
+                                                                    INCLUDE: invalid-feedback IN CLASS
+                                                                    INCLUDE: th:classappend="${#fields.hasErrors('name')} ? is-invalid : ''" IN <input> -->
+                                                                    <!-- <div class="alert alert-danger" th:if="${#fields.hasErrors('name')}">
+                                                                        <p th:errors="*{name}" th:text="${err}"></p>
+                                                                    </div> -->
+                                                                    <!-- th:errorclass="is-invalid"-->
+                                                                    <input type="text"
+                                                                           id="editProposalNameInput"
+                                                                           class="form-control"
+                                                                           th:field="*{name}"
+
+                                                                           th:placeholder="${proposal.name}"
+                                                                    />
+                                                                    <label class="form-label" for="editProposalNameInput">Nombre
+                                                                        Propuesta</label>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- validation error display THIS BLOCK WAS MOVED BELLOW
+                                                            <div class="alert alert-danger" th:if="${#fields.hasErrors('contactEmail')}">
+                                                                <p th:errors="*{contactEmail}"></p>
+                                                            </div> -->
+
+                                                            <!-- validation error display - Trying with the th:text="${err}" -->
+                                                            <div class="alert alert-danger" th:if="${#fields.hasErrors('contactEmail')}">
+                                                                <p th:errors="*{contactEmail}" th:text="${err}"></p>
+                                                            </div>
+
+                                                            <div class="d-flex justify-content-start align-items-center mb-4">
+                                                                <!-- validation error display - CHANGE 2: PUT ONLY THE <p> INSIDE THE CONTAINER DIV -->
+                                                                <!-- <p class="alert alert-danger mb-1"
+                                                                   th:if="${#fields.hasErrors('contactEmail')}"
+                                                                   th:errors="*{contactEmail}">
+                                                                </p> -->
+                                                                <!-- th:placeholder="${proposal.contactEmail}" -->
+                                                                <i class="far fa-envelope fa-lg text-white fa-fw me-3"></i>
+                                                                <div class="form-outline form-white w-100">
+                                                                    <input type="email"
+                                                                           id="editEmailInput"
+                                                                           class="form-control"
+                                                                           th:field="*{contactEmail}"
+                                                                           th:errorclass="is-invalid"
+
+                                                                    />
+                                                                    <label class="form-label" for="editEmailInput">Correo de
+                                                                        Contacto</label>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- validation error display THIS BLOCK WAS MOVED BELLOW
+                                                            <div class="alert alert-danger" th:if="${#fields.hasErrors('details')}">
+                                                                <p th:errors="*{details}"></p>
+                                                            </div>
+                                                            -->
+
+                                                            <!-- validation error display - Trying with the th:text="${err}" -->
+                                                            <div class="alert alert-danger" th:if="${#fields.hasErrors('details')}">
+                                                                <p th:errors="*{details}" th:text="${err}"></p>
+                                                            </div>
+
+                                                            <div class="d-flex justify-content-start align-items-center pb-3">
+                                                                <!-- validation error display - CHANGE 3: MOVE THE DIV INSIDE THE CONTAINER DIV -->
+                                                                <!-- <div class="alert alert-danger" th:if="${#fields.hasErrors('details')}">
+                                                                    <p th:errors="*{details}"></p>
+                                                                </div> -->
+                                                                <!-- th:errorclass="is-invalid" -->
+                                                                <i class="fa-solid fa-file-lines fa-lg text-white fa-fw me-3"></i>
+                                                                <div class="form-outline form-white w-100">
+                                                  <textarea class="form-control"
+                                                            id="editProposalDetailsInput"
+                                                            rows="7"
+                                                            th:field="*{details}"
+
+                                                            th:placeholder="${proposal.details}"
+                                                  >
+                                                  </textarea>
+                                                                    <label class="form-label"
+                                                                           for="editProposalDetailsInput">Detalles</label>
+                                                                    <div class="form-helper text-white">
+                                                                        <i class="fa-regular fa-lightbulb me-1"></i>
+                                                                        Aquí puede incluir una identificación de
+                                                                        la propuesta, ideas, problemas que se tengan en vista,
+                                                                        soluciones,
+                                                                        etc.
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!--
+                                                            <div class="d-flex justify-content-start align-items-center mb-4">
+                                                                <i class="fasolid fa-key fa-lg text-white fa-fw me-3"></i>
+                                                                <div class="form-outline form-white w-100">
+                                                                    <input type="password" id="adminPwdInput" class="form-control" />
+                                                                    <label class="form-label" for="adminPwdInput">Contraseña Administrador</label>
+                                                                </div>
+                                                            </div>
+                                                            -->
+                                                        </div>
+                                                    </div>
+                                                    <div class="card card-form-2 mb-0 z-depth-0">
+                                                        <div class="card-body text-center">
+                                                            <!-- <form class="text-center"> -->
+                                                            <div class="form-check red-checkbox my-3">
+                                                                <input class="form-check-input ms-2"
+                                                                       type="checkbox"
+                                                                       id="editIsVisibleInput"
+                                                                       th:field="*{visible}"/>
+                                                                <label class="form-check-label" for="editIsVisibleInput">
+                                                                    Mostrar como <strong>propuesta activa</strong> a los votantes
+                                                                </label>
+                                                            </div>
+
+                                                            <hr>
+
+                                                            <p>
+                                                                Al hacer click en <em>APLICAR CAMBIOS</em> todos los campos editados
+                                                                sobreescribirán los valores registrados previamente.
+                                                                Para hacer modificaciones en esta propuesta haga click en la
+                                                                opción <strong class="text-primary">EDITAR<i
+                                                                    class="fa fa-marker ms-1"></i></strong>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Volver</button>
+                                                <button type="submit" style="background-color: #008B8B;" class="btn text-light">Aplicar Cambios</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="w-75 mx-auto py-0">
+
+                            <button type="button"
+                                    class="btn btn-danger btn-sm btn-rounded d-flex"
+                                    data-mdb-toggle="modal"
+                                    data-mdb-target="#deleteConfirmationModal">
+                                Remover
+                                <i class="fa-solid fa-circle-xmark ms-2"></i>
+                            </button>
+                            <!-- Delete Proposal Confirmation Modal -->
+                            <div class="modal fade" id="deleteConfirmationModal" tabindex="-1"
+                                 aria-labelledby="modalLabel2" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form action="#" th:action="@{/auth/election-edit(uid=${currentElection.title}, pid=${proposal.name})}" th:method="delete">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="modalLabel2">Remover Propuesta</h5>
+                                                <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">¿Está seguro/a que desea remover esta propuesta?
+                                                Al hacer click en <em>REMOVER</em> se eliminará la propuesta del
+                                                sistema.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                        data-mdb-dismiss="modal">
+                                                    Volver
+                                                </button>
+                                                <button type="submit" class="btn btn-danger">Remover</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <button type="button" class="btn btn-primary btn-block mb-4 mt-4" data-mdb-toggle="modal"
+                    data-mdb-target="#newProposalModal">
+                Agregar Nueva Propuesta
+            </button>
+            <!-- </th:if>
+            <script th:inline="javascript">$('#newProposalModal').modal('show');</script>
+            </th:if> -->
+            <!-- Register Proposal Form Modal -->
+            <div class="modal fade" id="newProposalModal" tabindex="-1" aria-labelledby="proposalModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <form action="#" th:action="@{/auth/election-edit(uid=${currentElection.title})}" th:object="${proposalData}" method="post" role="form">
+                            <!-- <script th:inline="javascript" th:if="${#fields.hasErrors('*')}">$("#newProposalModal").modal("show");</script> -->
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="proposalModalLabel">Formulario Registro</h5>
+                                <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+
+                            <div class="modal-body">
+
+                                <!-- validation error display - CHANGE 6: DISPLAYING ERROR MSGS FROM CONTROLLER INSITHE DE modal-body-->
+                                <!-- <div th:if="${proposalRegistrationValidationErrors}">
+                                    <div th:each="error : ${proposalRegistrationValidationErrors}" class="alert alert-danger">
+                                        <p th:text="${error.defaultMessage}"></p>
+                                    </div>
+                                </div> -->
+                                <div class="card card-form mt-2 mb-4">
+                                    <div class="card-body rounded-top darken-4" style="background-color: #3B71CA;">
+                                        <h3 class="font-weight-bold text-center text-uppercase text-light my-4">Nueva
+                                            Propuesta</h3>
+                                        <!-- <form class="pb-5 px-2"> -->
+                                        <div class="pb-5 px-2">
+
+                                            <!-- validation error display - THIS BLOCK WAS MOVED INSIDE THE form-outline CONTAINER -->
+                                            <!-- <div class="alert alert-danger" th:if="${#fields.hasErrors('name')}">
+                                                <p th:errors="*{name}" th:text="${err}"></p>
+                                            </div> -->
+                                            <!-- validation error display - CHANGE 1: PUT ONLY THE <p> TAG(OUTSIDE THE DIV) -->
+                                            <!-- <p class="alert alert-danger mb-1"
+                                               th:if="${#fields.hasErrors('contactEmail')}"
+                                               th:errors="*{contactEmail}">
+                                            </p> -->
+
+                                            <!-- validation error display WITHOUT THE th:text="${err}"-->
+                                            <div class="alert alert-danger" th:if="${#fields.hasErrors('name')}">
+                                                <p th:errors="*{name}" th:text="${err}"></p>
+                                            </div>
+
+                                            <div class="d-flex justify-content-start align-items-center mb-4">
+                                                <i class="fa fa-tag fa-lg text-white fa-fw me-3"></i>
+                                                <div class="form-outline form-white w-100">
+                                                    <!-- validation error display - CHANGE 5:
+                                                    INCLUDE: @ModelAttribute IN CONTROLLER
+                                                    INCLUDE: th:text AND PUT DIV INSIDE form-outline CONTAINER
+                                                    INCLUDE: invalid-feedback IN CLASS
+                                                    INCLUDE: th:classappend="${#fields.hasErrors('name')} ? is-invalid : ''" IN <input> -->
+                                                    <!-- <div class="alert alert-danger" th:if="${#fields.hasErrors('name')}">
+                                                        <p th:errors="*{name}" th:text="${err}"></p>
+                                                    </div> -->
+                                                    <input type="text"
+                                                           id="proposalNameInput"
+                                                           class="form-control"
+                                                           th:field="*{name}"
+                                                           th:errorclass="is-invalid"
+                                                    />
+                                                    <label class="form-label" for="proposalNameInput">Nombre
+                                                        Propuesta</label>
+                                                </div>
+                                            </div>
+
+                                            <!-- validation error display THIS BLOCK WAS MOVED BELLOW
+                                            <div class="alert alert-danger" th:if="${#fields.hasErrors('contactEmail')}">
+                                                <p th:errors="*{contactEmail}"></p>
+                                            </div> -->
+
+                                            <!-- validation error display - Trying with the th:text="${err}" -->
+                                            <div class="alert alert-danger" th:if="${#fields.hasErrors('contactEmail')}">
+                                                <p th:errors="*{contactEmail}" th:text="${err}"></p>
+                                            </div>
+
+                                            <div class="d-flex justify-content-start align-items-center mb-4">
+                                                <!-- validation error display - CHANGE 2: PUT ONLY THE <p> INSIDE THE CONTAINER DIV -->
+                                                <!-- <p class="alert alert-danger mb-1"
+                                                   th:if="${#fields.hasErrors('contactEmail')}"
+                                                   th:errors="*{contactEmail}">
+                                                </p> -->
+                                                <i class="far fa-envelope fa-lg text-white fa-fw me-3"></i>
+                                                <div class="form-outline form-white w-100">
+                                                    <input type="email"
+                                                           id="emailInput"
+                                                           class="form-control"
+                                                           th:field="*{contactEmail}"
+                                                           th:errorclass="is-invalid"
+                                                    />
+                                                    <label class="form-label" for="emailInput">Correo de
+                                                        Contacto</label>
+                                                </div>
+                                            </div>
+
+                                            <!-- validation error display THIS BLOCK WAS MOVED BELLOW
+                                            <div class="alert alert-danger" th:if="${#fields.hasErrors('details')}">
+                                                <p th:errors="*{details}"></p>
+                                            </div>
+                                            -->
+
+                                            <!-- validation error display - Trying with the th:text="${err}" -->
+                                            <div class="alert alert-danger" th:if="${#fields.hasErrors('details')}">
+                                                <p th:errors="*{details}" th:text="${err}"></p>
+                                            </div>
+
+                                            <div class="d-flex justify-content-start align-items-center pb-3">
+                                                <!-- validation error display - CHANGE 3: MOVE THE DIV INSIDE THE CONTAINER DIV -->
+                                                <!-- <div class="alert alert-danger" th:if="${#fields.hasErrors('details')}">
+                                                    <p th:errors="*{details}"></p>
+                                                </div> -->
+                                                <i class="fa-solid fa-file-lines fa-lg text-white fa-fw me-3"></i>
+                                                <div class="form-outline form-white w-100">
+                                                  <textarea class="form-control"
+                                                            id="proposalDetailsInput"
+                                                            rows="7"
+                                                            th:field="*{details}"
+                                                            th:errorclass="is-invalid"
+                                                  >
+                                                  </textarea>
+                                                    <label class="form-label"
+                                                           for="proposalDetailsInput">Detalles</label>
+                                                    <div class="form-helper text-white">
+                                                        <i class="fa-regular fa-lightbulb me-1"></i>
+                                                        Aquí puede incluir una identificación de
+                                                        la propuesta, ideas, problemas que se tengan en vista,
+                                                        soluciones,
+                                                        etc.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--
+                                            <div class="d-flex justify-content-start align-items-center mb-4">
+                                                <i class="fasolid fa-key fa-lg text-white fa-fw me-3"></i>
+                                                <div class="form-outline form-white w-100">
+                                                    <input type="password" id="adminPwdInput" class="form-control" />
+                                                    <label class="form-label" for="adminPwdInput">Contraseña Administrador</label>
+                                                </div>
+                                            </div>
+                                            -->
+                                        </div>
+                                    </div>
+                                    <div class="card card-form-2 mb-0 z-depth-0">
+                                        <div class="card-body text-center">
+                                            <!-- <form class="text-center"> -->
+                                            <div class="form-check red-checkbox my-3">
+                                                <input class="form-check-input ms-2"
+                                                       type="checkbox"
+                                                       id="isVisibleInput"
+                                                       th:field="*{visible}"/>
+                                                <label class="form-check-label" for="isVisibleInput">
+                                                    Mostrar como <strong>propuesta activa</strong> a los votantes
+                                                </label>
+                                            </div>
+
+                                            <hr>
+
+                                            <p>
+                                                Al hacer click en <em>REGISTRAR PROPUESTA</em> ésta quedará ingresada en
+                                                el sistema. Para hacer modificaciones en esta propuesta haga click en la
+                                                opción <strong class="text-primary">EDITAR<i
+                                                    class="fa fa-marker ms-1"></i></strong>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Volver</button>
+                                <button type="submit" class="btn btn-primary">Registrar Propuesta</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--Section: Propuestas -->
+
+        <section class="content">
+            <hr class="mx-auto my-4 w-75">
+        </section>
+
         <!-- Section: Editar Elección -->
-        <section class="content pt-5 mb-9 mx-auto">
+        <section class="content pt-5 mb-9 mx-auto" data-aos="fade-in">
+
+            <h4 class="text-left mb-3 pb-2 text-primary fw-bold">Modificar Elección</h4>
+            <p class="text-left mb-1">
+                <i class="fa-regular fa-hand-point-right me-1"></i> Edite los campos que desee modificar y haga click en
+                <strong>APLICAR CAMBIOS</strong> para hacer éstos efectivos.
+            </p>
+            <p class="text-left mb-5">
+                <i class="fa-solid fa-circle-exclamation me-1"></i> Si planea hacer cambios significativos al proceso,
+                le recomendamos encarecidamente, que éstos sean hechos hasta <strong>30 minutos</strong> antes de la
+                <strong>fecha y hora de inicio</strong> estipulada.
+                Esto con el fin de ofrecer una buena experiencia a los votantes registrados.
+            </p>
+
+            <form action="#" th:action="@{/auth/election-edit(uid=${currentElection.title})}" th:object="${editableElection}" th:method="patch">
+                <!-- ATTR REMOVED FROM form ABOVE : role="form" -->
+                <!-- title input -->
+                <label class="form-label w-100" for="titleInput">
+                <span class="d-grid me-2 rounded-top border border-1 text-muted w-100 mb-1"
+                      data-target="titleInput"
+                      th:text="'&#8203' + ' Título : ' + ${currentElection.title}">
+                </span>
+                </label>
+                <!-- validation error display -->
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('editableTitle')}">
+                    <p th:errors="*{editableTitle}"></p>
+                </div>
+                <div class="input-group mw-100 mb-5">
+                    <div class="w-100">
+                        <input type="text" id="titleInput" class="form-control" th:field="*{editableTitle}" th:errorclass="is-invalid"/>
+                        <!-- <label class="form-label" for="titleInput"></label> -->
+                    </div>
+                </div>
+
+                <!-- topic input -->
+                <label class="form-label w-100" for="topicsInput">
+                <span class="d-grid me-2 rounded-top border border-1 text-muted w-100"
+                      data-target="topicsInputs"
+                      th:text="'&#8203' + ' Tópicos : ' + ${#strings.toUpperCase(currentElection.topics)}">
+                </span>
+                </label>
+                <!-- <span class="d-grid me-2 rounded-top border border-1 text-muted w-100"
+                      data-target="topicsInputs"
+                      th:text="'&#8203' + ' Tópicos : ' + ${currentElection.topics}"><span class="text-muted text-uppercase" th:text="${currentElection.topics}"></span>
+                    </span> -->
+                <div id="passwordHelpBlock" class="form-text mb-1">
+                    El/Los <em>Tópico(s)</em> que eliga ahora sobreescribirán a los indicados en la casilla de arriba.
+                    Si no ingresa ninguno, no se hará ningun cambio.
+                </div>
+                <!-- validation error display -->
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('topics')}">
+                    <p th:errors="*{topics}"></p>
+                </div>
+                <div class="input-group mw-100">
+                    <!-- <span class="input-group-text me-2 rounded-start border border-1 text-uppercase text-muted w-100"
+                          data-target="topicsInputs"
+                          th:text="'Tópicos : ' + ${currentElection.topics}">
+                    </span> -->
+                    <!-- <span class="input-group-text me-2" data-target="topicsInputs"><i class="fa-solid fa-hashtag"></i></span> -->
+                    <div class="form-floating input-group mb-5">
+                        <!-- <input type="text" id="topicInput" class="form-control"/> -->
+                        <select class="select-picker form-control"
+                                style="width: 100%;"
+                                name="topicsInput"
+                                id="topicsInput"
+                                multiple=""
+                                tabindex="-1"
+                                th:field="*{topics}"
+                                th:errorclass="is-invalid"
+                        >
+                            <option th:value="política">POLÍTICA</option>
+                            <option th:value="social">SOCIAL</option>
+                            <option th:value="salud">SALUD</option>
+                            <option th:value="ambiental">AMBIENTAL</option>
+                            <option th:value="administración">ADMINISTRACIÓN</option>
+                            <option th:value="educación">EDUCACIÓN</option>
+                            <option th:value="seguridad">SEGURIDAD</option>
+                            <option th:value="entretención">ENTRETENCIÓN</option>
+                            <option th:value="institucional">INSTITUCIONAL</option>
+                            <option th:value="laboral">LABORAL</option>
+                            <option th:value="florayfauna">FLORA Y FAUNA</option>
+                            <option th:value="urbano">URBANO</option>
+                            <option th:value="rural">RURAL</option>
+                        </select>
+                        <!-- <label class="form-label" for="topicsInput"></label> -->
+                    </div>
+                </div>
+
+
+                <!-- briefDescription input -->
+                <label class="form-label w-100" for="briefDescriptionInput">
+                <span class="d-grid me-2 rounded-top border border-1 text-muted w-100 mb-1"
+                      data-target="briefDescriptionInput"
+                      th:text="'&#8203' + ' Descripción Breve : ' + ${currentElection.briefDescription}">
+                </span>
+                </label>
+                <!-- validation error display -->
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('briefDescription')}">
+                    <p th:errors="*{briefDescription}"></p>
+                </div>
+                <div class="input-group mw-100 mb-5">
+                    <div class="w-100">
+                        <input type="text" id="briefDescriptionInput" class="form-control" th:field="*{briefDescription}" th:errorclass="is-invalid"/>
+                        <!-- <label class="form-label" for="briefDescriptionInput"></label> -->
+                    </div>
+                </div>
+
+
+                <!-- 2 column grid layout with text inputs for initTimestamp and finishTimestamp -->
+                <div class="row mb-4">
+                    <div class="col-sm-6">
+                        <!-- initTimestamp input -->
+                        <label for="initTimestampInput" class="form-label">
+                            <span class="d-grid border border-1 rounded-top px-3 py-1 w-100"
+                                  th:text="${'Fecha y Hora Inicio : ' + currentElection.initTimestamp}">
+                            </span>
+                        </label>
+                        <!-- validation error display -->
+                        <div class="alert alert-danger" th:if="${#fields.hasErrors('initTimestamp')}">
+                            <p th:errors="*{initTimestamp}"></p>
+                        </div>
+                        <div
+                                class="input-group log-event mb-4"
+                                id="linkedPickers1"
+                                data-td-target-input="nearest"
+                                data-td-target-toggle="nearest"
+                        >
+                            <input
+                                    id="initTimestampInput"
+                                    type="text"
+                                    class="form-control"
+                                    data-td-target="#linkedPickers1"
+                                    placeholder="dd-mm-aaaa, hh:mm"
+                                    th:field="*{initTimestamp}"
+                                    th:errorclass="is-invalid"
+                            />
+                            <span
+                                    class="input-group-text"
+                                    data-td-target="#linkedPickers1"
+                                    data-td-toggle="datetimepicker"
+                            >
+	                      <span class="fa-solid fa-calendar"></span>
+	                      </span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <!-- finishTimestamp input -->
+                        <label for="finishTimestampInput" class="form-label">
+                            <span class="d-grid border border-1 rounded-top px-3 py-1 w-100"
+                                  th:text="${'Fecha y Hora Término : ' + currentElection.finishTimestamp}">
+                            </span>
+                        </label>
+                        <!-- validation error display -->
+                        <div class="alert alert-danger" th:if="${#fields.hasErrors('finishTimestamp')}">
+                            <p th:errors="*{finishTimestamp}"></p>
+                        </div>
+                        <div
+                                class="input-group log-event mb-4"
+                                id="linkedPickers2"
+                                data-td-target-input="nearest"
+                                data-td-target-toggle="nearest"
+                        >
+                            <input
+                                    id="finishTimestampInput"
+                                    type="text"
+                                    class="form-control"
+                                    data-td-target="#linkedPickers2"
+                                    placeholder="dd-mm-aaaa, hh:mm"
+                                    th:field="*{finishTimestamp}"
+                                    th:errorclass="is-invalid"
+                            />
+                            <span
+                                    class="input-group-text"
+                                    data-td-target="#linkedPickers2"
+                                    data-td-toggle="datetimepicker"
+                            >
+	                      <span class="fa-solid fa-calendar"></span>
+	                      </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text input -->
+                <label class="form-label" for="detailsInput">
+                <span class="d-grid me-2 border border-1 rounded-top text-muted mb-1" data-target="detailsInput"
+                      th:text="'&#8203' + ' Detalles : ' + ${currentElection.details}">
+                </span>
+                </label>
+                <div class="input-group mw-100">
+                    <!-- <span class="input-group-text me-2 border border-1 rounded-start text-muted" data-target="detailsInput">Detalles :</span> -->
+                    <!-- validation error display -->
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('details')}">
+                        <p th:errors="*{details}"></p>
+                    </div>
+                    <div class="w-100 mb-3">
+                        <textarea class="form-control" id="detailsInput" rows="7" th:field="*{details}" th:errorclass="is-invalid"></textarea>
+                        <!-- <label class="form-label" for="detailsInput"></label> -->
+                    </div>
+                </div>
+
+                <!-- Patch Submit button --> <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary btn-block mb-2" data-mdb-toggle="modal" data-mdb-target="#editConfirmationModal">
+                    Aplicar Cambios</button>
+                <!-- Confirmation Modal -->
+                <div class="modal fade" id="editConfirmationModal" tabindex="-1" aria-labelledby="modalLabel1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabel1">Confirmación</h5>
+                                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">¿Está seguro/a que desea aplicar los cambios?
+                                Se sobreescribirán todos los campos modificados.</div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Volver</button>
+                                <button type="submit" class="btn btn-primary">Aplicar Cambios</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form action="#" th:action="@{/auth/election-edit/remove(uid=${currentElection.title})}" th:object="${currentElection}"
+                  th:method="delete">
+                  <!-- ATTR REMOVED FROM form ABOVE : role="form" -->
+                <!-- Delete Submit button --> <!-- Button trigger modal -->
+                <button type="button" class="btn btn-danger btn-block mb-4" data-mdb-toggle="modal"
+                        data-mdb-target="#removeConfirmationModal">
+                    Remover Elección
+                </button>
+                <!-- Confirmation Modal -->
+                <div class="modal fade" id="removeConfirmationModal" tabindex="-1" aria-labelledby="modalLabel3"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabel3">Confirmación</h5>
+                                <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">¿Está seguro/a que desea remover esta elección?
+                                Se eliminará toda la información asociada al proceso de forma permanente.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Volver</button>
+                                <button type="submit" class="btn btn-danger">Remover</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
 
         </section>
         <!-- Section: Editar Elección -->

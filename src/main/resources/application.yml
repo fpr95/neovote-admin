@@ -21,6 +21,9 @@ spring:
       ddl-auto: create-drop
   mvc:
     static-path-pattern: /static/**
+    hiddenmethod:
+      filter:
+        enabled: true
   template:
     cache: false
   thymeleaf:
@@ -32,11 +35,16 @@ spring:
 
 logging:
   level:
+    root: INFO
     org:
       hibernate:
         SQL: DEBUG
         type: TRACE
       springframework:
+        web: DEBUG
         security:
           web:
             FilterChainProxy: DEBUG
+      mapstruct: DEBUG
+    com:
+      digiteo: DEBUG

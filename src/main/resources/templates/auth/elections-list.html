@@ -10,27 +10,35 @@
 <main>
     <div layout:fragment="body" class="container">
         <!-- Section: Elecciones -->
-        <section class="content pt-5 mb-9 mx-auto">
+        <section class="content pt-5 mb-9 mx-auto" data-aos="fade-in">
             <h3 class="text-left mb-4 pb-2 text-primary fw-bold">Elecciones</h3>
-            <p class="text-left mb-5">
-                En esta sección podrá ver y editar <strong>todos</strong> los procesos disponibles en el sistema.
+            <p class="text-left mb-1">
+                <i class="fa-regular fa-hand-point-right me-1"></i> En esta sección podrá ver y editar
+                <strong>todos</strong> los procesos disponibles en el sistema.
                 Como administrador/a usted está habilitado/a para <strong>crear</strong>, <strong>suspender</strong>,
                 <strong>remover</strong>, y <strong>editar</strong> los campos definidos al momento del registro de
                 la elección, además de poder <strong>agregar</strong>, <strong>editar</strong> y
                 <strong>remover</strong> las <strong>propuestas</strong> que serán expuestas a los votantes registrados
                 para poder ser electas al momento de iniciar el proceso.
             </p>
+            <p class="text-left mb-5">
+                <i class="fa-solid fa-circle-exclamation me-1"></i> Recuerde que una vez el proceso alcance la
+                <strong>hora y fecha de inicio</strong>, éste no podrá ser editado.
+            </p>
 
-            <!-- The overflow-scroll attribute is meanwhile i found a better way to make the table responsive -->
-            <div class="shadow-4 rounded-5 overflow-scroll">
-                <table class="table align-middle mb-0 bg-white">
+            <div th:if="${param.success}">
+                <div class="alert alert-info">La elección ha sido eliminada del sistema.</div>
+            </div>
+
+            <div class="shadow-4 rounded-5 overflow-auto">
+                <table class="table table-borderless table-responsive-md table-striped align-middle mb-0 bg-white">
                     <thead class="bg-light">
                     <tr>
-                        <th class="w-50">Título</th>
-                        <th class="w-50">Descripción</th>
-                        <th class="w-25">Status</th>
-                        <th class="w-25">Encargado</th>
-                        <th class="w-25">Editar</th>
+                        <th class="w-50 fw-bold">Título</th>
+                        <th class="w-50 fw-bold">Descripción</th>
+                        <th class="w-25 fw-bold">Status</th>
+                        <th class="w-25 fw-bold">Encargado</th>
+                        <th class="w-25 fw-bold">Editar</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -41,13 +49,13 @@
                         <td>
                             <div class="d-flex align-items-center">
                                 <img
-                                        th:src="@{/static/img/E-logo.jpg}"
+                                        th:src="@{/static/img/election-default.jpg}"
                                         alt="election-default"
                                         style="width: 45px; height: 45px"
-                                        class="rounded-pill"
+                                        class="rounded-circle"
                                 />
                                 <div class="ms-3">
-                                    <p class="fw-bold mb-1" th:text="${election.title}">${election.title}</p>
+                                    <p class="fw-bold mb-1" th:text="${election.title}"></p>
                                         <p class="badge badge-light text-muted mb-0"
                                            th:each="topic : ${election.topics}"
                                            th:text="'#' + ${topic}"></p>
@@ -64,10 +72,43 @@
                             <span th:case="'SUSPENDIDO'" class="badge badge-secondary rounded-pill">SUSPENDIDO</span>
                         </td>
                         <td th:text="${election.creatorUsername}"></td>
-                        <td>
-                            <button type="button" class="btn btn-link btn-sm btn-rounded">
+                        <td th:switch="${election.status}">
+                            <a
+                                    th:case="'NO INICIADO'"
+                                    th:href="@{/auth/election-edit(uid=${election.title})}"
+                                    type="button"
+                                    class="btn btn-link btn-rounded btn-sm fs-7 d-flex"
+                                    data-mdb-ripple-color="dark">
                                 Editar
-                            </button>
+                                <i class="fa fa-marker ms-24 ms-2"></i>
+                            </a>
+                            <a
+                                    th:case="'SUSPENDIDO'"
+                                    th:href="@{/auth/election-edit(uid=${election.title})}"
+                                    type="button"
+                                    class="btn btn-link btn-rounded btn-sm fs-7 d-flex"
+                                    data-mdb-ripple-color="dark">
+                                Editar
+                                <i class="fa fa-marker ms-24 ms-2"></i>
+                            </a>
+                            <a
+                                    th:case="'FINALIZADO'"
+                                    th:href="@{/auth/election-results}"
+                                    type="button"
+                                    class="btn btn-link btn-rounded btn-sm fs-7 d-flex"
+                                    data-mdb-ripple-color="dark">
+                                Editar
+                                <i class="fa fa-marker ms-24 ms-2"></i>
+                            </a>
+                            <a
+                                    th:case="'EN PROGRESO'"
+                                    href="#"
+                                    type="button"
+                                    class="btn btn-link btn-rounded text-muted btn-sm fs-7 d-flex"
+                                    data-mdb-ripple-color="dark">
+                                Editar
+                                <i class="fa fa-marker ms-24 ms-2"></i>
+                            </a>
                         </td>
                     </tr>
                     </tbody>

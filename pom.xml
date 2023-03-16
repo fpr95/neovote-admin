@@ -18,6 +18,7 @@
 		<java.version>17</java.version>
 		<org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
 		<org.projectlombok.version>1.18.22</org.projectlombok.version>
+		<org.thymeleaf.extras.version>3.0.4.RELEASE</org.thymeleaf.extras.version>
 		<nz.net.ultraq.thymeleaf.version>3.2.0</nz.net.ultraq.thymeleaf.version>
 	</properties>
 
@@ -30,6 +31,18 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-java8time</artifactId>
+			<version>3.0.4.RELEASE</version>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>

@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @ToString
 @Entity(name = "userEntity")
 @Table(
-        name = "user",
+        name = "users",
         uniqueConstraints = {
                 @UniqueConstraint(name = "user_field_unique", columnNames = {"username", "email"})
         }

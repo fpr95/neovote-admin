@@ -3,14 +3,9 @@ package com.digiteo.neovoteIV.model.jpa.data;
 import lombok.*;
 
 import jakarta.persistence.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
-import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 //@Setter
@@ -102,16 +97,16 @@ public class Election extends BaseEntity {
     @Setter
     private String creatorUsername;
 
-/*  //ORDER:no, UNIQUENESS:yep, UPDATES:few, SIZE:10 elements max, OWNING:no, ACCESS:field(@Id on model.BaseEntity.id)
+    //ORDER:no, UNIQUENESS:yep, UPDATES:few, SIZE:10 elements max, OWNING:no, ACCESS:field(@Id on model.BaseEntity.id)
     @ToString.Exclude
     @OneToMany(
-            mappedBy = "election",
+            mappedBy = "bindingProcess",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL
     )
     @Getter
     private List<Proposal> proposals = new ArrayList<Proposal>();
-*/
+
 
     public Election (
             String title,
@@ -124,8 +119,6 @@ public class Election extends BaseEntity {
         this.title = title;
         this.briefDescription = briefDescription;
         this.topics = topics;
-        //this.creatorUsername = userDetails.getUsername();
-        //this.creatorUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         this.initTimestamp = initTimestamp;
         this.finishTimestamp = finishTimestamp;
         this.details = details;
@@ -165,6 +158,15 @@ public class Election extends BaseEntity {
         return topics.split(",", 0);
     }
 
+    public void addProposal(Proposal p){
+        proposals.add(p);
+        p.setBindingProcess(this);
+    }
+
+    public void removeProposal(Proposal p){
+        proposals.remove(p);
+        p.setBindingProcess(null);
+    }
 
     // CUSTOM IMPL TO CONVERT topics INTO AN ARRAY AND VICE VERSA
     //public String[] getTopics() {
@@ -174,17 +176,5 @@ public class Election extends BaseEntity {
     //public void setTopics(String[] topics) {
     //    this.topics = topics != null ? String.join(DELIMITER, topics) : null;
     //}
-
-/*
-    public void addProposal(Proposal p){
-        proposals.add(p);
-        p.setElection(this);
-    }
-
-    public void removeProposal(Proposal p){
-        proposals.remove(p);
-        p.setElection(null);
-    }
-*/
 }
 

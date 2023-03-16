@@ -32,24 +32,30 @@ public class NeovoteIvApplication {
 
 			userRepository.save(pepe);
 
-			/*
+
 			Election election = new Election(
-					"Vertedero sector El Retiro",
-					"Reclamo junta de vecinos N°23",
-					"salud,ambiental,social",
-					LocalDateTime.of(2023, 03, 15, 13, 00),
-					LocalDateTime.of(2023, 03, 15, 16, 00),
-					"Soluciones para la acumulación de desechos en El Retiro.");
+					"¡Vota por tu favorito! Deporte: Talleres Formativos 2023",
+					"Fútbol, Voleibol, Zumba ¡y más! Vota por el taller en el que te gustaría participar este 2023",
+					"salud,entretencion",
+					LocalDateTime.of(2023, 03, 25, 00, 00),
+					LocalDateTime.of(2023, 03, 25, 23, 59),
+					"Este 11 de Marzo, durante todo el día, se abren las urnas para votar por el taller formativo en " +
+							"el que TÚ desees participar. Contamos con profesores/as y preparadores físicos certificados en las siguientes áreas:\n" +
+							"Voleibol, Fútbol, Basquetbol, Zumba y Boxeo\n" +
+							"Las 3 opciones más votadas tendrán un espacio esta edición 2023 y comenzarán las clases el día 15");
+			election.setCreatorUsername("jhon1");
 
 			electionRepository.save(election);
 
+			/*
 							El día 25/02, la junta de vecinos N° 52 de Quilpué (Peyronet #212) nos hizo llegar " +
 							"una carta firmada por 98 de 116 miembros activos del comité buscando subsanar un conflicto de ámbito " +
 							"sanitario: La acumulación de basura y desechos en el vertedero ubicado en la intersección de Bellochio " +
 							"con Dr. Salas. Como municipio tenemos presente el timpo que esto lleva escalando y las consecuencias que acarrea " +
 							"para los vecin@s del sector, por ende, presentamos un nuevo proceso abierto con distintas soluciones ya " +
 							"revisadas por nuestro equipo para ser ejecutadas una vez se cierren las urnas virtuales
-			*/
+
+			 */
 		};
 	}
 }

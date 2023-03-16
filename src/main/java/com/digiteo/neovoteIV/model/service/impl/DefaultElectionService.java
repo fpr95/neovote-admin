@@ -2,11 +2,14 @@ package com.digiteo.neovoteIV.model.service.impl;
 
 import com.digiteo.neovoteIV.model.jpa.data.Election;
 import com.digiteo.neovoteIV.model.jpa.repository.ElectionRepository;
+import com.digiteo.neovoteIV.model.mapper.ElectionMapper;
 import com.digiteo.neovoteIV.model.service.ElectionService;
 import com.digiteo.neovoteIV.system.exception.ElectionAlreadyExistException;
 import com.digiteo.neovoteIV.web.data.model.ElectionData;
 import com.digiteo.neovoteIV.web.data.model.ElectionListData;
+import com.digiteo.neovoteIV.web.data.model.ElectionUpdateData;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,10 +22,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+//@AllArgsConstructor
 public class DefaultElectionService implements ElectionService {
 
-    @Autowired // change this to constructor injection!!!
-    ElectionRepository repository;
+    private final ElectionRepository repository;
+    private final ElectionMapper mapper;
+
+    @Autowired
+    public DefaultElectionService(ElectionRepository repository, ElectionMapper mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
+    }
 
     @Override
     @Transactional
@@ -34,6 +44,15 @@ public class DefaultElectionService implements ElectionService {
         repository.save(e);
     }
 
+    public Election getElectionByTitle(String title){
+        //Optional<Election> e = repository.findElectionByTitle(title);
+        //if(!e.isPresent()){
+        //    throw new NullPointerException("");
+        //}
+        //return e.get();
+        return repository.findElectionByTitle(title).get();
+    }
+
     @Override
     public void checkIfElectionExist(String title) throws ElectionAlreadyExistException {
         Optional<Election> e = repository.findElectionByTitle(title);
@@ -43,9 +62,27 @@ public class DefaultElectionService implements ElectionService {
     }
 
     @Override
-    public void partialUpdate(Long id) {
-
+    @Transactional
+    public String partialUpdate(Long id, ElectionUpdateData electionUpdateData) throws ElectionAlreadyExistException {
+        checkIfElectionExist(electionUpdateData.getEditableTitle());
+        Election e = repository.findById(id).get();
+        Election newElection = mapper.patchToEntity(electionUpdateData, e);
+        repository.save(newElection);
+        return newElection.getTitle();
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    @Override
+    @Transactional
+    public Election partialUpdatePlus(Long id, ElectionUpdateData electionUpdateData) {
+        Election e = repository.findById(id).get();
+        Election newElection = mapper.patchToEntity(electionUpdateData, e);
+        repository.save(newElection);
+        return newElection;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     @Override
     public void deleteElection(Long id) {
