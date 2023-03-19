@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ElectionUpdateData implements Serializable {
 
-    @Size(min = 2, max = 70, message = "El Título debe tener de 2 a 70 caracteres")
+    @Size(max = 70, message = "El Título puede tener como máximo 70 caracteres")
     private String editableTitle;
 
     private String topics;
@@ -30,6 +30,8 @@ public class ElectionUpdateData implements Serializable {
     @DateTimeFormat(pattern = "dd-MM-yyyy, HH:mm")
     private LocalDateTime finishTimestamp;
 
-    @Size(min = 10, max = 500, message = "{election.registration.validation.details}")
-    private String details;
+    @Size(max = 500, message = "El campo 'Detalles' puede tener como máximo 500 caracteres")
+    private String editableDetails;
+
+    private String electionStatus;
 }

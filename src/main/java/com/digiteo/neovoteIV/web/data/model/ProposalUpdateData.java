@@ -1,5 +1,6 @@
 package com.digiteo.neovoteIV.web.data.model;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -13,11 +14,15 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class ProposalUpdateData implements Serializable {
 
-    @Size(min = 2, message = "{proposal.registration.validation.name}")
+    @Size(max = 30, message = "{proposal.registration.validation.name}")
     private String name;
 
-    @Pattern(
-            regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z\\d-]+\\.)+[a-zA-Z]{2,6}$",
+    //@Pattern(
+    //        regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z\\d-]+\\.)+[a-zA-Z]{2,6}$",
+    //        message = "{proposal.registration.validation.contactEmail}"
+    //)
+    @Email(
+            regexp = "^(?:[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z\\d-]+\\.)+[a-zA-Z]{2,6})?$",
             message = "{proposal.registration.validation.contactEmail}"
     )
     private String contactEmail;

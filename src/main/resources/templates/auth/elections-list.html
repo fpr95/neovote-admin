@@ -93,11 +93,11 @@
                             </a>
                             <a
                                     th:case="'FINALIZADO'"
-                                    th:href="@{/auth/election-results}"
+                                    th:href="@{/auth/election-results(uid=${election.title})}"
                                     type="button"
                                     class="btn btn-link btn-rounded btn-sm fs-7 d-flex"
                                     data-mdb-ripple-color="dark">
-                                Editar
+                                Resultados
                                 <i class="fa fa-marker ms-24 ms-2"></i>
                             </a>
                             <a

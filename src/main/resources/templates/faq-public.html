@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+  <title>Preguntas Frecuentes | Neovote</title>
+</head>
+<body style="min-height:100vh;">
+<!--:::: Main ::::-->
+<main>
+  <div layout:fragment="body" class="container">
+    <div class="row py-5">
+      <div class="col-md-7 d-wrap mx-auto mb-4">
+        <div class="text-left col-mx-2 px-5 py-5 mt-2" data-aos="fade-up" data-aos-duration="700">
+          <h2 class="body-brand mx-auto mb-1">
+                <span class="border border-primary border-2 rounded-pill d-flex justify-content-center">
+                <span class="bg-light text-primary badge rounded-pill mx-auto p-5 py-1 my-3 fs-3 d-grid justify-content-center"
+                      style="font-weight: bold; font-size: 10px;">Preguntas Frecuentes</span>
+                </span>
+          </h2>
+          <hr class="h-color mx-4 mt-2">
+          <div class="d-flex mt-5 mb-5">
+            <p class="mx-5 fs-6 mt-4" mb-2>
+              <i class="fa-regular fa-hand-point-right me-1"></i> Este espacio tiene por objetivo resolver las dudas
+              y consultas que mas se repiten por parte de nuestros usuarios.
+            </p>
+            <p class="mx-5 fs-6 mb-4">
+              <i class="fa-regular fa-paper-plane me-1"></i> En caso de que su consulta no se
+              encuentre aquí, ésta puede ser enviada al área de administración a través del correo
+              <strong>neovote-contacto@gmail.com</strong>.
+            </p>
+          </div>
+          <!-- <p class="mx-5 fs-5">Simple. Seguro.</p> -->
+          <div class="list-group w-100">
+            <a href="#shortExampleAnswer1collapse" data-mdb-toggle="collapse" aria-expanded="false"
+               aria-controls="shortExampleAnswer1collapse" class="list-group-item list-group-item-action">
+              <div class="d-flex w-100 justify-content-between">
+                <h4 class="mt-2"><i class="fa-solid fa-circle-question me-1"></i>¿Qué es neovote?</h4>
+              </div>
+              <p class="mb-1">
+                neovote es un sistema de votación en línea.
+              </p>
+              <small><u>Más información</u></small>
+              <!-- Collapsed content -->
+              <div class="collapse mt-3" id="shortExampleAnswer1collapse">
+                <p>
+                  A grandes rasgos, neovote es un sistema de votación separado en 2 partes:
+                </p>
+                <p>
+                  Una es para los <strong>administradores</strong> quienes se encargan de la creación de elecciones,
+                  las propuestas para éstas elecciones, la revisión del padrón electoral global y particular,
+                  entre otras cosas.
+                  La otra parte es para los <strong>votantes</strong>, quienes pueden crear una cuenta en la
+                  aplicación y de esta forma ver las elecciones disponibles, registrarse como votantes activos
+                  en ellas, emitir votos y solicitar informes donde pueden ver resultados y estadísticas
+                  una vez los procesos hayan finalizado.
+                </p>
+              </div>
+            </a>
+            <a href="#shortExampleAnswer2collapse" data-mdb-toggle="collapse" aria-expanded="false"
+               aria-controls="shortExampleAnswer1collapse" class="list-group-item list-group-item-action">
+              <div class="d-flex w-100 justify-content-between">
+                <h4 class="mt-1"><i class="fa-solid fa-circle-question me-1"></i>¿Dónde y cómo puedo ver las elecciones?</h4>
+              </div>
+              <p class="mb-1">
+                Creando una cuenta y accediendo a la sección <em>Elecciones</em>.
+              </p>
+              <small class="text-muted"><u>Más Información</u></small>
+              <!-- Collapsed content -->
+              <div class="collapse mt-3" id="shortExampleAnswer2collapse">
+                <p>
+                  Todo usuario que desee ver las elecciones disponibles en el sistema debe registrarse e
+                  iniciar sesión. Una vez en su cuenta, podrá acceder a la sección <em>Elecciones</em> del
+                  menú.
+                  Aquí aparecerán los procesos, los cuales indicarán 3 posibles estados:
+                  <strong>NO INICIADO</strong>, <strong>EN PROGRESO</strong>, o <strong>FINALIZADO</strong>.
+                </p>
+              </div>
+            </a>
+            <a href="#shortExampleAnswer3collapse" data-mdb-toggle="collapse" aria-expanded="false"
+               aria-controls="shortExampleAnswer1collapse" class="list-group-item list-group-item-action">
+              <div class="d-flex w-100 justify-content-between">
+                <h4 class="my-1"><i class="fa-solid fa-circle-question me-1"></i>¿Cómo puedo votar?</h4>
+              </div>
+              <p class="mb-1">
+                Registrándose como parte del padrón activo para una elección.
+              </p>
+              <small class="text-muted"><u>Más información</u></small>
+              <!-- Collapsed content -->
+              <div class="collapse mt-3" id="shortExampleAnswer3collapse">
+                <p>
+                  Una vez iniciada su sesión, en la sección <em>Elecciones</em>, verá todos los procesos
+                  disponibles en los cuales podrá registrarse como parte del <em>padrón electoral activo</em>,
+                  esto lo habilitará para ver las propuestas disponibles y una vez llegue la
+                  <strong>fecha y hora de inicio</strong> podrá emitir su voto.
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<!--:::: Main ::::-->
+</body>
+</html>

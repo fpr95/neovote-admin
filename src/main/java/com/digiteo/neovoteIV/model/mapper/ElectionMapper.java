@@ -1,31 +1,42 @@
 package com.digiteo.neovoteIV.model.mapper;
 
 import com.digiteo.neovoteIV.model.jpa.data.Election;
+import com.digiteo.neovoteIV.web.data.model.ElectionData;
 import com.digiteo.neovoteIV.web.data.model.ElectionUpdateData;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Mapper(
-        componentModel = "spring"
+        componentModel = MappingConstants.ComponentModel.SPRING,
+        unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public interface ElectionMapper {
 
-    Logger logger = LoggerFactory.getLogger(ElectionMapper.class);
     ElectionMapper INSTANCE = Mappers.getMapper(ElectionMapper.class);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(source = "eud.editableTitle", target = "title", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(source = "eud.topics", target = "topics", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(source = "eud.briefDescription", target = "briefDescription", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(source = "eud.initTimestamp", target = "initTimestamp", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(source = "eud.finishTimestamp", target = "finishTimestamp", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(source = "eud.details", target = "details", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    Election patchToEntity(ElectionUpdateData eud,@MappingTarget Election e);
+    Election toEntity(ElectionData dto);
+    ElectionData toDto(Election entity);
 
-
-    default void logMappingResult(ElectionUpdateData eud, @MappingTarget Election e){
-        logger.debug("Mapper method called with source={}, target={}", eud, e);
+    @BeforeMapping
+    default void setEmptySourceStringToNull(@MappingTarget Election entity, ElectionUpdateData dto){
+        if (dto.getEditableTitle().isEmpty()) {
+            dto.setEditableTitle(null);
+        }
+        if (dto.getBriefDescription().isEmpty()){
+            dto.setBriefDescription(null);
+        }
+        if (dto.getEditableDetails().isEmpty()){
+            dto.setEditableDetails(null);
+        }
     }
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(source = "editableTitle", target = "title", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(source = "topics", target = "topics", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(source = "briefDescription", target = "briefDescription", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(source = "initTimestamp", target = "initTimestamp", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(source = "finishTimestamp", target = "finishTimestamp", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(source = "editableDetails", target = "details", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    Election patchToEntity(@MappingTarget Election entity, ElectionUpdateData dto);
+
 }

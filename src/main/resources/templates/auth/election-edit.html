@@ -6,12 +6,28 @@
     <title>Editar Elección</title>
     <script type="text/javascript" th:inline="javascript">
         var err = [(${proposalRegistrationValidationErrors})];
+        var editErr = [(${proposalEditValidationErrors})];
         if(err){
             $(document).ready(function() {
                 $('#newProposalModal').modal('show');
             });
         }
+        if(editErr){
+            $(document).ready(function() {
+                $('#editProposalModal').modal('show');
+            });
+        }
     </script>
+    <!--
+    <script type="text/javascript" th:inline="javascript">
+        var editErr = [(${proposalEditValidationErrors})];
+        if(editErr){
+            $(document).ready(function() {
+                $('#editProposalModal').modal('show');
+            });
+        }
+    </script>
+    -->
 </head>
 <body style="min-height:100vh;">
 <!--:::: Main ::::-->
@@ -79,7 +95,7 @@
                                     <div class="modal-content">
 
                                         <form action="#"
-                                              th:action="@{/auth/election-edit/edit-p(pid=${proposal.name}, uid=${currentElection.title})}"
+                                              th:action="@{/auth/election-edit(pid=${proposal.name}, uid=${currentElection.title})}"
                                               th:object="${editableProposal}"
                                               th:method="patch">
                                             <!-- ATTR REMOVED FROM form ABOVE : role="form" -->
@@ -679,14 +695,18 @@
                       th:text="'&#8203' + ' Detalles : ' + ${currentElection.details}">
                 </span>
                 </label>
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('editableDetails')}">
+                    <p th:errors="*{editableDetails}" th:text="${err}"></p>
+                </div>
                 <div class="input-group mw-100">
                     <!-- <span class="input-group-text me-2 border border-1 rounded-start text-muted" data-target="detailsInput">Detalles :</span> -->
-                    <!-- validation error display -->
+                    <!-- validation error display
                     <div class="alert alert-danger" th:if="${#fields.hasErrors('details')}">
-                        <p th:errors="*{details}"></p>
+                        <p th:errors="*{details}" th:text="${err}"></p>
                     </div>
+                    -->
                     <div class="w-100 mb-3">
-                        <textarea class="form-control" id="detailsInput" rows="7" th:field="*{details}" th:errorclass="is-invalid"></textarea>
+                        <textarea class="form-control" id="detailsInput" rows="7" th:field="*{editableDetails}" th:errorclass="is-invalid"></textarea>
                         <!-- <label class="form-label" for="detailsInput"></label> -->
                     </div>
                 </div>

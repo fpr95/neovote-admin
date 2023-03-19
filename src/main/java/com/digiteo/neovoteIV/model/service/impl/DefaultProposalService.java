@@ -40,6 +40,7 @@ public class DefaultProposalService implements ProposalService {
         }
     }
 
+
     @Override
     @Transactional
     public void partialUpdate(String name, ProposalUpdateData pud) throws ProposalNameAlreadyExistException {
@@ -50,11 +51,22 @@ public class DefaultProposalService implements ProposalService {
         Proposal p = repository.findProposalByName(name).get();
         Election e = p.getBindingProcess();
         e.removeProposal(p);
-        mapper.patchToEntity(pud, p);
+        Proposal newProposal = mapper.patchToEntity(p, pud);
         Election newBindingProcess = p.getBindingProcess();
-        newBindingProcess.addProposal(p);
-        repository.save(p);
+        newBindingProcess.addProposal(newProposal);
+        repository.save(newProposal);
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    @Override
+    @Transactional
+    public void partialUpdatePlus(String name, ProposalUpdateData pud){
+        Proposal newProposal = mapper.patchToEntity(repository.findProposalByName(name).get(), pud);
+        repository.save(newProposal);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     @Override
     public void deleteProposal(String proposalName) {

@@ -26,7 +26,7 @@ import java.util.Optional;
 public class DefaultElectionService implements ElectionService {
 
     private final ElectionRepository repository;
-    private final ElectionMapper mapper;
+    private ElectionMapper mapper;
 
     @Autowired
     public DefaultElectionService(ElectionRepository repository, ElectionMapper mapper) {
@@ -66,7 +66,7 @@ public class DefaultElectionService implements ElectionService {
     public String partialUpdate(Long id, ElectionUpdateData electionUpdateData) throws ElectionAlreadyExistException {
         checkIfElectionExist(electionUpdateData.getEditableTitle());
         Election e = repository.findById(id).get();
-        Election newElection = mapper.patchToEntity(electionUpdateData, e);
+        Election newElection = mapper.patchToEntity(e, electionUpdateData);
         repository.save(newElection);
         return newElection.getTitle();
     }
@@ -76,8 +76,8 @@ public class DefaultElectionService implements ElectionService {
     @Override
     @Transactional
     public Election partialUpdatePlus(Long id, ElectionUpdateData electionUpdateData) {
-        Election e = repository.findById(id).get();
-        Election newElection = mapper.patchToEntity(electionUpdateData, e);
+        //Election e = repository.findById(id).get();
+        Election newElection = mapper.patchToEntity(repository.findById(id).get(), electionUpdateData);
         repository.save(newElection);
         return newElection;
     }

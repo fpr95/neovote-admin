@@ -32,6 +32,9 @@ public class HomeController {
         return "/register";
     }
 
+    @GetMapping("/faq-public")
+    public String publicFaq(){ return "/faq-public"; }
+
     @PostMapping("/register")
     public String userRegistration(final @Valid UserData userData, final BindingResult bindingResult, final Model model) {
         if(bindingResult.hasErrors()){

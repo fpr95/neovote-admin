@@ -15,6 +15,7 @@ public interface ProposalService {
         throws ProposalNameAlreadyExistException;
     void partialUpdate(String name, ProposalUpdateData pud)
             throws ProposalNameAlreadyExistException;
+    void partialUpdatePlus(String name, ProposalUpdateData pud);
     void deleteProposal(String proposalName);
     List<ProposalData> getProposalList();
 }
