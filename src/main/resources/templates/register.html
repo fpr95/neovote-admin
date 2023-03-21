@@ -4,6 +4,25 @@
       layout:decorate="~{layouts/layout}">
 <head>
     <title>Registro</title>
+
+    <script type="text/javascript" th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", () => {
+            const hidePassword = document.querySelector("#hidePassword");
+            const passwordField = document.querySelector("#registerPassword");
+
+            hidePassword.addEventListener("click", function() {
+                if(this.classList.contains("fa-eye-slash")){
+                    this.classList.replace("fa-eye-slash", "fa-eye");
+                } else {
+                    this.classList.replace("fa-eye", "fa-eye-slash");
+                }
+                const inputType = passwordField.getAttribute("type")
+                === "password" ? "text" : "password";
+                passwordField.setAttribute("type", inputType);
+            });
+        });
+    </script>
+
 </head>
 <body>
 <!--:::: Main ::::-->
@@ -104,9 +123,12 @@
                             Tu contraseña debe tener de 8 a 20 caracteres y contener al menos una minúscula,
                             una mayúscula, un número y un símbolo.
                         </div>
-                        <div class="form-outline mb-4">
+                        <div class="form-outline password-container mb-4">
                             <input type="password" id="registerPassword" class="form-control" th:field="*{pwd}"
                                    th:errorclass="is-invalid"/>
+                            <i class="fa-solid fa-eye-slash d-flex justify-content-end"
+                               id="hidePassword"
+                               style="position: absolute;right: 4%; bottom: 27%;color: lightgray;"></i>
                             <label class="form-label" for="registerPassword">Contraseña</label>
                         </div>
 

@@ -38,4 +38,6 @@ public class ElectionData implements Serializable {
 
     @Size(min = 10, max = 500, message = "{election.registration.validation.details}")
     private String details;
+
+    private String electionStatus;
 }

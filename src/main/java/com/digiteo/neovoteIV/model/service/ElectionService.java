@@ -23,4 +23,8 @@ public interface ElectionService {
     //------------------------------------------------------------------------------------------------------------------
     void deleteElection(Long id);
     List<ElectionListData> getElectionsList();
+
+    void suspendElection(Election e);
+
+    void activateElection(Election e);
 }

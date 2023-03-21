@@ -1,6 +1,7 @@
 package com.digiteo.neovoteIV.web.controller;
 
 import com.digiteo.neovoteIV.model.jpa.data.Election;
+import com.digiteo.neovoteIV.model.jpa.data.ElectionStatus;
 import com.digiteo.neovoteIV.model.jpa.data.Proposal;
 import com.digiteo.neovoteIV.model.mapper.ElectionMapper;
 import com.digiteo.neovoteIV.model.service.ElectionService;
@@ -10,7 +11,6 @@ import com.digiteo.neovoteIV.system.exception.ProposalNameAlreadyExistException;
 import com.digiteo.neovoteIV.web.data.model.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.slf4j.ILoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +21,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @RequestMapping("/auth")
 @Controller
@@ -77,6 +76,7 @@ public class ElectionController {
         BeanUtils.copyProperties(e, ed);
         */
         ElectionData ed = electionMapper.toDto(e);
+        boolean flag = false;
         List<Proposal> proposals = e.getProposals();
         List<ProposalData> proposalsData = new ArrayList<>();
         for(Proposal p : proposals){
@@ -85,10 +85,14 @@ public class ElectionController {
             pd.setContactEmail(p.getContactEmail());
             pd.setDetails(p.getDetails());
             pd.setVisible(p.isVisible());
+            if(pd.isVisible()){
+                flag = true;
+            }
             pd.setCreatedAt(p.getTimestamp());
             proposalsData.add(pd);
         }
 
+        model.addAttribute("checkboxFlag", flag);
         model.addAttribute("currentElection", ed);
         model.addAttribute("editableElection", new ElectionUpdateData());
         model.addAttribute("editableProposal", new ProposalUpdateData());
@@ -102,7 +106,8 @@ public class ElectionController {
             final @Valid @ModelAttribute("proposalData")ProposalData proposalData,
             final BindingResult bindingResult,
             @RequestParam(value = "uid", required = false) String electionTitle,
-            final Model model) {
+            final Model model,
+            final RedirectAttributes redirectAttr) {
         Election e = electionService.getElectionByTitle(electionTitle);
         if(bindingResult.hasErrors()){
             //Election e = electionService.getElectionByTitle(electionTitle);
@@ -153,29 +158,12 @@ public class ElectionController {
             model.addAttribute("editableElection", new ElectionUpdateData());
             model.addAttribute("editableProposal", new ProposalUpdateData());
             model.addAttribute("proposalsList", proposalsData);
+            model.addAttribute("proposalRegistrationValidationErrors", true);
             model.addAttribute("proposalData", proposalData);
             return "auth/election-edit";
         }
-        ElectionData ed = new ElectionData(); // CHANGE THE ElectionData FOR A DTO WITH THE proposal LIST
-        BeanUtils.copyProperties(e, ed);
-        List<Proposal> proposals = e.getProposals();
-        List<ProposalData> proposalsData = new ArrayList<>();
-        for(Proposal p : proposals){
-            ProposalData pd = new ProposalData();
-            pd.setName(p.getName());
-            pd.setContactEmail(p.getContactEmail());
-            pd.setDetails(p.getDetails());
-            pd.setVisible(p.isVisible());
-            pd.setCreatedAt(p.getTimestamp());
-            proposalsData.add(pd);
-        }
-        model.addAttribute("currentElection", ed);
-        model.addAttribute("editableElection", new ElectionUpdateData());
-        model.addAttribute("editableProposal", new ProposalUpdateData());
-        model.addAttribute("proposalsList", proposalsData);
-        model.addAttribute("proposalData", proposalData);
-        //return "redirect:/auth/election-edit?success"; //Check if this is the correct approach to announce the success
-        return "auth/election-edit"; //Implement PRG pattern to avoid re-submit form when refresh or go back to the page
+        redirectAttr.addAttribute("uid", electionTitle);
+        return "redirect:/auth/election-edit";
     }
 
     @RequestMapping(value = "/election-edit", method = RequestMethod.DELETE, params = {"pid", "uid"})
@@ -280,7 +268,22 @@ public class ElectionController {
 
     //------------------------------------------------------------------------------------------------------------------
 
+    @PatchMapping(value = "/election-edit/suspend", params = {"uid"})
+    public String suspendElection(@RequestParam(value = "uid", required = false) String electionTitle,
+                                  final RedirectAttributes redirectAttr) {
+        Election e = electionService.getElectionByTitle(electionTitle);
+        if(e.getElectionStatus() == ElectionStatus.SUSPENDED){
+            electionService.activateElection(e);
+            redirectAttr.addAttribute("uid", electionTitle);
+            return "redirect:/auth/election-edit";
+        } else {
+            electionService.suspendElection(e);
+            return "redirect:/auth/elections-list";
+        }
+    }
 
+
+    //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value = "/election-edit", method = RequestMethod.PATCH, params = {"pid", "uid"})
     public String editProposal(final @Valid @ModelAttribute("editableProposal")ProposalUpdateData proposalUpdateData,
                                final BindingResult bindingResult,

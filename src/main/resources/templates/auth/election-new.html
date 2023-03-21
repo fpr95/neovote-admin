@@ -12,12 +12,20 @@
         <!--Section: Nueva Elección -->
         <section class="content pt-5 mb-9 mx-auto">
             <h3 class="text-left mb-4 pb-2 text-primary fw-bold">Nueva Elección</h3>
+            <p class="text-left mb-2">
+                <i class="fa-regular fa-hand-point-right me-1"></i> Rellene <strong>todos</strong> los campos
+                indicados en el formulario debajo para crear un nuevo proceso electoral.
+            </p>
             <p class="text-left mb-5">
-                Rellene <strong>todos</strong> los campos indicados en el formulario debajo para crear un nuevo proceso electoral.
-                Éste tendrá por defecto un status <strong>NO INICIADO</strong> el cual cambiará automáticamente a
-                <strong>EN PROGRESO</strong> una vez alcance el momento definido en el campo
-                '<strong>Fecha y Hora Inicio</strong>' y a <strong>FINALIZADO</strong> una vez alcance el momento
-                definido en el campo '<strong>Fecha y Hora Término</strong>'.
+                <i class="fa-regular fa-hand-point-right me-1"></i> Éste tendrá por defecto un status
+                <strong>SUSPENDIDO</strong>, con el propósito de tener un espacio para poder
+                agregar las propuestas o editar cualquier detalle antes de mostrar la elección como disponible al
+                público. Una vez todo esté listo, puede activar el proceso haciendo click en
+                <em>Editar<i class="fa fa-marker ms-1"></i></em> y luego en <em>Activar Proceso</em>,
+                con esto el status cambiará a <strong>NO INICIADO</strong> hasta que llegue la
+                '<strong>Fecha y Hora Inicio</strong>' indicada en el formulario. En este punto, la elección
+                cambiará su status a <strong>EN PROGRESO</strong>, y una vez alcance el momento
+                establecido en el campo '<strong>Fecha y Hora Término</strong>' pasará a <strong>FINALIZADO</strong>.
             </p>
 
             <form action="#" th:action="@{/auth/election-new}" th:object="${electionData}" method="post" role="form">

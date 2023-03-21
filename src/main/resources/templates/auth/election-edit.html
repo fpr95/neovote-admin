@@ -6,19 +6,20 @@
     <title>Editar Elección</title>
     <script type="text/javascript" th:inline="javascript">
         var err = [(${proposalRegistrationValidationErrors})];
-        var editErr = [(${proposalEditValidationErrors})];
         if(err){
             $(document).ready(function() {
                 $('#newProposalModal').modal('show');
             });
         }
-        if(editErr){
+    </script>
+    <script type="text/javascript" th:inline="javascript">
+        let flag = [(${checkboxFlag})]
+        if(flag){
             $(document).ready(function() {
-                $('#editProposalModal').modal('show');
+                $('#editIsVisibleInput').prop('checked', true);
             });
         }
     </script>
-    <!--
     <script type="text/javascript" th:inline="javascript">
         var editErr = [(${proposalEditValidationErrors})];
         if(editErr){
@@ -27,7 +28,6 @@
             });
         }
     </script>
-    -->
 </head>
 <body style="min-height:100vh;">
 <!--:::: Main ::::-->
@@ -108,7 +108,7 @@
 
                                             <div class="modal-body">
 
-                                                <!-- validation error display - CHANGE 6: DISPLAYING ERROR MSGS FROM CONTROLLER INSITHE DE modal-body-->
+                                                <!-- validation error display - CHANGE 6: DISPLAYING ERROR MSGS FROM CONTROLLER INSIDE THE DE modal-body-->
                                                 <!-- <div th:if="${proposalRegistrationValidationErrors}">
                                                     <div th:each="error : ${proposalRegistrationValidationErrors}" class="alert alert-danger">
                                                         <p th:text="${error.defaultMessage}"></p>
@@ -247,7 +247,8 @@
                                                                 <input class="form-check-input ms-2"
                                                                        type="checkbox"
                                                                        id="editIsVisibleInput"
-                                                                       th:field="*{visible}"/>
+                                                                       th:field="*{visible}"
+                                                                       th:checked="${proposal.visible}?'checked'"/>
                                                                 <label class="form-check-label" for="editIsVisibleInput">
                                                                     Mostrar como <strong>propuesta activa</strong> a los votantes
                                                                 </label>
@@ -711,8 +712,8 @@
                     </div>
                 </div>
 
-                <!-- Patch Submit button --> <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary btn-block mb-2" data-mdb-toggle="modal" data-mdb-target="#editConfirmationModal">
+                <!-- Model Patch Submit button --> <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary btn-block mb-4" data-mdb-toggle="modal" data-mdb-target="#editConfirmationModal">
                     Aplicar Cambios</button>
                 <!-- Confirmation Modal -->
                 <div class="modal fade" id="editConfirmationModal" tabindex="-1" aria-labelledby="modalLabel1" aria-hidden="true">
@@ -731,6 +732,84 @@
                         </div>
                     </div>
                 </div>
+
+                <hr class="content mx-auto my-1 w-75">
+
+                <span th:if="${currentElection.electionStatus != 'SUSPENDIDO'}">
+                <!-- Suspension Patch Submit button --> <!-- Button trigger modal -->
+                <button type="button" class="btn btn-secondary btn-block mb-2" value="suspend" data-mdb-toggle="modal"
+                      data-mdb-target="#suspendConfirmationModal">
+                  Suspender Proceso</button>
+                </span>
+                <!-- Confirmation Modal -->
+                <div class="modal fade" id="suspendConfirmationModal" tabindex="-1" aria-labelledby="modalLabel7" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabel7">Confirmación</h5>
+                                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <strong>¿Está seguro/a que desea suspender el proceso?</strong>
+                                <p class="mt-2">
+                                    La elección entrará en un estado de suspensión, esto significa que no aparecerá como
+                                    disponible para los usuarios. Solo los votantes que se hayan registrado en el padrón
+                                    electoral correspondiente al proceso podrán visualizar los detalles de éste, mas no
+                                    podrán ver las propuestas ni emitir su voto.
+                                </p>
+                                <p>
+                                    Puede revertir la suspensión ingresando al menú de edición y haciendo click
+                                    en el botón <em>Reactivar Proceso</em>.
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Volver</button>
+                                <button type="submit" value="suspend"
+                                        th:formaction="@{/auth/election-edit/suspend(uid=${currentElection.title})}"
+                                        class="btn btn-primary">Suspender Proceso</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <span th:if="${currentElection.electionStatus == 'SUSPENDIDO'}">
+                <!-- Activation Patch Submit button --> <!-- Button trigger modal -->
+                <button type="button" class="btn btn-secondary btn-block mb-2" value="suspend" data-mdb-toggle="modal"
+                        data-mdb-target="#activationConfirmationModal">
+                  Activar Proceso</button>
+                </span>
+                <!-- Confirmation Modal -->
+                <div class="modal fade" id="activationConfirmationModal" tabindex="-1" aria-labelledby="modalLabel8" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabel8">Confirmación</h5>
+                                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <strong>¿Desea activar el proceso?</strong>
+                                <p class="mt-2">
+                                    La elección cambiará a estado activo, esto significa que aparecerá como
+                                    disponible para todos los usuarios con una cuenta en el sistema.
+                                    Solo los votantes que se registren en el <em>padrón electoral</em> del proceso podrán
+                                    ver los detalles de éste, esto incluye revisar las propuestas agregadas y solo si la
+                                    elección esta en status '<strong>EN PROGRESO</strong>', podrán emitir su voto.
+                                </p>
+                                <p>
+                                    Mientras el proceso este en status '<strong>NO INICIADO</strong>' puede volver a
+                                    suspender la elección haciendo click en el botón <em>Suspender Proceso</em>.
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Volver</button>
+                                <button type="submit" value="suspend"
+                                        th:formaction="@{/auth/election-edit/suspend(uid=${currentElection.title})}"
+                                        class="btn btn-primary">Activar Proceso</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </form>
             <form action="#" th:action="@{/auth/election-edit/remove(uid=${currentElection.title})}" th:object="${currentElection}"
                   th:method="delete">

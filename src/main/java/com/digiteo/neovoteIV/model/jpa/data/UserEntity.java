@@ -28,6 +28,7 @@ public class UserEntity extends BaseEntity {
     private String email;
     private String pwd;
     private String gender; // change this for an ENUM
+    private boolean accountVerified;
 
     @Column(
             name = "register_timestamp",

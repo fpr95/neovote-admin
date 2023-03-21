@@ -5,6 +5,7 @@ import com.digiteo.neovoteIV.model.jpa.repository.UserRepository;
 import com.digiteo.neovoteIV.system.exception.EmailAlreadyExistException;
 import com.digiteo.neovoteIV.system.exception.UsernameAlreadyExistException;
 import com.digiteo.neovoteIV.web.data.model.UserData;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,6 +48,13 @@ public class DefaultUserService implements UserService {
         if(u.isPresent()) {
             throw new EmailAlreadyExistException("¡Ya existe un usuario registrado con estas credenciales!(email)");
         }
+    }
+
+    @Override
+    public UserEntity getUserByUsernameOrEmail(String username){
+        UserEntity u = userRepository.findUserByUsernameOrEmail(username)
+                .orElseThrow(() -> new EntityNotFoundException("No existe un usuario para el identifiador proporcionado."));
+        return u;
     }
 
     private void encodePwd(UserData source, UserEntity target) {

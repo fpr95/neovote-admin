@@ -53,6 +53,7 @@ public class Election extends BaseEntity {
     // To avoid mapping breaks in case of changing ElectionStatus, the persisting is managed by an AttributeConverter
     @Column( name = "current_status" )
     @Setter
+    @Getter
     private ElectionStatus electionStatus;
 
     @Column(
@@ -123,7 +124,7 @@ public class Election extends BaseEntity {
         this.finishTimestamp = finishTimestamp;
         this.details = details;
         this.creationTimestamp = LocalDateTime.now();
-        this.electionStatus = ElectionStatus.NOT_INIT;
+        this.electionStatus = ElectionStatus.SUSPENDED;
     }
 
     @Override
@@ -132,6 +133,7 @@ public class Election extends BaseEntity {
     @Override
     public void setId(Long id) { super.setId(id); }
 
+    /*
     public ElectionStatus getElectionStatus(){
         if(LocalDateTime.now().isBefore(initTimestamp)){
             return ElectionStatus.NOT_INIT;
@@ -142,6 +144,7 @@ public class Election extends BaseEntity {
         }
         return ElectionStatus.SUSPENDED;
     }
+    */
 
     public String getElectionStatusCode(){
         if(LocalDateTime.now().isBefore(initTimestamp)){

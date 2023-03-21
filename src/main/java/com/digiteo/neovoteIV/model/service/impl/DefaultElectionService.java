@@ -1,6 +1,7 @@
 package com.digiteo.neovoteIV.model.service.impl;
 
 import com.digiteo.neovoteIV.model.jpa.data.Election;
+import com.digiteo.neovoteIV.model.jpa.data.ElectionStatus;
 import com.digiteo.neovoteIV.model.jpa.repository.ElectionRepository;
 import com.digiteo.neovoteIV.model.mapper.ElectionMapper;
 import com.digiteo.neovoteIV.model.service.ElectionService;
@@ -85,6 +86,19 @@ public class DefaultElectionService implements ElectionService {
     //------------------------------------------------------------------------------------------------------------------
 
     @Override
+    public void suspendElection(Election e){
+        e.setElectionStatus(ElectionStatus.SUSPENDED);
+        repository.save(e);
+    }
+
+    @Override
+    public void activateElection(Election e){
+        ElectionStatus STATUS = ElectionStatus.getEnumFromCode(e.getElectionStatusCode());
+        e.setElectionStatus(STATUS);
+        repository.save(e);
+    }
+
+    @Override
     public void deleteElection(Long id) {
         Election e = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No existe una elección con este ID"));
@@ -108,7 +122,11 @@ public class DefaultElectionService implements ElectionService {
             // 2. ALSO NEED A WAY TO SET THE 'String' VALUE OF THE 'ElectionStatus' IN THE TARGET
             ElectionListData eld = new ElectionListData();
             BeanUtils.copyProperties(e, eld);
-            eld.setStatus(e.getElectionStatusCode());
+            if(e.getElectionStatus() == ElectionStatus.SUSPENDED){
+                eld.setStatus("SUSPENDIDO");
+            } else {
+                eld.setStatus(e.getElectionStatusCode());
+            }
             eld.setTopics(e.getTopicsCollection());
             electionList.add(eld);
         }
