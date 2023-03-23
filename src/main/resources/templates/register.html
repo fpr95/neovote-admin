@@ -50,6 +50,18 @@
                         <!-- <div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
                             <p th:each="err : ${#fields.allErrors()}" th:text="${err}"></p>
                         </div> -->
+                        <!--
+                        <div th:if="${registrationMsg}">
+                            <div class="alert alert-info">
+                                ¡El usuario se ha registrado con éxito! Le hemos enviado un link de confirmación
+                                al correo ingresado para activar su cuenta
+                            </div>
+                        </div>
+                        -->
+                        <div th:if="${registrationMsg}">
+                            <div class="alert alert-info" th:text="${registrationMsg}"></div>
+                        </div>
+
                         <!-- OAuth register -->
                         <div class="text-center mb-3">
                             <p>Regístrate con:</p>

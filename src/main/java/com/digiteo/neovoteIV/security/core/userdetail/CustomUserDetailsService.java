@@ -16,8 +16,12 @@ import java.util.Optional;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired // change this to constructor injection
     UserRepository userRepository;
+
+    @Autowired
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     //@Transactional
@@ -26,9 +30,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         if(userOptional.isEmpty()){
             throw new UsernameNotFoundException("La credencial proporcionada no existe en el sistema");
         }
-
+        boolean enabled = !userOptional.get().isAccountVerified();
         UserDetails user = User.withUsername(userOptional.get().getUsername())
                 .password(userOptional.get().getPwd())
+                .disabled(enabled)
                 .authorities("USER")
                 .build();
         return user;

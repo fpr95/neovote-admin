@@ -31,14 +31,17 @@
                         <div th:if="${param.error}">
                             <div class="alert alert-danger">
                                 <!-- <span th:text="#{login.error}"/> -->
-                                Credenciales inválidas
+                                Su cuenta aún no está verificada o las credenciales son inválidas
                             </div>
                         </div>
                         <div th:if="${param.logout}">
                             <div class="alert alert-info">Has cerrado sesión</div>
                         </div>
-                        <div th:if="${param.success}">
-                            <div class="alert alert-info">El usuario se ha registrado exitosamente</div>
+                        <div th:if="${tokenError}">
+                            <div class="alert alert-danger" th:text="${tokenError}"></div>
+                        </div>
+                        <div th:if="${verificationAccountMsg}">
+                            <div class="alert alert-info" th:text="${verificationAccountMsg}"></div>
                         </div>
 
                         <!-- OAuth login -->

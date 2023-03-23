@@ -19,19 +19,39 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: create-drop
+
   mvc:
     static-path-pattern: /static/**
     hiddenmethod:
       filter:
         enabled: true
+
   template:
     cache: false
+
   thymeleaf:
     encoding: UTF-8
     enabled: true
     cache: false
+
   messages:
+    basename: verificationMessages, validationMessages
+    fallback-to-system-locale: true
     encoding: UTF-8
+
+  mail:
+    host: smtp.gmail.com
+    port: 587 # port 587 is for encrypted sessions, 25 is for plain/text
+    username: lautaro.pipe@gmail.com #HERE GOES THE GMAIL USERNAME
+    password: cpha weva unkz xqdl #HERE GOES THE PASSWORD FOR THE EMAIL
+    transport:
+      protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true # Some SMTP servers require a TLS connection
 
 logging:
   level:
@@ -48,3 +68,15 @@ logging:
       mapstruct: DEBUG
     com:
       digiteo: DEBUG
+
+com:
+  digiteo:
+    secure:
+      token:
+        expSeconds: 21600
+
+site:
+  base:
+    url:
+      http: http://localhost:8080
+      https: http://localhost:8080

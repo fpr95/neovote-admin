@@ -1,10 +1,12 @@
 package com.digiteo.neovoteIV.model.jpa.data;
 
+import com.digiteo.neovoteIV.security.jpa.SecureToken;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -28,6 +30,11 @@ public class UserEntity extends BaseEntity {
     private String email;
     private String pwd;
     private String gender; // change this for an ENUM
+
+    @Column(
+            name = "account_verified",
+            columnDefinition = "TINYINT"
+    )
     private boolean accountVerified;
 
     @Column(
@@ -41,14 +48,15 @@ public class UserEntity extends BaseEntity {
     //@CreationTimestamp
     private LocalDateTime timestamp;
 
+    @OneToMany(mappedBy = "userEntity")
+    private Set<SecureToken> tokens = new HashSet<>();
+
     // @OneToMany( // <--- define cascade type
      //       mappedBy = "voter",
      //       fetch = FetchType.LAZY
     //)
     //private List<Vote> votes = new ArrayList<Vote>();
-
     // private String token;
-    // private boolean accountVerified;
     // private int failedLoginAttempts;
     // private String loginDisabled;
 
@@ -73,4 +81,14 @@ public class UserEntity extends BaseEntity {
     //Change modifier to PUBLIC as Mapstruct need it that way to achieve the DTO-entity mapping.
     @Override
     public void setId(Long id) { super.setId(id); }
+
+    public void addToken(SecureToken token){
+        tokens.add(token);
+        token.setUserEntity(this);
+    }
+
+    public void removeToken(SecureToken token){
+        tokens.remove(token);
+        token.setUserEntity(null);
+    }
 }
