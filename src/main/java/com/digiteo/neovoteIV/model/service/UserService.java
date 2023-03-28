@@ -3,6 +3,7 @@ package com.digiteo.neovoteIV.model.service;
 import com.digiteo.neovoteIV.model.jpa.data.UserEntity;
 import com.digiteo.neovoteIV.system.exception.EmailAlreadyExistException;
 import com.digiteo.neovoteIV.system.exception.InvalidTokenException;
+import com.digiteo.neovoteIV.system.exception.UnknownIdentifierException;
 import com.digiteo.neovoteIV.system.exception.UsernameAlreadyExistException;
 import com.digiteo.neovoteIV.web.data.model.UserData;
 
@@ -16,7 +17,7 @@ public interface UserService {
 
     public void sendRegistrationConfirmationEmail(UserEntity user);
 
-    UserEntity getUserByUsernameOrEmail(String username);
+    UserEntity getUserByUsernameOrEmail(String username); // throws UnknownIdentifierException;
 
     boolean verifyUser(String token) throws InvalidTokenException;
     /*

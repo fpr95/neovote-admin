@@ -22,6 +22,18 @@
             });
         });
     </script>
+    <script type="text/javascript" th:inline="javascript">
+        function validateRepeatPassword() {
+                var p = document.getElementById("registerPassword").value;
+                var rp = document.getElementById("registerRepeatPassword").value;
+            if(p === rp) {
+                return true;
+            } else {
+                alert("Las contraseñas no coindicen");
+                return false;
+            }
+        }
+    </script>
 
 </head>
 <body>
@@ -45,8 +57,8 @@
             <div class="col-md-5 d-wrap mb-8">
 
                 <!-- Form content -->
-                <div class="tab-content" data-aos="fade-in">
-                    <form action="#" th:action="@{/register}" th:object="${userData}" method="post" role="form">
+                <div class="tab-content" data-aos="fade-in" style="margin-top: 22%;">
+                    <form action="#" th:action="@{/register}" th:object="${userData}" onsubmit="return validateRepeatPassword();" method="post" role="form">
                         <!-- <div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
                             <p th:each="err : ${#fields.allErrors()}" th:text="${err}"></p>
                         </div> -->
@@ -62,7 +74,7 @@
                             <div class="alert alert-info" th:text="${registrationMsg}"></div>
                         </div>
 
-                        <!-- OAuth register -->
+                        <!-- OAuth register
                         <div class="text-center mb-3">
                             <p>Regístrate con:</p>
                             <button type="button" class="btn btn-secondary btn-floating mx-1">
@@ -75,6 +87,7 @@
                         </div>
 
                         <p class="text-center">o :</p>
+                        -->
 
                         <!-- Names input -->
                         <!-- name validation error display -->
@@ -144,7 +157,7 @@
                             <label class="form-label" for="registerPassword">Contraseña</label>
                         </div>
 
-                        <!-- Repeat Password input -->
+                        <!-- Repeat Password  -->
                         <div class="form-outline mb-4">
                             <input type="password" id="registerRepeatPassword" class="form-control"/>
                             <label class="form-label" for="registerRepeatPassword">Repetir Contraseña</label>

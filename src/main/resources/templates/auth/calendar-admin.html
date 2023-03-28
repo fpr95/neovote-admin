@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout_dash}">
+<head>
+    <title>Calendario</title>
+
+    <link rel="stylesheet" th:href="@{/static/css/calendar.css}" />
+</head>
+<body style="min-height:100vh;">
+<!--:::: Main ::::-->
+<main>
+    <div layout:fragment="body" class="container">
+
+        <!--Section: Calendario -->
+        <section class="content pt-5 mb-9 mx-auto" data-aos="fade-in">
+            <h3 class="text-left mb-4 pb-2 text-primary fw-bold">Calendario</h3>
+            <p class="text-left mb-5">
+                <i class="fa-regular fa-hand-point-right me-1"></i> Esta sección contiene un calendario en el
+                cual podrá agregar <strong>eventos</strong> aparte de las <em>Elecciones</em> con el fin de agendar
+                recordatorios de todo tipo que le ayuden a gestionar sus funciones como administrador.
+            </p>
+
+            <!--:::: Calendar ::::-->
+            <div class="calendar-container">
+                <div class="left">
+                    <div class="calendar">
+                        <div class="month">
+                            <i class="fas fa-chevron-left prev"></i>
+                            <div class="date"></div>
+                            <i class="fas fa-chevron-right next"></i>
+                        </div>
+                        <div class="weekdays">
+                            <div>Lun</div>
+                            <div>Mar</div>
+                            <div>Mie</div>
+                            <div>Jue</div>
+                            <div>Vie</div>
+                            <div>Sab</div>
+                            <div>Dom</div>
+                        </div>
+                        <div class="days">
+                            <div class="day "></div>
+                        </div>
+                        <div class="goto-today">
+                            <div class="goto">
+                                <input type="text" placeholder="mm/aaaa" class="date-input" />
+                                <button class="goto-btn">Ir</button>
+                            </div>
+                            <button class="today-btn">Hoy</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="today-date">
+                        <div class="event-day">jue</div>
+                        <div class="event-date me-2">23 Marzo 2023</div>
+                    </div>
+                    <div class="events"></div>
+                    <div class="add-event-wrapper">
+                        <div class="add-event-header">
+                            <div class="title">Nuevo Evento</div>
+                            <i class="fas fa-times close"></i>
+                        </div>
+                        <div class="add-event-body">
+                            <div class="add-event-input">
+                                <input type="text" placeholder="Título Evento" class="event-name" />
+                            </div>
+                            <div class="add-event-input">
+                                <input
+                                        type="text"
+                                        placeholder="Hora Inicio Evento"
+                                        class="event-time-from"
+                                />
+                            </div>
+                            <div class="add-event-input">
+                                <input
+                                        type="text"
+                                        placeholder="Hora Término Evento"
+                                        class="event-time-to"
+                                />
+                            </div>
+                        </div>
+                        <div class="add-event-footer">
+                            <button class="add-event-btn btn-primary text-dark">Agregar Evento</button>
+                        </div>
+                    </div>
+                </div>
+                <button class="add-event">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <!--:::: Calendar ::::-->
+        </section>
+        <!--Section: Calendario -->
+
+    </div>
+</main>
+<!--:::: Main ::::-->
+</body>
+</html>

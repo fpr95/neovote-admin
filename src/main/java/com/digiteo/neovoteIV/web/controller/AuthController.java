@@ -14,4 +14,6 @@ public class AuthController {
         return "auth/welcome-admin";
     }
 
+    @GetMapping("/calendar-admin")
+    public String calendarView() { return "auth/calendar-admin"; }
 }

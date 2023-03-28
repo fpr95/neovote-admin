@@ -5,7 +5,7 @@
 <head>
     <title>Iniciar Sesión</title>
 </head>
-<body>
+<body style="min-height:100vh;">
 <!--:::: Main ::::-->
 <main>
     <div layout:fragment="body" class="container">
@@ -25,7 +25,7 @@
             <!-- Login Form -->
             <div class="col-md-5 d-wrap mb-8">
                 <!-- Form content -->
-                <div class="tab-content" data-aos="fade-in">
+                <div class="tab-content" data-aos="fade-in" style="margin-top: 22%;">
                     <p th:if="${loginError}" class="error"></p>
                     <form th:action="@{/login}" method="post" role="form">
                         <div th:if="${param.error}">
@@ -40,11 +40,17 @@
                         <div th:if="${tokenError}">
                             <div class="alert alert-danger" th:text="${tokenError}"></div>
                         </div>
-                        <div th:if="${verificationAccountMsg}">
-                            <div class="alert alert-info" th:text="${verificationAccountMsg}"></div>
+                        <div th:if="${verifiedAccountMsg}">
+                            <div class="alert alert-info" th:text="${verifiedAccountMsg}"></div>
+                        </div>
+                        <div th:if="${resetPasswordMsg}">
+                            <div class="alert alert-info" th:text="${resetPasswordMsg}"></div>
+                        </div>
+                        <div th:if="${unknownId}">
+                            <div class="alert alert-danger" th:text="${unknownId}">No</div>
                         </div>
 
-                        <!-- OAuth login -->
+                        <!-- OAuth login
                         <div class="text-center mb-3">
                             <p>Inicia sesión con:</p>
                             <button type="button" class="btn btn-secondary btn-floating mx-1">
@@ -57,6 +63,7 @@
                         </div>
 
                         <p class="text-center">o :</p>
+                        -->
 
                         <!-- Username input -->
                         <div class="form-outline mb-4">
@@ -81,7 +88,8 @@
                             </div> -->
                             <div class="d-flex justify-content-center">
                                 <!-- Simple link -->
-                                <a href="#!">¿Olvidaste tu contraseña?</a>
+                                <a href="#!" data-mdb-toggle="modal" data-mdb-target="#resetPasswordModal">¿Olvidaste tu
+                                    contraseña?</a>
                             </div>
                         </div>
 
@@ -99,6 +107,53 @@
                 <!-- Form content -->
             </div>
             <!-- Login Form -->
+
+            <!-- Reset Password Modal -->
+            <div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="modalLabel1"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Reset Password Form Content -->
+                        <form th:action="@{/pwd/request}" method="post" th:object="${forgotPassword}">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabel1">Formulario de Recuperación</h5>
+                                <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">¿Olvidaste tu contraseña?
+                                <p class="mb-4">
+                                    No te preocupes. Ingresa el correo con el cual te registraste para confirmar
+                                    tu identidad y te enviaremos un enlace para que puedas crear una
+                                    <strong>contraseña nueva</strong>.
+                                </p>
+                                <!-- Email input -->
+                                <!-- validation error display -->
+                                <div class="alert alert-danger" th:if="${#fields.hasErrors('email')}">
+                                    <p th:errors="*{email}"></p>
+                                </div>
+                                <div class="form-outline mb-4">
+                                    <input type="email" id="registerEmail" class="form-control" th:field="*{email}"
+                                           th:errorclass="is-invalid"/>
+                                    <i class="fa-solid fa-envelope d-flex justify-content-end"
+                                       id="hidePassword"
+                                       style="position: absolute;right: 4%; bottom: 27%;color: lightgray;"></i>
+                                    <label class="form-label" for="registerEmail">Correo de Recuperación</label>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Volver</button>
+                                <button type="submit" class="btn btn-primary">Enviar Enlace</button>
+                            </div>
+
+                        </form>
+                        <!-- Reset Password Form Content -->
+                    </div>
+                </div>
+            </div>
+            <!-- Reset Password Modal -->
+
         </div>
     </div>
 </main>

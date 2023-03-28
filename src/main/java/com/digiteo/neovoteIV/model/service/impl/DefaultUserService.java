@@ -103,9 +103,10 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public UserEntity getUserByUsernameOrEmail(String username){
+    public UserEntity getUserByUsernameOrEmail(String username) { //throws UnknownIdentifierException {
         UserEntity u = userRepository.findUserByUsernameOrEmail(username)
                 .orElseThrow(() -> new EntityNotFoundException("No existe un usuario para el identifiador proporcionado."));
+                //.orElseThrow(() -> new UnknownIdentifierException("No existe un usuario para el identifiador proporcionado."));
         return u;
     }
 

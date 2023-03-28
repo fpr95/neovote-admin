@@ -21,6 +21,8 @@ spring:
       ddl-auto: create-drop
 
   mvc:
+    encoding:
+      charset: UTF-8
     static-path-pattern: /static/**
     hiddenmethod:
       filter:

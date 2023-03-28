@@ -9,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -20,15 +21,17 @@ public class NeovoteIvApplication {
 	}
 
 	@Bean
-	CommandLineRunner commandLineRunner(UserRepository userRepository, ElectionRepository electionRepository){
+	CommandLineRunner commandLineRunner(UserRepository userRepository, ElectionRepository electionRepository, PasswordEncoder encoder){
 		return args -> {
 			UserEntity pepe = new UserEntity(
 					"Pepe",
 					"Grillo",
 					"pepe123",
-					"pepegrillo123@hotmail.com",
-					"Pepe2023_",
+					"fabo_willy_76@live.cl",
+			encoder.encode("Pepe2023_"),
 					"Hombre");
+
+			pepe.setAccountVerified(true);
 
 			userRepository.save(pepe);
 
@@ -37,9 +40,9 @@ public class NeovoteIvApplication {
 					"¡Vota por tu favorito! Deporte: Talleres Formativos 2023",
 					"Fútbol, Voleibol, Zumba ¡y más! Vota por el taller en el que te gustaría participar este 2023",
 					"salud,entretencion",
-					LocalDateTime.of(2023, 03, 25, 00, 00),
-					LocalDateTime.of(2023, 03, 25, 23, 59),
-					"Este 11 de Marzo, durante todo el día, se abren las urnas para votar por el taller formativo en " +
+					LocalDateTime.of(2023, 04, 11, 00, 00),
+					LocalDateTime.of(2023, 04, 11, 23, 59),
+					"Este 11 de Abril, durante todo el día, se abren las urnas para votar por el taller formativo en " +
 							"el que TÚ desees participar. Contamos con profesores/as y preparadores físicos certificados en las siguientes áreas:\n" +
 							"Voleibol, Fútbol, Basquetbol, Zumba y Boxeo\n" +
 							"Las 3 opciones más votadas tendrán un espacio esta edición 2023 y comenzarán las clases el día 15");

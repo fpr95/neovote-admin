@@ -4,6 +4,7 @@ import com.digiteo.neovoteIV.model.service.UserService;
 import com.digiteo.neovoteIV.system.exception.EmailAlreadyExistException;
 import com.digiteo.neovoteIV.system.exception.InvalidTokenException;
 import com.digiteo.neovoteIV.system.exception.UsernameAlreadyExistException;
+import com.digiteo.neovoteIV.web.data.model.ResetPasswordData;
 import com.digiteo.neovoteIV.web.data.model.UserData;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ import java.util.Locale;
 
 @RequestMapping("/")
 @Controller
-//@Validated -> this annotation was the cause of the field(s) constraint-errors not showing up in the view!!!!
+//@Validated -> this annotation was the cause of the field(s) constraint-errors not showing up in the view!
 @AllArgsConstructor
 public class HomeController {
 
@@ -34,6 +35,8 @@ public class HomeController {
     public String login(
             @RequestParam(value = "tokenError", required = false) String tokenError,
             @RequestParam(value = "verifiedAccountMsg", required = false) String verifiedAccountMsg,
+            @RequestParam(value = "resetPasswordMsg", required = false) String resetPasswordMsg,
+            @RequestParam(value = "unknownId", required = false) String unknownId,
             final Model model){
         if(tokenError != null && !tokenError.isEmpty()){
             model.addAttribute("tokenError", tokenError);
@@ -41,6 +44,13 @@ public class HomeController {
         if(verifiedAccountMsg != null && !verifiedAccountMsg.isEmpty()){
             model.addAttribute("verifiedAccountMsg", verifiedAccountMsg);
         }
+        if(resetPasswordMsg != null && !resetPasswordMsg.isEmpty()){
+            model.addAttribute("resetPasswordMsg", resetPasswordMsg);
+        }
+        if(unknownId != null && !unknownId.isEmpty()){
+            model.addAttribute("unknownId", unknownId);
+        }
+        model.addAttribute("forgotPassword", new ResetPasswordData());
         return "/login";
     }
 
@@ -80,8 +90,9 @@ public class HomeController {
             model.addAttribute("registrationForm", userData);
             return "/register";
         }
-        redirectAttr.addFlashAttribute("registrationMsg", messageSource.getMessage("user.registration.verification.email.msg", null, LocaleContextHolder.getLocale()));
-        return "redirect:/register"; /* REDIRECT + check if this goes in the AppConstants*/
+        redirectAttr.addFlashAttribute("registrationMsg",
+                messageSource.getMessage("user.registration.verification.email.msg",null, LocaleContextHolder.getLocale()));
+        return "redirect:/register";
     }
 
     @GetMapping("emails/verify")
@@ -98,7 +109,6 @@ public class HomeController {
                     messageSource.getMessage("user.registration.verification.email.invalidToken", null, LocaleContextHolder.getLocale()));
             return "redirect:/login";
         }
-
         redirectAttr.addFlashAttribute("verifiedAccountMsg",
                 messageSource.getMessage("user.registration.verification.email.verifiedAccount", null, LocaleContextHolder.getLocale()));
         return "redirect:/login";

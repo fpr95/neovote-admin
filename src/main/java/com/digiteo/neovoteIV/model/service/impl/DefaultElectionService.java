@@ -42,6 +42,7 @@ public class DefaultElectionService implements ElectionService {
         Election e = new Election();
         BeanUtils.copyProperties(electionData, e);
         e.setCreatorUsername(principal.getName());
+        e.setElectionStatus(ElectionStatus.SUSPENDED);
         repository.save(e);
     }
 

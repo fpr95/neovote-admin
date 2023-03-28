@@ -90,11 +90,13 @@
                       class="dropdown-menu dropdown-menu-end"
                       aria-labelledby="navbarDropdownMenuLink"
               >
-                <li><a class="dropdown-item" href="#">Notificación 1</a></li>
-                <li><a class="dropdown-item" href="#">Notificación 2</a></li>
+                <li><a class="dropdown-item" href="#">1 Elección Finalizada</a></li>
+                <li><a class="dropdown-item" href="#">2 mensajes FAQ</a></li>
+                <!--
                 <li>
                   <a class="dropdown-item" href="#">Ootra notificación</a>
                 </li>
+                -->
               </ul>
             </li>
             <!-- Avatar -->
@@ -107,7 +109,7 @@
                       data-mdb-toggle="dropdown"
                       aria-expanded="false" >
                 <img
-                        th:src="@{/static/img/admin-logo-test2.png}"
+                        th:src="@{/static/img/admin-logo-test-2.png}"
                         class="rounded-circle"
                         height="32"
                         alt=""
@@ -166,7 +168,7 @@
         ><span>Nueva Elección</span></a
         >
         <a
-                href="#"
+                href="calendar-admin"
                 class="list-group-item list-group-item-action py-2 ripple"
         ><i class="fas fa-calendar fa-fw me-3"></i
         ><span>Calendario</span></a
@@ -282,6 +284,8 @@
 <script type="text/javascript" th:src="@{/static/select2/dist/js/select2.full.min.js}"></script>
 <!-- Election's topic(s) multiselect custom script(select2 lib)-->
 <script type="text/javascript" th:src="@{/static/select2/dist/js/election-topics.js}"></script>
+<!-- OSC Calendar script -->
+<script type="text/javascript" th:src="@{/static/js/osc-calendar.js}"></script>
 
 <!-- Custom scripts -->
 <script type="text/javascript"></script>
