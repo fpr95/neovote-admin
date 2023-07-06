@@ -27,7 +27,7 @@ public class NeovoteIvApplication {
 					"Pepe",
 					"Grillo",
 					"pepe123",
-					"fabo_willy_76@live.cl",
+					"ejemplo@gmail.com",
 			encoder.encode("Pepe2023_"),
 					"Hombre");
 
@@ -40,8 +40,8 @@ public class NeovoteIvApplication {
 					"¡Vota por tu favorito! Deporte: Talleres Formativos 2023",
 					"Fútbol, Voleibol, Zumba ¡y más! Vota por el taller en el que te gustaría participar este 2023",
 					"salud,entretencion",
-					LocalDateTime.of(2023, 04, 11, 00, 00),
-					LocalDateTime.of(2023, 04, 11, 23, 59),
+					LocalDateTime.of(2023, 07, 20, 00, 00),
+					LocalDateTime.of(2023, 07, 20, 23, 59),
 					"Este 11 de Abril, durante todo el día, se abren las urnas para votar por el taller formativo en " +
 							"el que TÚ desees participar. Contamos con profesores/as y preparadores físicos certificados en las siguientes áreas:\n" +
 							"Voleibol, Fútbol, Basquetbol, Zumba y Boxeo\n" +
@@ -50,15 +50,6 @@ public class NeovoteIvApplication {
 
 			electionRepository.save(election);
 
-			/*
-							El día 25/02, la junta de vecinos N° 52 de Quilpué (Peyronet #212) nos hizo llegar " +
-							"una carta firmada por 98 de 116 miembros activos del comité buscando subsanar un conflicto de ámbito " +
-							"sanitario: La acumulación de basura y desechos en el vertedero ubicado en la intersección de Bellochio " +
-							"con Dr. Salas. Como municipio tenemos presente el timpo que esto lleva escalando y las consecuencias que acarrea " +
-							"para los vecin@s del sector, por ende, presentamos un nuevo proceso abierto con distintas soluciones ya " +
-							"revisadas por nuestro equipo para ser ejecutadas una vez se cierren las urnas virtuales
-
-			 */
 		};
 	}
 }
