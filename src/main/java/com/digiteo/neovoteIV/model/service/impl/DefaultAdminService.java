@@ -2,16 +2,16 @@ package com.digiteo.neovoteIV.model.service.impl;
 
 import com.digiteo.neovoteIV.email.EmailService;
 import com.digiteo.neovoteIV.email.context.AccountVerificationEmailContext;
-import com.digiteo.neovoteIV.model.jpa.data.UserEntity;
-import com.digiteo.neovoteIV.model.jpa.repository.UserRepository;
-import com.digiteo.neovoteIV.model.service.UserService;
+import com.digiteo.neovoteIV.model.jpa.data.AdminEntity;
+import com.digiteo.neovoteIV.model.jpa.repository.AdminRepository;
+import com.digiteo.neovoteIV.model.service.AdminService;
 import com.digiteo.neovoteIV.security.jpa.SecureToken;
 import com.digiteo.neovoteIV.security.token.SecureTokenService;
 import com.digiteo.neovoteIV.security.token.repository.SecureTokenRepository;
 import com.digiteo.neovoteIV.system.exception.EmailAlreadyExistException;
 import com.digiteo.neovoteIV.system.exception.InvalidTokenException;
 import com.digiteo.neovoteIV.system.exception.UsernameAlreadyExistException;
-import com.digiteo.neovoteIV.web.data.model.UserData;
+import com.digiteo.neovoteIV.web.data.model.AdminData;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -26,28 +26,28 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Objects;
 import java.util.Optional;
 
-@Service("userService")
-@AllArgsConstructor // check if this autowire the fields, if not,
+@Service("adminService")
+@AllArgsConstructor // check if this auto-wire the fields, if not,
 // try 'onConstructor' attribute, if still not work,
 // create custom constructor with @Autowired annotation
-public class DefaultUserService implements UserService {
+public class DefaultAdminService implements AdminService {
 
-    private final UserRepository userRepository;
+    private final AdminRepository adminRepository;
     private PasswordEncoder passwordEncoder;
     private SecureTokenService secureTokenService;
     private SecureTokenRepository secureTokenRepository;
     private EmailService emailService;
-    //in case of implement https change for ".url.https"
+    //when implement https change for ".url.https"
     @Value("${site.base.url.http}")
     private String baseURL;
 
     @Autowired
-    public DefaultUserService(UserRepository userRepository,
-                              PasswordEncoder passwordEncoder,
-                              SecureTokenService secureTokenService,
-                              SecureTokenRepository secureTokenRepository,
-                              EmailService emailService){
-        this.userRepository = userRepository;
+    public DefaultAdminService(AdminRepository adminRepository,
+                               PasswordEncoder passwordEncoder,
+                               SecureTokenService secureTokenService,
+                               SecureTokenRepository secureTokenRepository,
+                               EmailService emailService){
+        this.adminRepository = adminRepository;
         this.passwordEncoder = passwordEncoder;
         this.secureTokenService = secureTokenService;
         this.secureTokenRepository = secureTokenRepository;
@@ -56,36 +56,36 @@ public class DefaultUserService implements UserService {
 
     @Override
     @Transactional
-    public void register(UserData user) throws UsernameAlreadyExistException, EmailAlreadyExistException{
+    public void register(AdminData user) throws UsernameAlreadyExistException, EmailAlreadyExistException{
         checkIfUserExist(user.getUsername(), user.getEmail());
-        UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(user, userEntity);
-        //userEntity.setFirstName(user.getFirstName());
-        //userEntity.setLastName(user.getLastName());
-        //userEntity.setUsername(user.getUsername());
-        //userEntity.setEmail(user.getEmail());
-        encodePwd(user, userEntity);
-        //userEntity.setGender(user.getGender());
-        userRepository.save(userEntity);
-        sendRegistrationConfirmationEmail(userEntity);
+        AdminEntity adminEntity = new AdminEntity();
+        BeanUtils.copyProperties(user, adminEntity);
+        //adminEntity.setFirstName(user.getFirstName());
+        //adminEntity.setLastName(user.getLastName());
+        //adminEntity.setUsername(user.getUsername());
+        //adminEntity.setEmail(user.getEmail());
+        encodePwd(user, adminEntity);
+        //adminEntity.setGender(user.getGender());
+        adminRepository.save(adminEntity);
+        sendRegistrationConfirmationEmail(adminEntity);
     }
 
     @Override
     public void checkIfUserExist(String username, String email) throws UsernameAlreadyExistException, EmailAlreadyExistException {
-        Optional<UserEntity> u = userRepository.findUserByUsername(username);
+        Optional<AdminEntity> u = adminRepository.findUserByUsername(username);
         if(u.isPresent()){
-            throw new UsernameAlreadyExistException("¡Ya existe un usuario registrado con estas credenciales!(username)");
+            throw new UsernameAlreadyExistException("¡Ya existe un administrador registrado con estas credenciales!(username)");
         }
-        u = userRepository.findUserByEmail(email);
+        u = adminRepository.findUserByEmail(email);
         if(u.isPresent()) {
-            throw new EmailAlreadyExistException("¡Ya existe un usuario registrado con estas credenciales!(email)");
+            throw new EmailAlreadyExistException("¡Ya existe un administrador registrado con estas credenciales!(email)");
         }
     }
 
     @Override
-    public void sendRegistrationConfirmationEmail(UserEntity user) {
+    public void sendRegistrationConfirmationEmail(AdminEntity user) {
         SecureToken secureToken = secureTokenService.createSecureToken();
-        secureToken.setUserEntity(user);
+        secureToken.setAdminEntity(user);
         secureTokenRepository.save(secureToken);
         AccountVerificationEmailContext emailContext = new AccountVerificationEmailContext();
         emailContext.init(user);
@@ -98,15 +98,15 @@ public class DefaultUserService implements UserService {
         }
     }
 
-    private void encodePwd(UserData source, UserEntity target) {
+    private void encodePwd(AdminData source, AdminEntity target) {
         target.setPwd(passwordEncoder.encode(source.getPwd()));
     }
 
     @Override
-    public UserEntity getUserByUsernameOrEmail(String username) { //throws UnknownIdentifierException {
-        UserEntity u = userRepository.findUserByUsernameOrEmail(username)
+    public AdminEntity getUserByUsernameOrEmail(String username) { //throws UnknownIdentifierException {
+        AdminEntity u = adminRepository.findUserByUsernameOrEmail(username)
                 .orElseThrow(() -> new EntityNotFoundException("No existe un usuario para el identifiador proporcionado."));
-                //.orElseThrow(() -> new UnknownIdentifierException("No existe un usuario para el identifiador proporcionado."));
+        //.orElseThrow(() -> new UnknownIdentifierException("No existe un usuario para el identifiador proporcionado."));
         return u;
     }
 
@@ -116,12 +116,12 @@ public class DefaultUserService implements UserService {
         if(Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken()) || secureToken.isExpired()){
             throw new InvalidTokenException("El token proporcionado no es válido");
         }
-        UserEntity user = userRepository.getReferenceById(secureToken.getUserEntity().getId());
+        AdminEntity user = adminRepository.getReferenceById(secureToken.getAdminEntity().getId());
         if(Objects.isNull(user)){
             return false;
         }
         user.setAccountVerified(true);
-        userRepository.save(user);
+        adminRepository.save(user);
 
         secureTokenService.removeToken(secureToken);
         return true;
@@ -132,17 +132,17 @@ public class DefaultUserService implements UserService {
     UPDATE: In terms of UX the 'register' method works better so this one it'll be commented along with all the methods related to it
     @Override
     @Transactional
-    public void registerPlus(UserData user) throws UsernameAlreadyExistException{
+    public void registerPlus(AdminData user) throws UsernameAlreadyExistException{
         checkIfUserExistPlus(user.getUsername());
         checkIfUserExistPlus(user.getEmail());
-        UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(user, userEntity);
-        encodePwd(user, userEntity);
-        userRepository.save(userEntity);
+        AdminEntity adminEntity = new AdminEntity();
+        BeanUtils.copyProperties(user, adminEntity);
+        encodePwd(user, adminEntity);
+        adminRepository.save(adminEntity);
     }
 
     public void checkIfUserExistPlus(String username) throws UsernameAlreadyExistException {
-        Optional<UserEntity> u = userRepository.findUserByUsernameOrEmail(username);
+        Optional<AdminEntity> u = adminRepository.findUserByUsernameOrEmail(username);
         if(u.isPresent()){
             throw new UsernameAlreadyExistException("Ya existe un usuario con estas credenciales");
         }

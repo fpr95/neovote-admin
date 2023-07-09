@@ -1,6 +1,7 @@
 package com.digiteo.neovoteIV.email.context;
 
-import com.digiteo.neovoteIV.model.jpa.data.UserEntity;
+import com.digiteo.neovoteIV.model.jpa.data.AdminEntity;
+import com.digiteo.neovoteIV.model.jpa.data.VoterEntity;
 import org.springframework.web.util.UriComponentsBuilder;
 
 public class AccountVerificationEmailContext extends AbstractEmailContext {
@@ -14,13 +15,23 @@ public class AccountVerificationEmailContext extends AbstractEmailContext {
 
     @Override
     public <T> void init(T context){
-        //change name of the obj to voter once implemented the voters layer
-        UserEntity user = (UserEntity) context; //here goes the voter/admin information
+        //change name of the obj to 'admin entity' once implemented the voters layer
+        AdminEntity user = (AdminEntity) context; //here goes the admin information
         put("firstName", user.getFirstName());
         setTemplateLocation("/emails/email-verification");
         setSubject("Verifique su cuenta para continuar");
         setFrom("neovote"); // this email account should be placed in the application.yml and should be like 'no-reply@neovote.cl'
         setTo(user.getEmail());
+    }
+
+    @Override
+    public <T> void initVoter(T context){
+        VoterEntity voter = (VoterEntity) context; //voter info
+        put("firstName", voter.getFirstName());
+        setTemplateLocation("/emails/email-verification");
+        setSubject("Verifique su cuenta para continuar");
+        setFrom("neovote"); // this email account should be placed in the application.yml and should be like 'no-reply@neovote.cl'
+        setTo(voter.getEmail());
     }
 
     public void buildVerificationUrl(final String baseUrl, final String token) {

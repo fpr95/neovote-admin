@@ -11,7 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 // @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserData implements Serializable {
+public class AdminData implements Serializable {
 
     //@NotBlank(message = "{user.registration.validation.firstName}")
     @Size(min = 2, message = "{user.registration.validation.firstName}")//message = "Ingrese su nombre")

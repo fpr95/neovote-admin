@@ -1,9 +1,9 @@
 package com.digiteo.neovoteIV;
 
 import com.digiteo.neovoteIV.model.jpa.data.Election;
-import com.digiteo.neovoteIV.model.jpa.data.UserEntity;
+import com.digiteo.neovoteIV.model.jpa.data.AdminEntity;
 import com.digiteo.neovoteIV.model.jpa.repository.ElectionRepository;
-import com.digiteo.neovoteIV.model.jpa.repository.UserRepository;
+import com.digiteo.neovoteIV.model.jpa.repository.AdminRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,19 +21,19 @@ public class NeovoteIvApplication {
 	}
 
 	@Bean
-	CommandLineRunner commandLineRunner(UserRepository userRepository, ElectionRepository electionRepository, PasswordEncoder encoder){
+	CommandLineRunner commandLineRunner(AdminRepository adminRepository, ElectionRepository electionRepository, PasswordEncoder encoder){
 		return args -> {
-			UserEntity pepe = new UserEntity(
+			AdminEntity pepe = new AdminEntity(
 					"Pepe",
 					"Grillo",
 					"pepe123",
-					"ejemplo@gmail.com",
+					"fabo_willy_76@live.cl",
 			encoder.encode("Pepe2023_"),
 					"Hombre");
 
 			pepe.setAccountVerified(true);
 
-			userRepository.save(pepe);
+			adminRepository.save(pepe);
 
 
 			Election election = new Election(

@@ -1,7 +1,7 @@
 package com.digiteo.neovoteIV.security.core.userdetail;
 
-import com.digiteo.neovoteIV.model.jpa.data.UserEntity;
-import com.digiteo.neovoteIV.model.jpa.repository.UserRepository;
+import com.digiteo.neovoteIV.model.jpa.data.AdminEntity;
+import com.digiteo.neovoteIV.model.jpa.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -16,17 +16,17 @@ import java.util.Optional;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    UserRepository userRepository;
+    AdminRepository adminRepository;
 
     @Autowired
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public CustomUserDetailsService(AdminRepository adminRepository) {
+        this.adminRepository = adminRepository;
     }
 
     @Override
     //@Transactional
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-        Optional<UserEntity> userOptional = userRepository.findUserByUsernameOrEmail(usernameOrEmail);
+        Optional<AdminEntity> userOptional = adminRepository.findUserByUsernameOrEmail(usernameOrEmail);
         if(userOptional.isEmpty()){
             throw new UsernameNotFoundException("La credencial proporcionada no existe en el sistema");
         }
@@ -43,11 +43,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     //in case the usernameOrEmail config don't work use this impl v
     //@Transactional
     //public UserDetails loadUserByUsername(String username, String email) throws UsernameNotFoundException {
-    //    Optional<UserEntity> userOptional = userRepository.findUserByUsername(username);
+    //    Optional<AdminEntity> userOptional = adminRepository.findUserByUsername(username);
     //    if(userOptional.isEmpty()){
     //        throw new UsernameNotFoundException("La credencial proporcionada no existe en el sistema");
     //    }
-    //    userOptional = userRepository.findUserByEmail(email);
+    //    userOptional = adminRepository.findUserByEmail(email);
     //    if(userOptional.isEmpty()){
     //        throw new UsernameNotFoundException("La credencial proporcionada no existe en el sistema");
     //    }

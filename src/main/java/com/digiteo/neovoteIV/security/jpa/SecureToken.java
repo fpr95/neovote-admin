@@ -1,7 +1,8 @@
 package com.digiteo.neovoteIV.security.jpa;
 
 import com.digiteo.neovoteIV.model.jpa.data.BaseEntity;
-import com.digiteo.neovoteIV.model.jpa.data.UserEntity;
+import com.digiteo.neovoteIV.model.jpa.data.AdminEntity;
+import com.digiteo.neovoteIV.model.jpa.data.VoterEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,8 +35,12 @@ public class SecureToken extends BaseEntity {
     private LocalDateTime expireAt;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private UserEntity userEntity;
+    @JoinColumn(name = "admin_id", referencedColumnName = "id")
+    private AdminEntity adminEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "voter_id", referencedColumnName = "id")
+    private VoterEntity voterEntity;
 
     @Transient
     private boolean isExpired;

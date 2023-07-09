@@ -14,14 +14,14 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Entity(name = "userEntity")
+@Entity(name = "adminEntity")
 @Table(
-        name = "users",
+        name = "admins",
         uniqueConstraints = {
-                @UniqueConstraint(name = "user_field_unique", columnNames = {"username", "email"})
+                @UniqueConstraint(name = "admin_field_unique", columnNames = {"username", "email"})
         }
 )
-public class UserEntity extends BaseEntity {
+public class AdminEntity extends BaseEntity {
 
     private String firstName;
     private String lastName;
@@ -48,19 +48,19 @@ public class UserEntity extends BaseEntity {
     //@CreationTimestamp
     private LocalDateTime timestamp;
 
-    @OneToMany(mappedBy = "userEntity")
+    @OneToMany(mappedBy = "adminEntity")
     private Set<SecureToken> tokens = new HashSet<>();
 
     // @OneToMany( // <--- define cascade type
-     //       mappedBy = "voter",
-     //       fetch = FetchType.LAZY
+    //       mappedBy = "voter",
+    //       fetch = FetchType.LAZY
     //)
     //private List<Vote> votes = new ArrayList<Vote>();
     // private String token;
     // private int failedLoginAttempts;
     // private String loginDisabled;
 
-    public UserEntity(
+    public AdminEntity(
             String firstName,
             String lastName,
             String username,
@@ -84,11 +84,11 @@ public class UserEntity extends BaseEntity {
 
     public void addToken(SecureToken token){
         tokens.add(token);
-        token.setUserEntity(this);
+        token.setAdminEntity(this);
     }
 
     public void removeToken(SecureToken token){
         tokens.remove(token);
-        token.setUserEntity(null);
+        token.setAdminEntity(null);
     }
 }

@@ -6,9 +6,9 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/ #NOMBRE_BD
-    username: #PLACEHOLDER
-    password: #PLACEHOLDER
+    url: jdbc:mysql://localhost:3307/neovote_demo_iv #NOMBRE_BD
+    username: root #PLACEHOLDER
+    password: 852456msql #PLACEHOLDER
 
   jpa:
     database: mysql
@@ -44,8 +44,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587 # port 587 is for encrypted sessions, 25 is for plain/text
-    username: #HERE GOES THE GMAIL USERNAME
-    password: #HERE GOES THE PASSWORD FOR THE EMAIL
+    username: lautaro.pipe@gmail.com #HERE GOES THE GMAIL USERNAME
+    password: paay qfjt agmg afoz #HERE GOES THE 'APPLICATION PASSWORD' FOR THE GMAIL
     transport:
       protocol: smtp
     properties:

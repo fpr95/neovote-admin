@@ -21,7 +21,7 @@ import java.util.List;
 )
 public class Election extends BaseEntity {
 
-    //TRY2: SET creatorUsername USING A CUSTOM UserDetails IMPLEMENTATION FOR UserEntity
+    //TRY2: SET creatorUsername USING A CUSTOM UserDetails IMPLEMENTATION FOR AdminEntity
     //@Autowired
     //UserDetails userDetails;
 

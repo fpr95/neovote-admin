@@ -1,11 +1,11 @@
 package com.digiteo.neovoteIV.web;
 
-import com.digiteo.neovoteIV.model.service.UserService;
+import com.digiteo.neovoteIV.model.service.AdminService;
 import com.digiteo.neovoteIV.system.exception.EmailAlreadyExistException;
 import com.digiteo.neovoteIV.system.exception.InvalidTokenException;
 import com.digiteo.neovoteIV.system.exception.UsernameAlreadyExistException;
 import com.digiteo.neovoteIV.web.data.model.ResetPasswordData;
-import com.digiteo.neovoteIV.web.data.model.UserData;
+import com.digiteo.neovoteIV.web.data.model.AdminData;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +28,7 @@ import java.util.Locale;
 @AllArgsConstructor
 public class HomeController {
 
-    private UserService userService;
+    private AdminService adminService;
     private MessageSource messageSource;
 
     @GetMapping("/login")
@@ -60,7 +60,7 @@ public class HomeController {
             model.addAttribute("registrationMsg",
                     messageSource.getMessage("user.registration.verification.email.msg", null, LocaleContextHolder.getLocale()));
         }
-        model.addAttribute("userData", new UserData());
+        model.addAttribute("userData", new AdminData());
         return "/register";
     }
 
@@ -68,13 +68,13 @@ public class HomeController {
     public String publicFaq(){ return "/faq-public"; }
 
     @PostMapping("/register")
-    public String userRegistration(final @Valid UserData userData, final BindingResult bindingResult,final RedirectAttributes redirectAttr, final Model model) {
+    public String userRegistration(final @Valid AdminData userData, final BindingResult bindingResult,final RedirectAttributes redirectAttr, final Model model) {
         if(bindingResult.hasErrors()){
             model.addAttribute("registrationForm", userData);
             return "/register"; // find a way to return a field-error or registration form error or something like that to make thymeleaf show a message
         }
         try{
-            userService.register(userData);
+            adminService.register(userData);
         }catch (UsernameAlreadyExistException e){
             bindingResult.rejectValue(
                     "username",
@@ -103,7 +103,7 @@ public class HomeController {
             return "redirect:/login";
         }
         try {
-            userService.verifyUser(token);
+            adminService.verifyUser(token);
         } catch(InvalidTokenException ex) {
             redirectAttr.addFlashAttribute("tokenError",
                     messageSource.getMessage("user.registration.verification.email.invalidToken", null, LocaleContextHolder.getLocale()));
@@ -116,13 +116,13 @@ public class HomeController {
 
     /*
     @PostMapping("/register")
-    public String userRegistrationPlus(final @Valid UserData userData, final BindingResult bindingResult, final Model model) {
+    public String userRegistrationPlus(final @Valid AdminData userData, final BindingResult bindingResult, final Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("registrationForm", userData);
             return "/register";
         }
         try {
-            userService.registerPlus(userData);
+            adminService.registerPlus(userData);
         } catch (UsernameAlreadyExistException e) {
             // check if the errorCode "userData.username" works for existent email validation : DON'T WORK
             bindingResult.rejectValue(null, "userData.username", "Ya existe un usuario registrado con esas credenciales");
