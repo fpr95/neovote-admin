@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout-admin}">
+<head>
+    <title>Iniciar Sesión</title>
+</head>
+<body style="min-height:100vh;">
+<!--:::: Main ::::-->
+<main>
+    <div layout:fragment="body" class="container">
+        <div class="row py-5">
+            <div class="col-md-6 d-wrap me-7">
+                <div class="text-left col-mx-2 px-5 py-5 mt-2" data-aos="fade-right" data-aos-duration="700">
+                    <h1 class="body-brand me-4 mx-5">
+                <span class="bg-light rounded px-0 py-1 mb-1 fs-1"
+                      style="font-weight: bold; font-size: 50px;">neovote</span>
+                    </h1><h5 class="mx-5" style="font-weight: bold;">Administrador(a)</h5>
+                    <hr class="h-color mx-4">
+                    <p class="mx-5 fs-5 mt-4">Sistema de votación en línea.</p>
+                    <p class="mx-5 fs-5">Simple. Seguro.</p>
+                </div>
+            </div>
+
+            <!-- Login Form -->
+            <div class="col-md-5 d-wrap mb-8">
+                <!-- Form content -->
+                <div class="tab-content" data-aos="fade-in" style="margin-top: 22%;">
+                    <p th:if="${loginError}" class="error"></p>
+                    <form th:action="@{/login-admin}" method="post" role="form">
+                        <div th:if="${param.error}">
+                            <div class="alert alert-danger">
+                                <!-- <span th:text="#{login.error}"/> -->
+                                Su cuenta aún no está verificada o las credenciales son inválidas
+                            </div>
+                        </div>
+                        <div th:if="${param.logout}">
+                            <div class="alert alert-info">Has cerrado sesión</div>
+                        </div>
+                        <div th:if="${tokenError}">
+                            <div class="alert alert-danger" th:text="${tokenError}"></div>
+                        </div>
+                        <div th:if="${verifiedAccountMsg}">
+                            <div class="alert alert-info" th:text="${verifiedAccountMsg}"></div>
+                        </div>
+                        <div th:if="${resetPasswordMsg}">
+                            <div class="alert alert-info" th:text="${resetPasswordMsg}"></div>
+                        </div>
+                        <div th:if="${unknownId}">
+                            <div class="alert alert-danger" th:text="${unknownId}">No</div>
+                        </div>
+
+                        <!-- OAuth login
+                        <div class="text-center mb-3">
+                            <p>Inicia sesión con:</p>
+                            <button type="button" class="btn btn-secondary btn-floating mx-1">
+                                <i class="fab fa-facebook-f"></i>
+                            </button>
+
+                            <button type="button" class="btn btn-secondary btn-floating mx-1">
+                                <i class="fab fa-google"></i>
+                            </button>
+                        </div>
+
+                        <p class="text-center">o :</p>
+                        -->
+
+                        <!-- Username input -->
+                        <div class="form-outline mb-4">
+                            <input type="text" id="username" class="form-control" name="username"/>
+                            <label class="form-label" for="username">Nombre de usuario o correo</label>
+                        </div>
+
+                        <!-- Password input -->
+                        <div class="form-outline mb-4">
+                            <input type="password" id="password" class="form-control" name="password"/>
+                            <label class="form-label" for="password">Contraseña</label>
+                        </div>
+
+                        <!-- 2 column grid layout -->
+                        <div class="mb-4">
+                            <!-- <div class="col-md-6 d-flex justify-content-center">
+                              Checkbox
+                              <div class="form-check mb-3 mb-md-0">
+                                <input class="form-check-input" type="checkbox" value="" id="loginCheck" checked />
+                                <label class="form-check-label" for="loginCheck"> Remember me </label>
+                              </div>
+                            </div> -->
+                            <div class="d-flex justify-content-center">
+                                <!-- Simple link -->
+                                <a href="#!" data-mdb-toggle="modal" data-mdb-target="#resetPasswordModal">¿Olvidaste tu
+                                    contraseña?</a>
+                            </div>
+                        </div>
+
+                        <!-- Submit button -->
+                        <button type="submit" class="btn btn-primary btn-block mb-4 fs-6" value="Log in">Iniciar
+                            Sesión
+                        </button>
+
+                        <!-- Register button -->
+                        <!--
+                        <div class="text-center">
+                            <p>¿No tienes una cuenta? <a href="register">Regístrate</a></p>
+                        </div>
+                        -->
+                    </form>
+                </div>
+                <!-- Form content -->
+            </div>
+            <!-- Login Form -->
+
+            <!-- Reset Password Modal -->
+            <div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="modalLabel1"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Reset Password Form Content -->
+                        <form th:action="@{/pwd/request}" method="post" th:object="${forgotPassword}">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabel1">Formulario de Recuperación</h5>
+                                <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">¿Olvidaste tu contraseña?
+                                <p class="mb-4">
+                                    No te preocupes. Ingresa el correo con el cual te registraste para confirmar
+                                    tu identidad y te enviaremos un enlace para que puedas crear una
+                                    <strong>contraseña nueva</strong>.
+                                </p>
+                                <!-- Email input -->
+                                <!-- validation error display -->
+                                <div class="alert alert-danger" th:if="${#fields.hasErrors('email')}">
+                                    <p th:errors="*{email}"></p>
+                                </div>
+                                <div class="form-outline mb-4">
+                                    <input type="email" id="registerEmail" class="form-control" th:field="*{email}"
+                                           th:errorclass="is-invalid"/>
+                                    <i class="fa-solid fa-envelope d-flex justify-content-end"
+                                       id="hidePassword"
+                                       style="position: absolute;right: 4%; bottom: 27%;color: lightgray;"></i>
+                                    <label class="form-label" for="registerEmail">Correo de Recuperación</label>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Volver</button>
+                                <button type="submit" class="btn btn-primary">Enviar Enlace</button>
+                            </div>
+
+                        </form>
+                        <!-- Reset Password Form Content -->
+                    </div>
+                </div>
+            </div>
+            <!-- Reset Password Modal -->
+
+        </div>
+    </div>
+</main>
+<!--:::: Main ::::-->
+</body>
+</html>

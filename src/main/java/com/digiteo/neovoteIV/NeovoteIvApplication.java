@@ -2,8 +2,10 @@ package com.digiteo.neovoteIV;
 
 import com.digiteo.neovoteIV.model.jpa.data.Election;
 import com.digiteo.neovoteIV.model.jpa.data.AdminEntity;
+import com.digiteo.neovoteIV.model.jpa.data.VoterEntity;
 import com.digiteo.neovoteIV.model.jpa.repository.ElectionRepository;
 import com.digiteo.neovoteIV.model.jpa.repository.AdminRepository;
+import com.digiteo.neovoteIV.model.jpa.repository.VoterRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,19 +23,32 @@ public class NeovoteIvApplication {
 	}
 
 	@Bean
-	CommandLineRunner commandLineRunner(AdminRepository adminRepository, ElectionRepository electionRepository, PasswordEncoder encoder){
+	CommandLineRunner commandLineRunner(AdminRepository adminRepository,
+										VoterRepository voterRepository,
+										ElectionRepository electionRepository,
+										PasswordEncoder encoder){
 		return args -> {
 			AdminEntity pepe = new AdminEntity(
 					"Pepe",
 					"Grillo",
-					"pepe123",
-					"fabo_willy_76@live.cl",
-			encoder.encode("Pepe2023_"),
+					"admin",
+					"admin@neovote.cl", // mail should be something like 'admin@neovote.cl'
+			encoder.encode("Admin2023_"),
 					"Hombre");
 
 			pepe.setAccountVerified(true);
-
 			adminRepository.save(pepe);
+
+			VoterEntity jhon = new VoterEntity(
+					"Jhon",
+					"Doe",
+					"jhon1",
+					"fabo_willy_76@live.cl", // mail should be something like 'admin@neovote.cl'
+					encoder.encode("Jhon2023_"),
+					"Hombre");
+
+			jhon.setAccountVerified(true);
+			voterRepository.save(jhon);
 
 
 			Election election = new Election(

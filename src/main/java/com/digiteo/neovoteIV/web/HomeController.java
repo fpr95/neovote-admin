@@ -1,11 +1,13 @@
 package com.digiteo.neovoteIV.web;
 
 import com.digiteo.neovoteIV.model.service.AdminService;
+import com.digiteo.neovoteIV.model.service.VoterService;
 import com.digiteo.neovoteIV.system.exception.EmailAlreadyExistException;
 import com.digiteo.neovoteIV.system.exception.InvalidTokenException;
 import com.digiteo.neovoteIV.system.exception.UsernameAlreadyExistException;
 import com.digiteo.neovoteIV.web.data.model.ResetPasswordData;
 import com.digiteo.neovoteIV.web.data.model.AdminData;
+import com.digiteo.neovoteIV.web.data.model.VoterData;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +31,7 @@ import java.util.Locale;
 public class HomeController {
 
     private AdminService adminService;
+    private VoterService voterService;
     private MessageSource messageSource;
 
     @GetMapping("/login")
@@ -54,13 +57,36 @@ public class HomeController {
         return "/login";
     }
 
+    @GetMapping("/login-admin")
+    public String loginAdmin(
+            @RequestParam(value = "tokenError", required = false) String tokenError,
+            @RequestParam(value = "verifiedAccountMsg", required = false) String verifiedAccountMsg,
+            @RequestParam(value = "resetPasswordMsg", required = false) String resetPasswordMsg,
+            @RequestParam(value = "unknownId", required = false) String unknownId,
+            final Model model){
+        if(tokenError != null && !tokenError.isEmpty()){
+            model.addAttribute("tokenError", tokenError);
+        }
+        if(verifiedAccountMsg != null && !verifiedAccountMsg.isEmpty()){
+            model.addAttribute("verifiedAccountMsg", verifiedAccountMsg);
+        }
+        if(resetPasswordMsg != null && !resetPasswordMsg.isEmpty()){
+            model.addAttribute("resetPasswordMsg", resetPasswordMsg);
+        }
+        if(unknownId != null && !unknownId.isEmpty()){
+            model.addAttribute("unknownId", unknownId);
+        }
+        model.addAttribute("forgotPassword", new ResetPasswordData());
+        return "/login-admin";
+    }
+
     @GetMapping("/register")
     public String register(@RequestParam(value = "registrationMsg", required = false) String verificationMsg, final Model model){
         if(verificationMsg != null && !verificationMsg.isEmpty()){
             model.addAttribute("registrationMsg",
                     messageSource.getMessage("user.registration.verification.email.msg", null, LocaleContextHolder.getLocale()));
         }
-        model.addAttribute("userData", new AdminData());
+        model.addAttribute("userData", new VoterData());
         return "/register";
     }
 
@@ -68,25 +94,25 @@ public class HomeController {
     public String publicFaq(){ return "/faq-public"; }
 
     @PostMapping("/register")
-    public String userRegistration(final @Valid AdminData userData, final BindingResult bindingResult,final RedirectAttributes redirectAttr, final Model model) {
+    public String userRegistration(final @Valid VoterData userData, final BindingResult bindingResult,final RedirectAttributes redirectAttr, final Model model) {
         if(bindingResult.hasErrors()){
             model.addAttribute("registrationForm", userData);
             return "/register"; // find a way to return a field-error or registration form error or something like that to make thymeleaf show a message
         }
         try{
-            adminService.register(userData);
+            voterService.register(userData);
         }catch (UsernameAlreadyExistException e){
             bindingResult.rejectValue(
                     "username",
                     "userData.username",
-                    "Ya existe un usuario registrado con ese nombre de usuario");
+                    "Ya existe un votante registrado con ese nombre de usuario");
             model.addAttribute("registrationForm", userData);
             return "/register";
         }catch (EmailAlreadyExistException e){
             bindingResult.rejectValue(
                     "email",
                     "userData.email",
-                    "Ya existe un usuario registrado con ese correo");
+                    "Ya existe un votante registrado con ese correo");
             model.addAttribute("registrationForm", userData);
             return "/register";
         }
@@ -103,7 +129,7 @@ public class HomeController {
             return "redirect:/login";
         }
         try {
-            adminService.verifyUser(token);
+            voterService.verifyVoter(token);
         } catch(InvalidTokenException ex) {
             redirectAttr.addFlashAttribute("tokenError",
                     messageSource.getMessage("user.registration.verification.email.invalidToken", null, LocaleContextHolder.getLocale()));

@@ -5,6 +5,7 @@ import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -26,31 +27,69 @@ public class AppSecurityConfig {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-        return http
-                //.cors().and()
-                //.csrf().disable()
-                .authorizeHttpRequests()
-                //.requestMatchers("/register", "/login").permitAll()
-                .requestMatchers("/resources/**").permitAll()
-                .requestMatchers("/auth/**")
-                //.authenticated()
-                .hasAuthority("USER")
-                .anyRequest().permitAll()
-                .and()
-                //.authenticationManager(authManager(userDetailsService))
-                .formLogin(form -> form
-                        .defaultSuccessUrl("/auth/welcome-admin")
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .failureUrl("/login?error=true")
-                ).logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                        .permitAll()
-                )
-                .build();
+    @Configuration
+    //@Order(1)
+    public static class VoterConfigurationAdapter {
+        @Bean
+        public SecurityFilterChain voterSecurityFilterChain(HttpSecurity http) throws Exception{
+            return http
+                    //.cors().and()
+                    //.csrf().disable()
+                    //.securityMatcher("/auth-voter/**")
+                    .authorizeHttpRequests()
+                    //.requestMatchers("/register", "/login").permitAll()
+                    .requestMatchers("/resources/**").permitAll()
+                    .requestMatchers("/auth-voter/**")
+                    //.authenticated()
+                    .hasAuthority("USER")
+                    .anyRequest().permitAll()
+                    .and()
+                    //.authenticationManager(authManager(userDetailsService))
+                    .formLogin(form -> form
+                            .defaultSuccessUrl("/auth-voter/welcome-voter", true)
+                            //.successForwardUrl("/auth-voter/welcome-voter")
+                            .loginPage("/login")
+                            .loginProcessingUrl("/login")
+                            .failureUrl("/login?error=true")
+                    ).logout(logout -> logout
+                            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                            .permitAll()
+                    )
+                    .build();
+        }
     }
+
+    @Configuration
+    @Order(1)
+    public static class AdminConfigurationAdapter {
+        @Bean
+        public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception{
+            return http
+                    //.cors().and()
+                    //.csrf().disable()
+                    .securityMatcher("/login-admin", "/auth/**")
+                    .authorizeHttpRequests()
+                    //.requestMatchers("/register", "/login").permitAll()
+                    .requestMatchers("/resources/**").permitAll()
+                    .requestMatchers("/auth/**")
+                    //.authenticated()
+                    .hasAuthority("ADMIN")
+                    .anyRequest().permitAll()
+                    .and()
+                    //.authenticationManager(authManager(userDetailsService))
+                    .formLogin(form -> form
+                            .defaultSuccessUrl("/auth/welcome-admin", true)
+                            .loginPage("/login-admin")
+                            .loginProcessingUrl("/login-admin")
+                            .failureUrl("/login?error=true")
+                    ).logout(logout -> logout
+                            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                            .permitAll()
+                    )
+                    .build();
+        }
+    }
+
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
