@@ -27,4 +27,8 @@ public interface ElectionService {
     void suspendElection(Election e);
 
     void activateElection(Election e);
+
+    // Voters layer related methods  -----------------------------------------------------------------------------------
+
+    List<ElectionListData> getVotersElectionsList();
 }

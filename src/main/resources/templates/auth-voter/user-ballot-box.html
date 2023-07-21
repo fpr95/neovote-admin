@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout-dash-voter}">
+<head>
+    <title>Urna Virtual</title>
+    <script type="text/javascript" th:inline="javascript">
+    function confirmSelectedProposal() {
+    let voteButtons = document.getElementsByClassName("btn-vote");
+    let confirmationButton = document.getElementById("confirmation-btn");
+        confirmationButton.addEventListener("click", function(event) {
+            let selectedVoteButton = null;
+            let enabledCount = 0;
+            // Find the selected vote button
+            for (let i = 0; i < voteButtons.length; i++) {
+                if (!voteButtons[i].disabled) {
+                    selectedVoteButton = voteButtons[i];
+                    enabledCount++;
+                    if (enabledCount > 1) {
+                        break;
+                    }
+                }
+            }
+            // Show alert if no or multiple buttons are enabled
+            if (enabledCount >= 2) {
+                alert("Porfavor seleccione una propuesta antes de emitir su voto");
+            }
+        });
+    }
+    </script>
+    <!--
+    <script type="text/javascript" th:inline="javascript">
+        function selectedProposal(proposalName){
+            document.getElementById('selectedProposal').value = proposalName;
+        }
+    </script>
+    -->
+</head>
+<body style="min-height:100vh;">
+<!--:::: Main ::::-->
+<main>
+    <div layout:fragment="body" class="container">
+        <!--Section: Instrucciones -->
+        <section class="content pt-5 mb-9 mx-auto">
+            <h3 class="text-left mb-4 pb-2 text-primary fw-bold">¡A Votar!</h3>
+            <p class="text-left">
+                <i class="fa-solid fa-1 me-2"></i> Vote por la propuesta de su preferencia. Si por algún motivo se
+                equivoca, vuelva a hacer click para habilitar las otras opciones y vote.
+            </p>
+            <p class="text-left">
+                <i class="fa-solid fa-2 me-2"></i> Haga click en <strong>Emitir Voto</strong> y en
+                <strong>Confirmar</strong>.
+            </p>
+            <p class="text-left mb-5">
+                <i class="fa-solid fa-3 me-2"></i> ¡Ya está!, ahora solo queda esperar los resultados.
+            </p>
+        </section>
+        <!--Section: Instrucciones -->
+
+        <div class="content mb-3 px-4">
+            <h2 class="text-end text-muted" th:text="${currentElection.title}"></h2>
+        </div>
+
+        <!-- Section: Papeleta -->
+        <form action="#" th:action="@{/auth-voter/user-ballot-box}" method="post" role="form">
+            <section class="content">
+                <div class="row px-4 mb-5">
+
+                    <div class="col-sm-6 my-3" th:each="proposal : ${proposalsList}">
+                        <div class="card h-100">
+                            <div class="row g-0 h-100">
+                                <div class="col-md-4 d-flex">
+                                    <img th:src="@{/static/img/proposal-default.jpg}" alt=""
+                                         class="img-fluid rounded-start my-auto h-100" style="object-fit:cover;">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title" th:text="${proposal.name}"></h5>
+                                        <p class="card-text text-muted" th:text="${proposal.details}"
+                                           style="display: -webkit-box;-webkit-line-clamp: 4;-webkit-box-orient: vertical;overflow: hidden;">
+                                        </p>
+                                        <button type="button" class="btn btn-primary btn-vote"
+                                                th:data-proposal-name="${proposal.name}">Votar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="selectedProposal" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Section: Papeleta -->
+
+            <section class="content mb-5">
+                <!-- Modal Submit button --> <!-- Button trigger modal -->
+                <button type="button" id="confirmation-btn" class="content btn btn-primary btn-block px-4 mb-5"
+                        disabled="true" data-mdb-target="#voteConfirmationModal"
+                        data-mdb-toggle="modal" onclick="confirmSelectedProposal()">Emitir Voto</button>
+            </section>
+            <!-- Confirmation Modal -->
+            <div class="modal fade" id="voteConfirmationModal" tabindex="-1" aria-labelledby="modalLabel1"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <img th:src="@{/static/img/ballot-box.jpg}" class="img-fluid">
+                            <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"
+                                    style="position: absolute;top: 0;right: 0;padding: inherit;"></button>
+                        </div>
+                        <div class="modal-body">¡Ya casi! Al hacer click en <strong>Confirmar</strong> la propuesta
+                            elegida
+                            tendrá un voto más para ganar la elección. Solo recuerde estar atento/a a la publicación de
+                            los
+                            resultados
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Volver</button>
+                            <button type="submit" class="btn btn-primary">Confirmar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Confirmation Modal -->
+        </form>
+    </div>
+</main>
+<!--:::: Main ::::-->
+</body>
+</html>

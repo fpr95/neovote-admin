@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -51,11 +53,12 @@ public class VoterEntity extends BaseEntity {
     @OneToMany(mappedBy = "voterEntity")
     private Set<SecureToken> tokens = new HashSet<>();
 
-    // @OneToMany( // <--- define cascade type
-    //       mappedBy = "voter",
-    //       fetch = FetchType.LAZY
-    //)
-    //private List<Vote> votes = new ArrayList<Vote>();
+    @ToString.Exclude
+    @OneToMany( // <--- define cascade type
+           mappedBy = "voter",
+           fetch = FetchType.LAZY
+    )
+    private List<Vote> votes = new ArrayList<Vote>();
 
     public VoterEntity(
             String firstName,

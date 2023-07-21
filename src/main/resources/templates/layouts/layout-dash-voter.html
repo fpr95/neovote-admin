@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8" content-type="text/html">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <meta name="author" content="fpr95">
+
+    <!-- Favicon -->
+    <link rel="icon" th:href="@{/static/img/neovote-favicon.png}" type="image/x-icon"/>
+    <!-- Font Awesome -->
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"/>
+    <!-- MDB -->
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/static/css/mdb.min.css}"/>
+    <!-- AOS -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css"/>
+    <!-- Custom dashboard styling -->
+    <link rel="stylesheet" th:href="@{/static/css/dashboard.layout.css}" />
+
+    <!-- JQuery (v3.6.3) -->
+    <script type="text/javascript" th:src="@{/static/js/jquery-3.6.3.min.js}"></script>
+    <!-- Popper -->
+    <script type="text/javascript" th:src="@{/static/dist/js/popper.min.js}"></script>
+    <!-- Tempus Dominus styling -->
+    <link rel="stylesheet" th:href="@{/static/dist/css/tempus-dominus.min.css}"/>
+    <!-- Select2 styling -->
+    <link rel="stylesheet" th:href="@{/static/select2/dist/css/select2.min.css}">
+
+    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">Neovote</title>
+</head>
+<!--:::: Header :::::-->
+<header>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <!-- Container wrapper -->
+        <div class="container">
+            <!-- Navbar brand -->
+            <a class="navbar-brand me-2" href="#">
+                <span class="bg-light rounded px-1 py-1 mb-1 fs-4" style="font-weight: bold;">neovote</span>
+            </a>
+
+            <!-- Toggle button -->
+            <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-mdb-toggle="collapse"
+                    data-mdb-target=".multi-collapse"
+                    aria-controls="navbarButtonsExample"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+            >
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Collapsible wrapper -->
+            <div class="collapse navbar-collapse multi-collapse" id="navbarButtonsExample">
+                <!-- Left links -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Panel Votante</a>
+                    </li>
+                </ul>
+                <!-- Left links -->
+
+                <!-- Right links -->
+                <div class="d-flex align-items-center px-2">
+                    <ul class="navbar-nav ms-auto d-flex flex-row px-2">
+                        <!-- Notification dropdown -->
+                        <li class="nav-item dropdown mt-2 mb-2">
+                            <a
+                                    class="nav-link me-4 me-lg-3 dropdown-toggle hidden-arrow"
+                                    href="#"
+                                    id="navbarDropdownMenuLink"
+                                    role="button"
+                                    data-mdb-toggle="dropdown"
+                                    aria-expanded="false"
+                            >
+                                <i class="fas fa-bell"></i>
+                                <span class="badge rounded-pill badge-notification bg-danger"
+                                >2</span
+                                >
+                            </a>
+                            <ul
+                                    class="dropdown-menu dropdown-menu-end"
+                                    aria-labelledby="navbarDropdownMenuLink"
+                            >
+                                <li><a class="dropdown-item" href="#">1 Elección Finalizada</a></li>
+                                <li><a class="dropdown-item" href="#">1 Solicitud Padrón Aceptada</a></li>
+                                <!--
+                                <li>
+                                  <a class="dropdown-item" href="#">Ootra notificación</a>
+                                </li>
+                                -->
+                            </ul>
+                        </li>
+                        <!-- Avatar -->
+                        <li class="nav-item dropdown mt-1 mb-1 px-1 mx-2" >
+                            <a
+                                    class="nav-link dropdown-toggle hidden-arrow me-lg-3 d-flex align-items-center"
+                                    href="#"
+                                    aria-labelledby="navbarDropdownMenuLink"
+                                    role="button"
+                                    data-mdb-toggle="dropdown"
+                                    aria-expanded="false" >
+                                <img
+                                        th:src="@{/static/img/user-logo-test-1.png}"
+                                        class="rounded-circle"
+                                        height="32"
+                                        alt=""
+                                        loading="lazy"
+                                />
+                            </a>
+                            <ul
+                                    class="dropdown-menu dropdown-menu-end"
+                                    aria-labelledby="navbarDropdownMenuLink"
+                            >
+                                <li><a class="dropdown-item" href="#">Actualizar Perfil</a></li>
+                                <li><a class="dropdown-item" th:href="@{/logout}">Cerrar Sesión</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <!-- FAQ -->
+                    <a
+                            class="btn btn-dark px-3 me-lg-3 mt-0"
+                            href="#"
+                            role="button"
+                            style="color: white; font-weight: bold;"
+                    ><i class="fa fa-question-circle"></i> FAQ</a>
+                </div>
+                <!-- Right links -->
+            </div>
+            <!-- Collapsible wrapper -->
+        </div>
+        <!-- Container wrapper -->
+    </nav>
+    <!-- Navbar -->
+
+    <!-- Sidebar -->
+    <nav
+            class="collapse d-lg-block sidebar navbar-collapse multi-collapse bg-white"
+    >
+        <div class="ps-relative" style="position: absolute;" id="sidebar-container">
+
+            <div class="list-group list-group-flush mx-3 mt-4">
+                <a
+                        href="welcome-voter"
+                        class="list-group-item list-group-item-action py-2 ripple"
+                        aria-current="true"
+                >
+                    <i class="fas fa-tachometer-alt fa-fw me-3"></i
+                    ><span>Inicio</span>
+                </a>
+                <a
+                        href="user-elections-list"
+                        class="list-group-item list-group-item-action py-2 ripple"
+                ><i class="fas fa-chart-bar fa-fw me-3"></i><span>Elecciones</span></a
+                >
+                <!--
+                <a
+                        href="election-new"
+                        class="list-group-item list-group-item-action py-2 ripple"
+                ><i class="fas fa-tag fa-fw me-3"></i
+                ><span>Nueva Elección</span></a
+                >
+                -->
+                <!--
+                <a
+                        href="calendar-admin"
+                        class="list-group-item list-group-item-action py-2 ripple"
+                ><i class="fas fa-calendar fa-fw me-3"></i
+                ><span>Calendario</span></a
+                >
+                -->
+                <a
+                        href="#"
+                        class="list-group-item list-group-item-action py-2 ripple"
+                ><i class="fas fa-users fa-fw me-3"></i><span>Mi Padrón Electoral</span></a
+                >
+                <!--
+                <a
+                        href="#"
+                        class="list-group-item list-group-item-action py-2 ripple"
+                ><i class="fas fa-chart-line fa-fw me-3"></i
+                ><span>Estadísticas</span></a
+                >
+                -->
+            </div>
+        </div>
+    </nav>
+    <!-- Sidebar -->
+</header>
+<!--:::: Header ::::-->
+<body layout:fragment="body">
+<!-- <th:block layout:fragment="script"></th:block> -->
+</body>
+<!--:::: Footer ::::-->
+<footer class="bg-primary text-white text-center text-lg-start pt-5">
+    <!-- Grid container -->
+    <div class="container p-5">
+        <!--Grid row-->
+        <div class="row">
+            <!--Grid column-->
+            <div class="col-lg-3 col-md-7 mb-4 mt-md-2 mb-md-0">
+                <div class="bg-image hover-overlay hover-zoom ripple rounded mt-4" data-ripple-color="light">
+              <span class="d-wrap">
+                <img th:src="@{/static/img/LOGO-FINAL-PNG-ADJ-1.png}" alt="footer-brand" class="w-100 img-fluid">
+              </span>
+                </div>
+            </div>
+            <!--Grid column-->
+
+            <!--Grid column-->
+            <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                <h5 class="text-uppercase">Sobre Nosotros</h5>
+                <hr>
+                <p>
+                    Digiteo es un emprendimiento que tiene por objetivo desarrollar soluciones digitales personalizadas
+                    para todos nuestros clientes.
+                    Creemos que las nuevas tecnologías pueden brindar nuevas rutas
+                    para construir un mejor mañana.
+                </p>
+            </div>
+            <!--Grid column-->
+
+            <!--Grid column-->
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                <h5 class="text-uppercase mb-0">Contáctanos</h5>
+                <hr>
+                <ul class="list-unstyled d-flex justify-content-evenly mt-4">
+                    <li class="bg-image hover-zoom">
+                        <a href="#!"
+                           class="btn btn-link btn-floating btn-lg text-center text-dark m-1"
+                           role="button"
+                           data-mdb-ripple-color="dark"
+                           style="line-height: 45px; font-size: 25px;">
+                            <span><i class="fa fa-envelope-open-text"></i></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#!"
+                           class="btn btn-link btn-floating btn-lg text-center text-dark m-1"
+                           role="button"
+                           data-mdb-ripple-color="dark"
+                           style="line-height: 45px; font-size: 25px;">
+                            <span><i class="fab fa-whatsapp"></i></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#!"
+                           class="btn btn-link btn-floating btn-lg text-center text-dark m-1"
+                           role="button"
+                           data-mdb-ripple-color="dark"
+                           style="line-height: 45px; font-size: 25px;">
+                            <span><i class="fab fa-facebook-f"></i></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!--Grid column-->
+        </div>
+        <!--Grid row-->
+    </div>
+    <!-- Grid container -->
+
+    <!-- Copyright -->
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.3);">
+        <small>&copy; 2023 <b>Digiteo</b> - Todos Los Derechos Reservados.</small>
+    </div>
+    <!-- Copyright -->
+</footer>
+<!--:::: Footer ::::-->
+
+<!-- MDB -->
+<script type="text/javascript" th:src="@{/static/js/mdb.min.js}"></script>
+<!--:::: AOS ::::-->
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script> AOS.init(); </script>
+<!-- Tempus Dominus JS -->
+<script type="text/javascript" th:src="@{/static/dist/js/tempus-dominus.min.js}"></script>
+<!-- Election's timestamps custom script(Tempus Dominus lib) -->
+<script type="text/javascript" th:src="@{/static/dist/js/election-timestamps.js}"></script>
+
+<!-- Select2 JS -->
+<script type="text/javascript" th:src="@{/static/select2/dist/js/select2.full.min.js}"></script>
+<!-- Election's topic(s) multiselect custom script(select2 lib)-->
+<script type="text/javascript" th:src="@{/static/select2/dist/js/election-topics.js}"></script>
+<!-- OSC Calendar script -->
+<script type="text/javascript" th:src="@{/static/js/osc-calendar.js}"></script>
+<!-- ballot box buttons -->
+<script type="text/javascript" th:src="@{/static/js/vote-btns.js}"></script>
+
+<!-- Custom scripts -->
+<script type="text/javascript"></script>
+</html>

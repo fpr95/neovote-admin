@@ -73,7 +73,9 @@
                             </div>
                         </td>
                         <td>
-                            <p class="text-muted mb-0" th:text="${proposal.details}"></p>
+                            <p class="text-muted mb-0" th:text="${proposal.details}"
+                               style="display: -webkit-box;-webkit-line-clamp: 4;-webkit-box-orient: vertical;overflow: hidden;">
+                            </p>
                         </td>
                         <td>
                             <span class="badge badge-secondary rounded-pill"
@@ -712,7 +714,7 @@
                     </div>
                 </div>
 
-                <!-- Model Patch Submit button --> <!-- Button trigger modal -->
+                <!-- Modal Patch Submit button --> <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary btn-block mb-4" data-mdb-toggle="modal" data-mdb-target="#editConfirmationModal">
                     Aplicar Cambios</button>
                 <!-- Confirmation Modal -->

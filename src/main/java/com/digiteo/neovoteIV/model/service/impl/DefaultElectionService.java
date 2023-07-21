@@ -133,4 +133,25 @@ public class DefaultElectionService implements ElectionService {
         }
         return electionList;
     }
+
+    // Voter layer related methods impl  -------------------------------------------------------------------------------
+    @Override
+    public List<ElectionListData> getVotersElectionsList(){
+        List<Election> elections = repository.findAll();
+        if(elections == null){
+            return Collections.emptyList();
+        }
+        List<ElectionListData> votersElectionList = new ArrayList<>();
+        for(Election e:elections){
+            ElectionListData eld = new ElectionListData();
+            BeanUtils.copyProperties(e, eld);
+            if(e.getElectionStatus() != ElectionStatus.SUSPENDED){
+                eld.setStatus(e.getElectionStatusCode());
+                eld.setTopics(e.getTopicsCollection());
+                //check if copyProperties copy the init and finish timestamp, if not, use the mutator of eld to set them
+                votersElectionList.add(eld);
+            }
+        }
+        return votersElectionList;
+    }
 }

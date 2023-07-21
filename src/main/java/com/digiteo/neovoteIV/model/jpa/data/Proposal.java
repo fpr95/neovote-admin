@@ -44,10 +44,13 @@ public class Proposal extends BaseEntity {
     private boolean visible;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    // remember that hibernate execute a query for EACH proposal in lazy type, to avoid performance issues try
+    // creating a custom @Query in repo with JOIN FETCH
     @JoinColumn(name = "election_id")
     private Election bindingProcess;
 
     /* ORDER:chronological, UNIQUENESS:yep, UPDATES:for adding, SIZE:undefined, OWNING:no, ACCESS:field(@Id on BaseEntity.id)
+    */
     @ToString.Exclude
     @OneToMany(
             mappedBy = "targetProposal",
@@ -55,7 +58,6 @@ public class Proposal extends BaseEntity {
             cascade = CascadeType.ALL
     )
     private List<Vote> votes;
-     */
 
     @Column(
             name = "creation_timestamp",
