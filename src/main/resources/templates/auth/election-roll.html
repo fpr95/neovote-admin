@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout_dash}">
+<head>
+    <title>Padrón Electoral</title>
+    <link rel="stylesheet" th:href="@{/static/css/username.tag.input.css}" />
+
+    <!-- ====================== test this import bellow ============================ -->
+    <!-- <script type="text/javascript" th:src="@{/static/js/username-tag-input.js}"></script> -->
+    <script type="text/javascript" th:inline="javascript">
+        $(document).ready(function() {
+            $('#rollForm').keydown(function(event){
+                if(event.keyCode == 13) {
+                    event.preventDefault();
+                    return false;
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript" th:inline="javascript">
+        let currentRolSize = [[${rollSet.size()}]];
+    </script>
+    <script type="text/javascript" th:inline="javascript">
+        let flag = [(${errorInPassword})];
+        if(flag){
+            $(document).ready(function() {
+                $('#newVoterModal').modal('show');
+            });
+        }
+    </script>
+</head>
+<body style="min-height:100vh;">
+<!--:::: Main ::::-->
+<main>
+    <div layout:fragment="body" class="container">
+        <!-- Section: Padrón -->
+        <section class="content pt-5 mb-9 mx-auto">
+            <h3 class="text-left text-primary fw-bold" th:text="${electionTitle}"></h3>
+            <h5 class="text-left mb-4 pb-2 fw-bold">Padrón Electoral</h5>
+
+            <div th:if="${eliminatedUserFlag}">
+                <div class="alert alert-info">
+                    Se ha eliminado al siguiente usuario del padrón: <strong th:text="${eliminatedUsername}"></strong>
+                </div>
+            </div>
+
+            <div class="shadow-4 rounded-2 overflow-auto mb-5">
+                <table class="table table-responsive-md align-middle mb-0 bg-white">
+                    <thead class="bg-light">
+                    <tr>
+                        <th class="w-25 fw-bold">Nombre de Usuario</th>
+                        <th class="w-25 fw-bold">Correo</th>
+                        <th class="fw-bold" style="width: 15%;">Registrado</th>
+                        <th class="fw-bold" style="width: 20%;">Fecha y Hora Ingreso</th>
+                        <th class="fw-bold" style="width: 20%;">Remover</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${rollSet.isEmpty() }">
+                        <td colspan="5">Aún no hay votantes registrados en el padrón de esta elección,
+                            si desea agregar uno (o más), haga click en el botón <em>INGRESAR VOTANTE(S)</em></td>
+                    </tr>
+                    <tr th:each="rollUser : ${rollSet}">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img
+                                        th:src="@{/static/img/user-logo-test-1.png}"
+                                        alt=""
+                                        style="width: 30px; height: 30px"
+                                />
+                                <div class="ms-3">
+                                    <p class="fw-bold mb-1" th:text="${rollUser.voterUsername}"></p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <p class="text-muted mb-0" th:text="${rollUser.email} ?: '-'"></p>
+                        </td>
+                        <td>
+                            <span class="badge badge-success rounded-pill" th:if="${rollUser.isRegistered}"> <i class="fa fa-user-check"></i> </span>
+                            <span class="badge badge-warning rounded-pill" th:if="${!rollUser.isRegistered}"> <i class="fa fa-user-xmark"></i> </span>
+                        </td>
+                        <td>
+                            <span class="badge badge-secondary rounded-pill"
+                                  style="font-size: 13px;" th:text="${#temporals.format(rollUser.createdAt, 'dd-MM-yyyy HH:mm')}"></span>
+                        </td>
+                        <td>
+                            <a
+                                    href="#"
+                                    type="button"
+                                    class="btn btn-link btn-sm btn-rounded fs-7 d-flex"
+                                    data-mdb-ripple-color="dark"
+                                    th:data-mdb-toggle="modal"
+                                    th:data-mdb-target="'#deleteConfirmationModal-' + ${rollUser.voterUsername}"
+                            >
+                                Remover<i class="fa fa-circle-xmark ms-2"></i>
+                            </a>
+
+                            <!-- Delete Proposal Confirmation Modal  -->
+                            <div class="modal fade" th:id="'deleteConfirmationModal-' + ${rollUser.voterUsername}" tabindex="-1"
+                                 aria-labelledby="modalLabel2" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form action="#" th:action="@{/auth/election-roll(et=${electionTitle}, uname=${rollUser.voterUsername})}" th:method="delete">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="modalLabel2">Remover Usuario del Padrón</h5>
+                                                <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">¿Está seguro/a que desea remover a <strong th:text="${rollUser.voterUsername}"></strong>
+                                                del padrón?. Esta acción no puede ser deshecha.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                        data-mdb-dismiss="modal">
+                                                    Volver
+                                                </button>
+                                                <!-- <input type="hidden" th:name="uname" th:value="${rollUser.voterUsername}"> -->
+                                                <button type="submit" class="btn btn-danger">Remover</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mb-5">
+                <button type="button" class="btn btn-primary btn-block mb-4" data-mdb-toggle="modal"
+                        data-mdb-target="#newVoterModal">
+                    Ingresar Votante(s)
+                </button>
+
+
+                <!-- Confirmation Modal -->
+                <div class="modal fade" id="newVoterModal" tabindex="-1" aria-labelledby="voterModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form action="#"
+                                  id="rollForm"
+                                  th:action="@{/auth/election-roll(et=${electionTitle})}"
+                                  th:object="${rollData}"
+                                  method="post"
+                                  role="form">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="voterModalLabel">Formulario de Ingreso</h5>
+                                    <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                            aria-label="Close">
+                                    </button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="card card-form mt-2 mb-4">
+                                        <!-- #3B71CA -->
+                                        <div class="card-body rounded-top darken-4" style="background-color: #2E8B57;">
+                                            <h3 class="font-weight-bold text-center text-uppercase text-light my-4">
+                                                Nuevo(s) Votante(s)</h3>
+                                            <div class="pb-5 px-2">
+
+                                                <div class="alert alert-danger" th:if="${#fields.hasErrors('roll')}">
+                                                    <p th:errors="*{roll}" th:text="${err}"></p>
+                                                </div>
+
+                                                <div class="d-flex justify-content-start align-items-center mb-0">
+                                                    <i class="fa fa-tag fa-lg text-white fa-fw me-3"></i>
+                                                    <div class="form-outline form-white w-100">
+                                                        <ul class="ul-test d-flex form-outline form-white w-100">
+                                                            <input type="text" id="userNameInput"
+                                                                   class="input-test form-control"
+                                                                   placeholder="Nombre(s) Usuario(s)"
+                                                                   aria-describedby="userNameDetailsBlock"
+                                                                   th:field="*{roll}"
+                                                                   th:errorclass="is-invalid"/>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <div id="userNameDetailsBlock"
+                                                     class="details-box-1 form-text text-white mb-4">
+                                                    <p>
+                                                        <i class="fa-regular fa-lightbulb me-1"></i>
+                                                        Escriba el <strong>nombre de usuario</strong> del votante que
+                                                        desee ingresar (mínimo 3 caracteres) y presione
+                                                        <em>Enter</em>.
+                                                    </p>
+                                                    <p>
+                                                        <i class="fa-regular fa-lightbulb me-1"></i>
+                                                        Puede ingresar más de un nombre de usuario a la vez, para esto
+                                                        solo debe
+                                                        separar con una coma (,) cada uno de ellos y luego presionar
+                                                        <em>Enter</em>.
+                                                    </p>
+                                                    <p>
+                                                        <i class="fa-regular fa-lightbulb me-1"></i>
+                                                        El número máximo de votantes a registrar es de <span
+                                                            class="fw-bold">150</span>.
+                                                    </p>
+                                                    <p>
+                                                        <i class="fa-regular fa-lightbulb me-1"></i>
+                                                        Para <strong class="fw-bold">remover todos</strong> los nombres
+                                                        ingresados haga click
+                                                        <span type="button" class="remove-all-btn badge badge-lg fs-6">aquí</span>
+                                                    </p>
+                                                </div>
+
+                                                <!--
+                                                <div class="alert alert-danger" th:if="${#fields.hasErrors('pwd')}">
+                                                    <p th:errors="*{pwd}" th:text="${err}"></p>
+                                                </div>
+                                                -->
+
+                                                <div th:if="${errorInPassword}">
+                                                    <div class="alert alert-danger">
+                                                        La contraseña ingresada no es válida.
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex justify-content-start align-items-center mt-5 mb-0">
+                                                    <i class="fa-solid fa-key fa-lg text-white fa-fw me-3"></i>
+                                                    <div class="form-outline form-white w-100">
+                                                        <input type="password" id="adminPwdInput" class="form-control"
+                                                               placeholder="Contraseña Administrador"
+                                                               aria-describedby="passwordDetailsBlock"
+                                                               th:field="*{pwd}"
+                                                               th:errorclass="is-invalid"/>
+                                                    </div>
+                                                </div>
+
+                                                <div id="passwordDetailsBlock" class="form-text text-white mt-3 mb-5">
+                                                    <i class="fa-regular fa-lightbulb me-1"></i>
+                                                    Por motivos de seguridad su contraseña es requerida para finalizar
+                                                    el ingreso del(los) votante(s).
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="card card-form-2 mb-0 z-depth-0">
+                                            <div class="card-body text-center">
+
+                                                <hr>
+
+                                                <p>
+                                                    Al hacer click en <em>INGRESAR VOTANTE(s)</em> éstos/as quedará(n)
+                                                    registrados/as en
+                                                    el padrón de la elección. Si desea remover un votante, haga click en
+                                                    <strong class="text-primary">REMOVER<i
+                                                            class="fa fa-circle-xmark ms-1"></i></strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Volver
+                                    </button>
+                                    <button type="submit" style="background-color: #2E8B57;" class="btn text-light" onclick="addTagsToInput()">
+                                        Ingresar Votante(s)
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Confirmation Modal -->
+
+            </div>
+        </section>
+        <!-- Section: Padrón -->
+    </div>
+</main>
+<!--:::: Main ::::-->
+</body>
+</html>

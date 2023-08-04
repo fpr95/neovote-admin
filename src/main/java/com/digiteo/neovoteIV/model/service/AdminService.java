@@ -7,6 +7,8 @@ import com.digiteo.neovoteIV.system.exception.UnknownIdentifierException;
 import com.digiteo.neovoteIV.system.exception.UsernameAlreadyExistException;
 import com.digiteo.neovoteIV.web.data.model.AdminData;
 
+import java.security.Principal;
+
 public interface AdminService {
 
     void register(final AdminData user)
@@ -15,11 +17,13 @@ public interface AdminService {
     void checkIfUserExist(final String username, final String email)
             throws UsernameAlreadyExistException, EmailAlreadyExistException;
 
-    public void sendRegistrationConfirmationEmail(AdminEntity user);
+    void sendRegistrationConfirmationEmail(AdminEntity user);
 
     AdminEntity getUserByUsernameOrEmail(String username); // throws UnknownIdentifierException;
 
     boolean verifyUser(String token) throws InvalidTokenException;
+
+    boolean authenticateAdminPassword(Principal principal, String pwd);
     /*
     void registerPlus(final AdminData user)
         throws UsernameAlreadyExistException;

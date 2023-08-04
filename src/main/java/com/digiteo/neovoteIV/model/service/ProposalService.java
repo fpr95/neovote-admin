@@ -1,6 +1,7 @@
 package com.digiteo.neovoteIV.model.service;
 
 import com.digiteo.neovoteIV.model.jpa.data.Election;
+import com.digiteo.neovoteIV.model.jpa.data.Proposal;
 import com.digiteo.neovoteIV.system.exception.ProposalNameAlreadyExistException;
 import com.digiteo.neovoteIV.web.data.model.ProposalData;
 import com.digiteo.neovoteIV.web.data.model.ProposalUpdateData;
@@ -18,4 +19,5 @@ public interface ProposalService {
     void partialUpdatePlus(String name, ProposalUpdateData pud);
     void deleteProposal(String proposalName);
     List<ProposalData> getProposalList();
+    public Proposal findProposal(String proposalName);
 }

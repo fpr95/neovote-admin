@@ -66,6 +66,17 @@
             <section class="content">
                 <div class="row px-4 mb-5">
 
+                    <div class="col-sm-12 my-3" th:if="${proposalsList.isEmpty() and hasVoted}">
+                        <div class="card h-100 w-100">
+                            <p class="p-5">
+                                <strong>¡Ups!</strong> parece que usted ya ha votado en esta elección y solo es un
+                                voto por persona, por favor espere los resultados que serán entregados el
+                                <span class="fw-bold" th:text="${#temporals.format(currentElection.finishTimestamp, 'dd-MM-yyyy')}"></span> a las
+                                <span class="fw-bold" th:text="${#temporals.format(currentElection.finishTimestamp, 'HH:mm')}"></span> horas.
+                            </p>
+                        </div>
+                    </div>
+
                     <div class="col-sm-6 my-3" th:each="proposal : ${proposalsList}">
                         <div class="card h-100">
                             <div class="row g-0 h-100">

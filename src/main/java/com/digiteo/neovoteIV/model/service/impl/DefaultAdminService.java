@@ -19,10 +19,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -148,5 +150,17 @@ public class DefaultAdminService implements AdminService {
         }
     }
      */
+
+    @Override
+    public boolean authenticateAdminPassword(Principal principal, String pwd){
+        boolean isCorrect = false;
+        Optional<AdminEntity> ao = adminRepository.findUserByUsernameOrEmail(principal.getName());
+        if(ao.isPresent()){
+            if(passwordEncoder.matches(pwd, ao.get().getPwd())){
+                isCorrect = true;
+            }
+        }
+        return isCorrect;
+    }
 
 }

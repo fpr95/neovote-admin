@@ -60,6 +60,13 @@ public class VoterEntity extends BaseEntity {
     )
     private List<Vote> votes = new ArrayList<Vote>();
 
+    //@ToString.Exclude
+    //@ManyToMany( // <--- define cascade type
+    //        mappedBy = "electoralRoll",
+    //        fetch = FetchType.LAZY
+    //)
+    //private List<Election> rolls = new ArrayList<>();
+
     public VoterEntity(
             String firstName,
             String lastName,

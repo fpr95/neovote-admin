@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout_dash}">
+<head>
+    <title>Lista Padrones</title>
+</head>
+<body style="min-height:100vh;">
+<!--:::: Main ::::-->
+<main>
+    <div layout:fragment="body" class="container">
+        <!--Section: Inicio -->
+        <section class="content pt-5 mb-9 mx-auto">
+            <h3 class="text-left mb-4 pb-2 text-primary fw-bold">Lista de Padrones</h3>
+            <p class="text-left mb-2">
+                <i class="fa-regular fa-hand-point-right me-1"></i> En esta sección, podrá ver y modificar el
+                <strong>padrón electoral</strong> de cada uno de los procesos creados.
+                Como administrador/a usted está habilitado/a para <strong>agregar</strong> y <strong>remover</strong>
+                a los <strong>votantes</strong> que usted desee incluir o sacar del registro respectivamente.
+            </p>
+            <p class="text-left mb-2">
+                <i class="fa-regular fa-hand-point-right me-1"></i> No es imprescindible que los
+                votantes tengan una cuenta en el sistema al momento de ser ingresados a un padrón, pero en este caso,
+                es importante que cuando el usuario se registre, lo haga con el mismo <strong>nombre de usuario</strong>
+                ingresado en el padrón, de lo contrario <strong>no aparecerá</strong> en éste.
+                En el caso contrario, esto es, que el usuario haya creado su cuenta primero, será su responsabilidad
+                como
+                administrador/a ingresar al votante con el <strong>nombre de usuario</strong> con el que éste se haya
+                registrado en el sistema.
+            </p>
+            <p class="text-left mb-5">
+                <i class="fa-solid fa-circle-exclamation me-1"></i> Recuerde que una vez el proceso alcance la
+                <strong>hora y fecha de inicio</strong>, el padrón de éste no podrá ser modificado.
+            </p>
+        </section>
+
+        <section class="content mb-9 mx-auto">
+            <div class="shadow-4 rounded-2 overflow-auto">
+                <table class="table table-responsive-md table-striped align-middle mb-0 bg-white">
+                    <thead class="bg-light">
+                    <tr>
+                        <th class="w-25 fw-bold">ID / Tópicos</th>
+                        <th class="w-25 fw-bold">Descripción</th>
+                        <th class="fw-bold" style="width: 15%;">Status</th>
+                        <th class="fw-bold" style="width: 20%;">Inicio</th>
+                        <th class="fw-bold" style="width: 20%;">Término</th>
+                        <th class="fw-bold" style="width: 15%;">Padrón</th>
+                        <th class="fw-bold" style="width: 20%;">Editar</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${electionsList.isEmpty() }">
+                        <td colspan="5">Aquí podrá ver el detalle de las elecciones registradas</td>
+                    </tr>
+                    <tr th:each="election : ${electionsList}">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img
+                                        th:src="@{/static/img/election-default.jpg}"
+                                        alt=""
+                                        style="width: 45px; height: 45px"
+
+                                />
+                                <div class="ms-3">
+                                    <p class="fw-bold mb-1" th:text="${election.title}"></p>
+                                    <p class="badge badge-light text-muted mb-0"
+                                       th:each="topic : ${election.topics}"
+                                       th:text="'#' + ${topic}"></p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <p class="text-muted mb-0" th:text="${election.briefDescription}"></p>
+                        </td>
+                        <td th:switch="${election.status}">
+                        <span th:case="'NO INICIADO'" class="badge badge-primary rounded-pill">NO INICIADO</span>
+                        <span th:case="'EN PROGRESO'" class="badge badge-success rounded-pill">EN PROGRESO</span>
+                        <span th:case="'FINALIZADO'" class="badge badge-warning rounded-pill">FINALIZADO</span>
+                        <span th:case="'SUSPENDIDO'" class="badge badge-secondary rounded-pill">SUSPENDIDO</span>
+                        </td>
+                        <td>
+                            <span class="badge badge-secondary rounded-pill"
+                                  style="font-size: 13px;" th:text="${#temporals.format(election.initTimestamp, 'dd-MM-yyyy HH:mm')}"></span>
+                        </td>
+                        <td>
+                            <span class="badge badge-secondary rounded-pill"
+                                  style="font-size: 13px;" th:text="${#temporals.format(election.finishTimestamp, 'dd-MM-yyyy HH:mm')}"></span>
+                        </td>
+                        <td>
+                            <span class="badge badge-primary rounded-pill my-auto" style="font-size: 12px;" th:text="${election.roll}"></span>
+                        </td>
+                        <td>
+                            <a
+                                    th:href="@{/auth/election-roll(uid=${election.title})}"
+                                    type="button"
+                                    class="btn btn-link btn-sm btn-rounded text-muted fs-7 d-flex"
+                                    data-mdb-ripple-color="dark"
+                            >
+                                Ver Padrón<i class="fa fa-file ms-2"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+        <!--Section: Inicio -->
+    </div>
+</main>
+<!--:::: Main ::::-->
+</body>
+</html>

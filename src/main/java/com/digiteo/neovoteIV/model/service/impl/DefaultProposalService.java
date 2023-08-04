@@ -8,6 +8,7 @@ import com.digiteo.neovoteIV.model.service.ProposalService;
 import com.digiteo.neovoteIV.system.exception.ProposalNameAlreadyExistException;
 import com.digiteo.neovoteIV.web.data.model.ProposalData;
 import com.digiteo.neovoteIV.web.data.model.ProposalUpdateData;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -79,8 +80,20 @@ public class DefaultProposalService implements ProposalService {
         }
     }
 
+    //------------------------------------------------------------------------------------------------------------------
     @Override
     public List<ProposalData> getProposalList() {
         return null;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    @Override
+    public Proposal findProposal(String proposalName){
+        Optional<Proposal> p = repository.findProposalByName(proposalName);
+        if(p.isEmpty()){
+            throw new EntityNotFoundException("No se encontró una propuesta con el nombre indicado");
+        } else {
+            return p.get();
+        }
     }
 }

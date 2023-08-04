@@ -1,6 +1,7 @@
 package com.digiteo.neovoteIV.model.service.impl;
 
 import com.digiteo.neovoteIV.model.jpa.data.Election;
+import com.digiteo.neovoteIV.model.jpa.data.ElectionRoll;
 import com.digiteo.neovoteIV.model.jpa.data.ElectionStatus;
 import com.digiteo.neovoteIV.model.jpa.repository.ElectionRepository;
 import com.digiteo.neovoteIV.model.mapper.ElectionMapper;
@@ -17,10 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 //@AllArgsConstructor
@@ -136,7 +134,7 @@ public class DefaultElectionService implements ElectionService {
 
     // Voter layer related methods impl  -------------------------------------------------------------------------------
     @Override
-    public List<ElectionListData> getVotersElectionsList(){
+    public List<ElectionListData> getVotersElectionsList(Principal principal){
         List<Election> elections = repository.findAll();
         if(elections == null){
             return Collections.emptyList();
@@ -149,9 +147,19 @@ public class DefaultElectionService implements ElectionService {
                 eld.setStatus(e.getElectionStatusCode());
                 eld.setTopics(e.getTopicsCollection());
                 //check if copyProperties copy the init and finish timestamp, if not, use the mutator of eld to set them
-                votersElectionList.add(eld);
+                Set<ElectionRoll> ers = e.getRoll();
+                for(ElectionRoll er:ers){
+                    if(Objects.equals(er.getVoterUsername(), principal.getName())
+                            || Objects.equals(er.getEmail(), principal.getName())){
+                        votersElectionList.add(eld);
+                    }
+                }
             }
         }
         return votersElectionList;
     }
+
+    //public Collection<T> getRollCollection(String title){
+    //    Election e = repository.findElectionByTitle(title).get();
+    //}
 }

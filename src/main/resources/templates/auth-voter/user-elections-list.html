@@ -15,14 +15,15 @@
             <p class="text-left mb-2">
                 <i class="fa-regular fa-hand-point-right me-1"></i> En esta sección podrá ver todas las elecciones
                 disponibles. Cada proceso tiene un <strong>padrón electoral</strong> definido por el administrador
-                creador de la elección. Si usted desea participar de un proceso, primero debe mandar una solicitud para
-                ser ingresado en el padrón de éste, una vez aceptada su solicitud e ingresado su nombre al padrón, podrá
-                ver en esta sección la opción de ingresar a la <strong>urna virtual</strong> de la elección, donde verá
-                los detalles de las <strong>propuestas</strong> y podrá emitir su voto para alguna de ellas.
+                creador de la elección. Si usted desea participar de un proceso, primero debe mandar una solicitud al
+                correo del administrador para ser ingresado en el padrón de éste, una vez aceptada su solicitud e
+                ingresado su nombre al padrón, podrá ver en esta sección la opción de ingresar a la
+                <strong>urna virtual</strong> de la elección, donde verá los detalles de las
+                <strong>propuestas</strong> y podrá emitir su voto para alguna de ellas.
             </p>
             <p class="text-left">
                 <i class="fa-regular fa-hand-point-right me-1"></i> Las elecciones tienen un <strong>status</strong> que
-                indica en qué estado se encuentra actualmente el proceso, en función de este estado usted sabrá que se
+                indica en qué estado se encuentra actualmente el proceso, en función de este estado, usted sabrá que se
                 puede (y que no se puede) hacer:
             </p>
             <p class="text-left">
@@ -62,7 +63,10 @@
                     </thead>
                     <tbody>
                     <tr th:if="${voterElectionsList.isEmpty() }">
-                        <td colspan="5">Aquí podrá ver el detalle de las elecciones registradas</td>
+                        <td colspan="5">Aquí podrá ver el detalle de las elecciones registradas. Si una elección que
+                            ya fue creada no aparece, puede ser debido a que usted no se encuentre ingresado en el
+                            <strong>padrón electoral</strong> de dicha elección, en cuyo caso le recomendamos
+                            ponerse en contacto con el administrador.</td>
                     </tr>
                     <tr th:each="election : ${voterElectionsList}">
                         <td>

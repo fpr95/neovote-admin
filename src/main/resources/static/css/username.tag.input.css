@@ -1,0 +1,23 @@
+.ul-test {
+    padding: 7px;
+    border-radius: 5px;
+    flex-wrap: wrap;
+}
+
+.ul-test .li-test {
+    list-style: none;
+    margin: 4px 3px;
+    border-radius: 5px;
+    background: #f2f2f2;
+    padding: 5px 8px 5px 10px;
+    border: 1px solid #e3d1e1;
+}
+
+.ul-test .li-test i {
+    font-size: 13px;
+    background: #dfdfdf;
+    border-radius: 50%;
+    justify-content: center;
+    color: #808080;
+    cursor: pointer;
+}

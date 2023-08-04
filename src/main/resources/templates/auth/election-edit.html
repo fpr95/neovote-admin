@@ -12,19 +12,63 @@
             });
         }
     </script>
+    <!--
     <script type="text/javascript" th:inline="javascript">
-        let flag = [(${checkboxFlag})]
-        if(flag){
+        //let flag = [(${checkboxFlag})]
+        //if(flag){
+        //    $(document).ready(function() {
+        //        //$('#editIsVisibleInput').prop('checked', true);
+        //    });
+        //}
+
+        let proposalName = [[${#strings.replace(checkboxProposalName,' ','')}]];
+        let checkboxInputId = 'checkbox-' + proposalName
+        let checkboxFlag = checkboxInputId
+        //if(checkboxFlag){
             $(document).ready(function() {
-                $('#editIsVisibleInput').prop('checked', true);
+                if(checkboxFlag){
+                    $(checkboxInputId).prop('checked', true);
+                }else{
+                    $(checkboxInputId).prop('checked', false);
+                }
+            });
+        //}
+
+    </script>
+    -->
+    <script type="text/javascript" th:inline="javascript">
+        const visibleProposals = [[${visibleProposals}]];
+
+        function setCheckboxes() {
+            visibleProposals.forEach((proposalName) => {
+                const checkbox = document.getElementById("editIsVisibleInput-" + proposalName.replace(/\s/g, ''));
+                if (checkbox && !checkbox.checked) {
+                    checkbox.checked = true;
+                }
+            });
+        }
+        document.addEventListener('DOMContentLoaded', setCheckboxes);
+    </script>
+    <script type="text/javascript" th:inline="javascript">
+        var editErr = [(${proposalEditValidationErrors})];
+        var proposalName = [[${#strings.replace(badEditProposalName,' ','')}]];
+        var modalId = '#editProposalModal-' + proposalName
+
+        if(editErr){
+            $(document).ready(function() {
+                //$("div[id^='editProposalModal-']").modal('show');
+                $(modalId).modal('show');
             });
         }
     </script>
     <script type="text/javascript" th:inline="javascript">
-        var editErr = [(${proposalEditValidationErrors})];
-        if(editErr){
+        let hasBegan = [(${hasBegan})];
+        if(hasBegan){
             $(document).ready(function() {
-                $('#editProposalModal').modal('show');
+                $('.remove-prop-btn').prop("disabled", true);
+                $('.edit-prop-btn').prop("disabled", true);
+                $('#addProposal').prop("disabled", true);
+                $('#applyChanges').prop("disabled", true);
             });
         }
     </script>
@@ -83,15 +127,15 @@
                         </td>
                         <td>
                             <button type="button"
-                                    class="btn text-primary btn-sm btn-rounded d-flex"
+                                    class="btn edit-prop-btn text-primary btn-sm btn-rounded d-flex"
                                     data-mdb-ripple-color="dark"
-                                    data-mdb-toggle="modal"
-                                    data-mdb-target="#editProposalModal">
+                                    th:data-mdb-toggle="modal"
+                                    th:data-mdb-target="'#editProposalModal-' + ${#strings.replace(proposal.name,' ','')}">
                                 Editar
                                 <i class="fa fa-marker ms-4"></i>
                             </button>
                             <!-- Edit Proposal Form Modal -->
-                            <div class="modal fade" id="editProposalModal" tabindex="-1" aria-labelledby="proposalModalLabel2"
+                            <div class="modal fade" th:id="'editProposalModal-' + ${#strings.replace(proposal.name,' ','')}" tabindex="-1" aria-labelledby="proposalModalLabel2"
                                  aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -186,6 +230,7 @@
                                                                            class="form-control"
                                                                            th:field="*{contactEmail}"
                                                                            th:errorclass="is-invalid"
+                                                                           th:placeholder="${proposal.contactEmail}"
 
                                                                     />
                                                                     <label class="form-label" for="editEmailInput">Correo de
@@ -244,14 +289,15 @@
                                                     </div>
                                                     <div class="card card-form-2 mb-0 z-depth-0">
                                                         <div class="card-body text-center">
-                                                            <!-- <form class="text-center"> -->
+                                                            <!-- <form class="text-center"> <th:checked="${proposal.visible}?'checked'"
+                                                             th:checked="${#strings.concat(checkbox-, proposal.name)}?'checked'"-->
                                                             <div class="form-check red-checkbox my-3">
                                                                 <input class="form-check-input ms-2"
                                                                        type="checkbox"
-                                                                       id="editIsVisibleInput"
+                                                                       th:id="'editIsVisibleInput-' + ${#strings.replace(proposal.name,' ','')}"
                                                                        th:field="*{visible}"
-                                                                       th:checked="${proposal.visible}?'checked'"/>
-                                                                <label class="form-check-label" for="editIsVisibleInput">
+                                                                />
+                                                                <label class="form-check-label" th:for="'editIsVisibleInput-' + ${#strings.replace(proposal.name,' ','')}">
                                                                     Mostrar como <strong>propuesta activa</strong> a los votantes
                                                                 </label>
                                                             </div>
@@ -281,14 +327,14 @@
                             <hr class="w-75 mx-auto py-0">
 
                             <button type="button"
-                                    class="btn btn-danger btn-sm btn-rounded d-flex"
-                                    data-mdb-toggle="modal"
-                                    data-mdb-target="#deleteConfirmationModal">
+                                    class="btn btn-danger btn-sm btn-rounded remove-prop-btn d-flex"
+                                    th:data-mdb-toggle="modal"
+                                    th:data-mdb-target="'#deleteConfirmationModal-' + ${#strings.replace(proposal.name,' ','')}">
                                 Remover
                                 <i class="fa-solid fa-circle-xmark ms-2"></i>
                             </button>
                             <!-- Delete Proposal Confirmation Modal -->
-                            <div class="modal fade" id="deleteConfirmationModal" tabindex="-1"
+                            <div class="modal fade" th:id="'deleteConfirmationModal-' + ${#strings.replace(proposal.name,' ','')}" tabindex="-1"
                                  aria-labelledby="modalLabel2" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -319,7 +365,7 @@
                 </table>
             </div>
 
-            <button type="button" class="btn btn-primary btn-block mb-4 mt-4" data-mdb-toggle="modal"
+            <button type="button" class="btn btn-primary btn-block mb-4 mt-4" id="addProposal" data-mdb-toggle="modal"
                     data-mdb-target="#newProposalModal">
                 Agregar Nueva Propuesta
             </button>
@@ -715,7 +761,7 @@
                 </div>
 
                 <!-- Modal Patch Submit button --> <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary btn-block mb-4" data-mdb-toggle="modal" data-mdb-target="#editConfirmationModal">
+                <button type="button" class="btn btn-primary btn-block mb-4" id="applyChanges" data-mdb-toggle="modal" data-mdb-target="#editConfirmationModal">
                     Aplicar Cambios</button>
                 <!-- Confirmation Modal -->
                 <div class="modal fade" id="editConfirmationModal" tabindex="-1" aria-labelledby="modalLabel1" aria-hidden="true">

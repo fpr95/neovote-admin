@@ -30,5 +30,5 @@ public interface ElectionService {
 
     // Voters layer related methods  -----------------------------------------------------------------------------------
 
-    List<ElectionListData> getVotersElectionsList();
+    List<ElectionListData> getVotersElectionsList(Principal principal);
 }

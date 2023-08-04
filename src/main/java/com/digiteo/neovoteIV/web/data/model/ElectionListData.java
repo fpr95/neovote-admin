@@ -18,6 +18,7 @@ public class ElectionListData implements Serializable {
     private String briefDescription;
     // try with 'ElectionStatus', if it doesn't work try convert it to String value
     private String status;
+    private int roll;
     private String creatorUsername;
     private LocalDateTime initTimestamp;
     private LocalDateTime finishTimestamp;

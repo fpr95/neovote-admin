@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,7 +77,9 @@ public class ElectionController {
         BeanUtils.copyProperties(e, ed);
         */
         ElectionData ed = electionMapper.toDto(e);
-        boolean flag = false;
+        //boolean flag = false;
+        boolean hasBegan = false;
+        List<String> visibleProposals = new ArrayList<>();
         List<Proposal> proposals = e.getProposals();
         List<ProposalData> proposalsData = new ArrayList<>();
         for(Proposal p : proposals){
@@ -86,13 +89,27 @@ public class ElectionController {
             pd.setDetails(p.getDetails());
             pd.setVisible(p.isVisible());
             if(pd.isVisible()){
-                flag = true;
+                //flag = true;
+                //model.addAttribute("checkbox-" + p.getName(), true);
+                //model.addAttribute("checkboxProposalName", p.getName());
+                visibleProposals.add(p.getName());
             }
+            //else {
+                //model.addAttribute("checkbox-" + p.getName(), false);
+                //model.addAttribute("checkboxProposalName", p.getName());
+            //}
             pd.setCreatedAt(p.getTimestamp());
             proposalsData.add(pd);
         }
 
-        model.addAttribute("checkboxFlag", flag);
+        if(LocalDateTime.now().compareTo(ed.getInitTimestamp()) == 0 ||
+                LocalDateTime.now().compareTo(ed.getInitTimestamp()) > 0){
+            hasBegan = true;
+        }
+
+        model.addAttribute("visibleProposals", visibleProposals);
+        model.addAttribute("hasBegan", hasBegan);
+        //model.addAttribute("checkboxFlag", flag);
         model.addAttribute("currentElection", ed);
         model.addAttribute("editableElection", new ElectionUpdateData());
         model.addAttribute("editableProposal", new ProposalUpdateData());
@@ -113,6 +130,8 @@ public class ElectionController {
             //Election e = electionService.getElectionByTitle(electionTitle);
             ElectionData ed = new ElectionData(); // CHANGE THE ElectionData FOR A DTO WITH THE proposal LIST
             BeanUtils.copyProperties(e, ed);
+            boolean flag = false;
+            boolean hasBegan = false;
             List<Proposal> proposals = e.getProposals();
             List<ProposalData> proposalsData = new ArrayList<>();
             for(Proposal p : proposals){
@@ -121,9 +140,20 @@ public class ElectionController {
                 pd.setContactEmail(p.getContactEmail());
                 pd.setDetails(p.getDetails());
                 pd.setVisible(p.isVisible());
+                if(pd.isVisible()){
+                    flag = true;
+                }
                 pd.setCreatedAt(p.getTimestamp());
                 proposalsData.add(pd);
             }
+
+            if(LocalDateTime.now().compareTo(ed.getInitTimestamp()) == 0 ||
+                    LocalDateTime.now().compareTo(ed.getInitTimestamp()) > 0){
+                hasBegan = true;
+            }
+
+            model.addAttribute("hasBegan", hasBegan);
+            model.addAttribute("checkboxFlag", flag);
             model.addAttribute("currentElection", ed);
             model.addAttribute("editableElection", new ElectionUpdateData());
             model.addAttribute("editableProposal", new ProposalUpdateData());
@@ -143,6 +173,8 @@ public class ElectionController {
 
             ElectionData ed = new ElectionData(); // CHANGE THE ElectionData FOR A DTO WITH THE proposal LIST
             BeanUtils.copyProperties(e, ed);
+            boolean flag = false;
+            boolean hasBegan = false;
             List<Proposal> proposals = e.getProposals();
             List<ProposalData> proposalsData = new ArrayList<>();
             for(Proposal p : proposals){
@@ -151,9 +183,20 @@ public class ElectionController {
                 pd.setContactEmail(p.getContactEmail());
                 pd.setDetails(p.getDetails());
                 pd.setVisible(p.isVisible());
+                if(pd.isVisible()){
+                    flag = true;
+                }
                 pd.setCreatedAt(p.getTimestamp());
                 proposalsData.add(pd);
             }
+
+            if(LocalDateTime.now().compareTo(ed.getInitTimestamp()) == 0 ||
+                    LocalDateTime.now().compareTo(ed.getInitTimestamp()) > 0){
+                hasBegan = true;
+            }
+
+            model.addAttribute("hasBegan", hasBegan);
+            model.addAttribute("checkboxFlag", flag);
             model.addAttribute("currentElection", ed);
             model.addAttribute("editableElection", new ElectionUpdateData());
             model.addAttribute("editableProposal", new ProposalUpdateData());
@@ -171,9 +214,12 @@ public class ElectionController {
                                  @RequestParam(value = "uid", required = false) String electionTitle,
                                  Model model){
         proposalService.deleteProposal(name);
+        //check if the code bellow can be replaced with an invocation to the electionListView endpoint right here <-
         Election e = electionService.getElectionByTitle(electionTitle);
         ElectionData ed = new ElectionData(); // CHANGE THE ElectionData FOR A DTO WITH THE proposal LIST
         BeanUtils.copyProperties(e, ed);
+        boolean flag = false;
+        boolean hasBegan = false;
         List<Proposal> proposals = e.getProposals();
         List<ProposalData> proposalsData = new ArrayList<>();
         for(Proposal p : proposals){
@@ -182,9 +228,20 @@ public class ElectionController {
             pd.setContactEmail(p.getContactEmail());
             pd.setDetails(p.getDetails());
             pd.setVisible(p.isVisible());
+            if(pd.isVisible()){
+                flag = true;
+            }
             pd.setCreatedAt(p.getTimestamp());
             proposalsData.add(pd);
         }
+
+        if(LocalDateTime.now().compareTo(ed.getInitTimestamp()) == 0 ||
+                LocalDateTime.now().compareTo(ed.getInitTimestamp()) > 0){
+            hasBegan = true;
+        }
+
+        model.addAttribute("hasBegan", hasBegan);
+        model.addAttribute("checkboxFlag", flag);
         model.addAttribute("currentElection", ed);
         model.addAttribute("editableElection", new ElectionUpdateData());
         model.addAttribute("editableProposal", new ProposalUpdateData());
@@ -295,6 +352,8 @@ public class ElectionController {
         if(bindingResult.hasErrors()){
             ElectionData ed = new ElectionData(); // CHANGE THE ElectionData FOR A DTO WITH THE proposal LIST
             BeanUtils.copyProperties(e, ed);
+            boolean flag = false;
+            boolean hasBegan = false;
             List<Proposal> proposals = e.getProposals();
             List<ProposalData> proposalsData = new ArrayList<>();
             for(Proposal p : proposals){
@@ -303,15 +362,27 @@ public class ElectionController {
                 pd.setContactEmail(p.getContactEmail());
                 pd.setDetails(p.getDetails());
                 pd.setVisible(p.isVisible());
+                if(pd.isVisible()){
+                    flag = true;
+                }
                 pd.setCreatedAt(p.getTimestamp());
                 proposalsData.add(pd);
             }
+
+            if(LocalDateTime.now().compareTo(ed.getInitTimestamp()) == 0 ||
+                    LocalDateTime.now().compareTo(ed.getInitTimestamp()) > 0){
+                hasBegan = true;
+            }
+
+            model.addAttribute("hasBegan", hasBegan);
+            model.addAttribute("checkboxFlag", flag);
             model.addAttribute("currentElection", ed);
             model.addAttribute("editableElection", new ElectionUpdateData());
             model.addAttribute("editableProposal", proposalUpdateData); // maybe change this for a new one
             model.addAttribute("proposalsList", proposalsData);
 
             model.addAttribute("proposalEditValidationErrors", true);
+            model.addAttribute("badEditProposalName", proposalName);
             model.addAttribute("proposalData", new ProposalData());
             return "auth/election-edit"; // check if it should be "auth/election-new?error" to display the constraint message
         }
@@ -325,6 +396,8 @@ public class ElectionController {
 
             ElectionData ed = new ElectionData(); // CHANGE THE ElectionData FOR A DTO WITH THE proposal LIST
             BeanUtils.copyProperties(e, ed);
+            boolean flag = false;
+            boolean hasBegan = false;
             List<Proposal> proposals = e.getProposals();
             List<ProposalData> proposalsData = new ArrayList<>();
             for(Proposal p : proposals){
@@ -333,9 +406,20 @@ public class ElectionController {
                 pd.setContactEmail(p.getContactEmail());
                 pd.setDetails(p.getDetails());
                 pd.setVisible(p.isVisible());
+                if(pd.isVisible()){
+                    flag = true;
+                }
                 pd.setCreatedAt(p.getTimestamp());
                 proposalsData.add(pd);
             }
+
+            if(LocalDateTime.now().compareTo(ed.getInitTimestamp()) == 0 ||
+                    LocalDateTime.now().compareTo(ed.getInitTimestamp()) > 0){
+                hasBegan = true;
+            }
+
+            model.addAttribute("hasBegan", hasBegan);
+            model.addAttribute("checkboxFlag", flag);
             model.addAttribute("currentElection", ed);
             model.addAttribute("editableElection", new ElectionUpdateData());
             model.addAttribute("editableProposal", proposalUpdateData);

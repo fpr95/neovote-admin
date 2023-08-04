@@ -5,11 +5,10 @@ import lombok.*;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 //@Setter
-@EqualsAndHashCode(callSuper = true)
+//@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @ToString
 @Entity(name = "election")
@@ -108,6 +107,26 @@ public class Election extends BaseEntity {
     @Getter
     private List<Proposal> proposals = new ArrayList<Proposal>();
 
+    //ORDER:no, UNIQUENESS:yes, UPDATES:could b many, SIZE:undefined, OWNING:yes, ACCESS:field(@Id on model.BaseEntity.id)
+    //@ToString.Exclude
+    //@ManyToMany(
+    //        //mappedBy = "rolls",
+    //        fetch = FetchType.LAZY,
+    //        cascade = CascadeType.ALL
+    //)
+    //@Getter
+    //private List<VoterEntity> electoralRoll = new ArrayList<VoterEntity>();
+
+
+    //ORDER:no, UNIQUENESS:yes, UPDATES:should b few, SIZE:undefined, OWNING:no, ACCESS:field(@Id on model.BaseEntity.id)
+    @ToString.Exclude
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            mappedBy = "targetElection"
+    )
+    @Getter
+    private Set<ElectionRoll> roll = new HashSet<>();
 
     public Election (
             String title,
@@ -132,6 +151,23 @@ public class Election extends BaseEntity {
 
     @Override
     public void setId(Long id) { super.setId(id); }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(getId().intValue());
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (this == o)
+            return true;
+        if (o == null)
+            return false;
+        if (getClass() != o.getClass())
+            return false;
+        Election other = (Election) o;
+        return Objects.equals(getId(), other.getId());
+    }
 
     /*
     public ElectionStatus getElectionStatus(){

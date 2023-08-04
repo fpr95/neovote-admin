@@ -1,10 +1,512 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout-dash-voter}">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <title>Resultados</title>
+    <style>
+        @media (max-width: 768px) {
+            .election-card-header {
+                flex-direction: column;
+            }
+            .election-list-details {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <style>
+        #my-canvas{
+            position: fixed;
+            top: 0;
+            left: 0;
+            /* width: 100%;
+            height: 100vh; */
+            z-index: 1000000;
+            /* visibility: hidden; */
+            pointer-events: none;
+        }
+        /*
+        #my-canvas.active{
+            visibility: visible;
+        }
+        */
+    </style>
 
+    <style>
+        #tumbleweed-container {
+            max-width: 100%;
+            width: 100%;
+        }
+        .tumbleweed{
+            position: absolute;
+            display: block;
+            top: 80vh;
+            left: 0;
+            width: 125px;
+            height: 125px;
+            z-index: 10000;
+            background-size: 100%;
+        }
+
+        .tumbleweed{
+            animation: tumbleweed linear 5s;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes tumbleweed{
+            0% {
+                transform:  translate(0px,45px)  rotate(0deg) ;
+            }
+            9% {
+                transform:  translate(8vw,5px)  rotate(130deg) ;
+            }
+            17% {
+                transform:  translate(15vw,45px)  rotate(250deg) ;
+            }
+            26% {
+                transform:  translate(25vw,15px)  rotate(360deg) ;
+            }
+            34% {
+                transform:  translate(36vw,45px)  rotate(490deg) ;
+            }
+            42% {
+                transform:  translate(48vw,5px)  rotate(600deg) ;
+            }
+            50% {
+                transform:  translate(59vw,45px)  rotate(720deg) ;
+            }
+            58% {
+                transform:  translate(71vw,15px)  rotate(890deg) ;
+            }
+            70% {
+                transform:  translate(80vw,45px)  rotate(950deg) ;
+            }
+            80% {
+                transform:  translate(89vw,45px)  rotate(1090deg) ;
+            }
+            100% {
+                transform:  translate(99vw,30px)  rotate(1110deg) ;
+            }
+        }
+    </style>
+
+    <script type="text/javascript" defer th:inline="javascript">
+        let winnerProposal = [[${winnerProposal}]];
+        let tieProposalOne = [[${tieProposalOne}]];
+        let tieProposalTwo = [[${tieProposalTwo}]];
+        let totalVotes = [[${totalVotes}]];
+
+        var end = Date.now() + (5 * 1000);
+        var colors = ['#bb0000', '#ffffff'];
+
+        //let conf = document.querySelector("#my-canvas");
+        //let confettiSettings = { target: 'my-canvas' };
+        //let confetti = new ConfettiGenerator(confettiSettings);
+        //confetti.render();
+
+        $(document).ready(function(){
+            if(winnerProposal != null){
+                $("#winnerProposalModal").focus();
+                $("#winnerProposalModal").modal('show');
+
+                (function frame() {
+                    confetti({
+                        particleCount: 2,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 },
+                        colors: colors
+                    });
+                    confetti({
+                        particleCount: 2,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 },
+                        colors: colors
+                    });
+
+                    if (Date.now() < end) {
+                        requestAnimationFrame(frame);
+                    }
+                }());
+
+                //confetti();
+                //confetti.render();
+                //conf.classList.add('active');
+
+                function onModalClosed() {
+                    //conf.classList.remove('active');
+                    //confetti.clear();
+                }
+
+                $("#winnerProposalModal").on("hidden.bs.modal", function() {
+                    onModalClosed();
+                });
+            }
+            if(tieProposalOne != null && tieProposalTwo != null){
+                $("#tieModal").focus();
+                $("#tieModal").modal('show');
+            }
+            if(totalVotes == 0 && winnerProposal == null && tieProposalOne == null){
+                $("#zeroVotesModal").focus();
+                $("#zeroVotesModal").modal('show');
+                $("#tumbleweed-container").attr("hidden", false);
+
+                $("#zeroVotesModal").on("hidden.bs.modal", function() {
+                    $("#tumbleweed-container").hide();
+                });
+            }
+        });
+    </script>
+
+</head>
+<body style="min-height:100vh;">
+<!--:::: Main ::::-->
+<main>
+    <div layout:fragment="body" class="container">
+        <!-- Confetti animation element -->
+        <canvas id="my-canvas"></canvas>
+        <!-- Section: Introducción -->
+        <section class="content pt-5 mb-5 mx-auto">
+            <h3 class="text-left mb-4 pb-2 text-primary fw-bold">Resultados</h3>
+            <h5 class="text-left mb-4 pb-2 fw-bold" th:text="${currentElection.title}"></h5>
+        </section>
+        <!-- Section: Introducción -->
+
+        <!-- Section: Modal Propuesta Ganadora -->
+        <div class="modal fade" id="winnerProposalModal" tabindex="-1"
+             aria-labelledby="modalLabel2" aria-hidden="true" th:if="${winnerProposal != null}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <img th:src="@{/static/img/proposal-default.jpg}" class="img-fluid rounded-circle p-5">
+                        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"
+                                style="position: absolute;top: 0;right: 0;padding: inherit;"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h3 class="text-center mb-0">
+                            <strong>¡Felicidades!</strong>
+                        </h3>
+                        <h5 class="text-center mb-3">
+                            <strong th:text="${winnerProposal.name}"></strong>
+                        </h5>
+                        <hr class="w-75 mx-auto">
+                        <p class="text-center">
+                            ha sido la propuesta ganadora con un
+                            <span class="text-success" th:text="${#strings.concat(winnerProposal.percent, '%')}"></span>
+                            de preferencia.
+                        </p>
+                    </div>
+                    <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
+        <!-- Section: Modal Propuesta Ganadora -->
+
+        <!-- Section: Modal Empate TRIED: totalVotes == 0, < 0, > 0, -->
+        <div class="modal fade" id="tieModal" tabindex="-1"
+             aria-labelledby="modalLabel2" aria-hidden="true" th:if="${winnerProposal == null and totalVotes > 0}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="col-md-5">
+                            <img th:src="@{/static/img/proposal-default.jpg}" class="img-fluid rounded-circle p-2">
+                        </div>
+                        <div class="col-md-2">
+                            <span class="badge w-100 bg-warning text-dark rounded-pill"><i class="fa-solid fa-bolt"></i></span>
+                        </div>
+                        <div class="col-md-5">
+                            <img th:src="@{/static/img/proposal-default.jpg}" class="img-fluid rounded-circle p-2">
+                        </div>
+                        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"
+                                style="position: absolute;top: 0;right: 0;padding: inherit;"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h3 class="text-center mb-0"><strong>¡Tenemos un empate!</strong></h3>
+                        <h6 class="text-center mb-0">entre</h6>
+                        <p class="d-flex justify-content-between">
+                            <h5 class="text-center mb-0"><strong th:text="${tieProposalOne.name}"></strong></h5>
+                            <p class="text-center mb-0">&</p>
+                            <h5 class="text-center mb-3"><strong th:text="${tieProposalTwo.name}"></strong></h5>
+                        </p>
+                        <hr class="w-75 mx-auto">
+                        <p class="text-center text-muted">
+                            han alcanzado un <span class="text-success" th:text="${#strings.concat(tieProposalOne.percent, '%')}"></span> de
+                            preferencia.
+                        </p>
+                    </div>
+                    <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
+        <!-- Section: Modal Empate -->
+
+        <!-- Section: Modal 0 Votos -->
+        <div class="modal fade" id="zeroVotesModal" tabindex="-1"
+             aria-labelledby="modalLabel2" aria-hidden="true" th:if="${totalVotes == 0}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <img th:src="@{/static/img/bunny.png}" class="img-fluid rounded-circle p-5">
+                        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"
+                                style="position: absolute;top: 0;right: 0;padding: inherit;"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h3 class="text-center mb-0">
+                            <strong>Baia Baia</strong>
+                        </h3>
+                        <!--
+                        <h5 class="text-center mb-3">
+                            <strong th:text="${winnerProposal.name}"></strong>
+                        </h5>
+                        -->
+                        <hr class="w-75 mx-auto">
+                        <p class="text-center">
+                            ¡Al parecer <strong>nadie</strong> voto en esta elección!
+                            <!--
+                            <span class="text-success" th:text="${#strings.concat(winnerProposal.percent, '%')}"></span>
+                            de preferencia.
+                            -->
+                        </p>
+                    </div>
+                    <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
+        <!-- Section: Modal 0 Votos -->
+
+        <section class="content">
+            <hr class="mx-auto my-4 w-75">
+        </section>
+
+        <!-- Section: Resultados -->
+        <section class="content pt-3 mb-9 mx-auto">
+            <div class="row">
+                <!-- Single Winner Section -->
+                <div class="col-md-5 mb-3" th:if="${winnerProposal} != null">
+                    <h4 class="mb-3">Propuesta Ganadora</h4>
+                    <div class="card">
+                        <div class="card-header">
+                            <img class="img-fluid p-5" th:src="@{/static/img/proposal-default.jpg}" alt="">
+                        </div>
+                        <ul class="list-group list-group-light">
+                            <li class="list-group-item px-3 d-flex justify-content-between"><strong>ID:</strong>
+                                <span class="fw-bold" th:text="${winnerProposal.name}"></span></li>
+                            <li class="list-group-item px-3 d-flex justify-content-between"><strong>Votos
+                                Obtenidos:</strong>
+                                <span class="fw-bold badge badge-success rounded-pill my-auto"
+                                      th:text="${winnerProposal.votes}"></span></li>
+                            <li class="list-group-item px-3 d-flex justify-content-between"><strong>Porcentaje:</strong>
+                                <span class="text-success" th:text="${#strings.concat(winnerProposal.percent, '%')}"></span></li>
+                            <li class="list-group-item px-3 d-flex justify-content-between"><strong>Ranking:</strong>
+                                <span class="fw-bold">1</span></li>
+                            <li class="list-group-item px-3 d-flex justify-content-between"><strong>Fecha y Hora
+                                Registro:</strong>
+                                <span class="badge badge-secondary rounded-pill text-black fw-bold p-2"
+                                      th:text="${#temporals.format(winnerProposal.createdAt, 'dd-MM-yyyy HH:mm')}"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Single Winner Section -->
+
+                <!-- Tie Case Section -->
+                <div class="col-md-6" th:if="${tieProposalOne} != null">
+                    <h4 class="mb-3">Propuestas Mas Votadas</h4>
+                    <div class="card d-flex">
+                        <div class="row g-0">
+                            <div class="col-md-4 d-flex">
+                                <img th:src="@{/static/img/proposal-default.jpg}" style="object-fit: cover;"
+                                     class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <ul class="list-group list-group-light">
+                                        <li class="list-group-item px-3 d-flex justify-content-between">
+                                            <strong>ID:</strong>
+                                            <span class="fw-bold" th:text="${tieProposalOne.name}"></span></li>
+                                        <li class="list-group-item px-3 d-flex justify-content-between"><strong>Votos
+                                            Obtenidos:</strong>
+                                            <span class="fw-bold badge badge-success rounded-pill my-auto"
+                                                  th:text="${tieProposalOne.votes}"></span></li>
+                                        <li class="list-group-item px-3 d-flex justify-content-between"><strong>Porcentaje:</strong>
+                                            <span class="text-success" th:text="${tieProposalOne.percent}"></span></li>
+                                        <li class="list-group-item px-3 d-flex justify-content-between">
+                                            <strong>Ranking:</strong>
+                                            <span class="fw-bold">-</span></li>
+                                        <li class="list-group-item px-3 d-flex justify-content-between"><strong>Registro:</strong>
+                                            <span class="badge badge-secondary rounded-pill text-black fw-bold p-2"
+                                                  th:text="${#temporals.format(tieProposalOne.createdAt, 'dd-MM-yyyy HH:mm')}"></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6" th:if="${tieProposalTwo} != null">
+                    <div class="card">
+                        <div class="row g-0">
+                            <div class="col-md-4 d-flex">
+                                <img th:src="@{/static/img/proposal-default.jpg}" style="object-fit: cover;"
+                                     class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <ul class="list-group list-group-light">
+                                        <li class="list-group-item px-3 d-flex justify-content-between">
+                                            <strong>ID:</strong>
+                                            <span class="fw-bold" th:text="${tieProposalTwo.name}"></span></li>
+                                        <li class="list-group-item px-3 d-flex justify-content-between"><strong>Votos
+                                            Obtenidos:</strong>
+                                            <span class="fw-bold badge badge-success rounded-pill my-auto"
+                                                  th:text="${tieProposalTwo.votes}"></span></li>
+                                        <li class="list-group-item px-3 d-flex justify-content-between"><strong>Porcentaje:</strong>
+                                            <span class="text-success" th:text="${tieProposalTwo.percent}"></span></li>
+                                        <li class="list-group-item px-3 d-flex justify-content-between">
+                                            <strong>Ranking:</strong>
+                                            <span class="fw-bold">-</span></li>
+                                        <li class="list-group-item px-3 d-flex justify-content-between"><strong>Registro:</strong>
+                                            <span class="badge badge-secondary rounded-pill text-black fw-bold p-2"
+                                                  th:text="${#temporals.format(tieProposalTwo.createdAt, 'dd-MM-yyyy HH:mm')}"></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tie Case Section -->
+
+
+                <div class="col-md-7 mt-5">
+                    <h4 class="mb-3" th:if="${winnerProposal != null or tieProposalOne != null}">Otra(s) Propuesta(s)</h4>
+                    <h4 class="mb-3" th:unless="${winnerProposal != null or tieProposalOne != null}">Listado Propuestas</h4>
+                    <div class="shadow-3 overflow-auto">
+                        <table class="table table-responsive-md align-middle mb-0 bg-white">
+                            <thead class="bg-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>N° Votos</th>
+                                <th>Ranking</th>
+                                <th>%</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${otherProposals.isEmpty() }">
+                                <td colspan="5">No hay más propuestas registradas.</td>
+                            </tr>
+                            <tr th:each="p,iter : ${otherProposals}">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img
+                                                th:src="@{/static/img/proposal-default.jpg}"
+                                                alt=""
+                                                style="width: 45px; height: 45px"
+                                                class="rounded-circle"
+                                        />
+                                        <div class="ms-3">
+                                            <p class="fw-bold mb-1" th:text="${p.name}"></p>
+                                            <p class="text-muted mb-0" th:text="${p.email}"></p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-secondary rounded-pill d-inline"
+                                          th:text="${p.votes}"></span>
+                                </td>
+                                <!-- data still not included(Ranking) -->
+                                <td>
+                                    <span th:if="${p.votes > 0}" class="fw-bold" th:text="${rankingIndexes[iter.index]}"></span>
+                                    <span th:if="${p.votes == 0}" class="fw-bold">-</span>
+                                </td>
+                                <!-- data still not included(Ranking) -->
+                                <td>
+                                    <!-- data still not included(%) -->
+                                    <span class="text-danger" th:text="${#strings.concat(p.percent, '%')}"></span>
+                                    <!-- data still not included(%) -->
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Section: Resultados -->
+
+        <section class="content">
+            <hr class="mx-auto my-4 w-75">
+        </section>
+
+        <!-- Section: Detalles Proceso -->
+        <section class="content pt-5 mb-9">
+            <h3 class="text-left mb-4 pb-2 text-primary fw-bold">Detalles del Proceso</h3>
+            <div class="row">
+                <div class="col-md-12 px-3">
+                    <div class="card d-flex">
+                        <div class="card-header election-card-header d-flex">
+                            <div class="col-sm-3 my-auto">
+                                <img class="img-fluid rounded-circle p-5" th:src="@{/static/img/election-default.jpg}"
+                                     alt="">
+                            </div>
+                            <div class="col-sm-9 my-auto">
+                                <text class="my-auto px-4">
+                                    <span class="card p-3" th:text="${currentElection.details}"></span>
+                                </text>
+                            </div>
+                        </div>
+                        <div class="card-body px-5">
+                            <div class="col-sm-12">
+                                <ul class="list-group list-group-light">
+                                    <li class="list-group-item election-list-details px-3 d-flex justify-content-between">
+                                        <strong>ID:</strong>
+                                        <span class="fw-bold text-muted" th:text="${currentElection.title}"></span>
+                                    </li>
+                                    <li class="list-group-item election-list-details px-3 d-flex justify-content-between">
+                                        <strong>Tópico(s):</strong>
+                                        <span class="fw-bold text-muted"
+                                              th:text="${#strings.replace(currentElection.topics,',',', ')}"></span></li>
+
+                                    <!-- data still not included(Porcentaje de Participación) -->
+                                    <li class="list-group-item px-3 d-flex justify-content-between">
+                                        <strong>Porcentaje de Participación:</strong>
+                                        <span class="text-success me-0" th:text="${#strings.concat(participationPercent, '%')}"></span></li>
+
+                                    <!-- data still not included(Votos Emitidos) -->
+                                    <li class="list-group-item px-3 d-flex justify-content-between"><strong>N°
+                                        Votos Emitidos:</strong>
+                                        <span th:text="${totalVotes}"></span></li>
+
+                                    <li class="list-group-item election-list-details px-3 d-flex justify-content-between">
+                                        <strong>Fecha y Hora Inicio:</strong>
+                                        <span class="badge badge-secondary my-auto rounded-pill text-black fw-bold p-2"
+                                              th:text="${#temporals.format(currentElection.initTimestamp, 'dd-MM-yyyy HH:mm')}"></span>
+                                    </li>
+                                    <li class="list-group-item election-list-details px-3 d-flex justify-content-between">
+                                        <strong>Fecha y Hora Término:</strong>
+                                        <span class="badge badge-secondary my-auto rounded-pill text-black fw-bold p-2"
+                                              th:text="${#temporals.format(currentElection.finishTimestamp, 'dd-MM-yyyy HH:mm')}"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Section: Detalles Proceso -->
+
+        <!-- Section: Tumbleweed animation -->
+        <div id="tumbleweed-container" hidden>
+            <img class="tumbleweed" th:src="@{/static/img/tumbleweed.png}" alt="">
+        </div>
+        <!-- Section: Tumbleweed animation -->
+
+    </div>
+</main>
+<!--:::: Main ::::-->
 </body>
 </html>
