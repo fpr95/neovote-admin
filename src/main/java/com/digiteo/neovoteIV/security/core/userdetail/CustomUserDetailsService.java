@@ -27,32 +27,35 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.voterRepository = voterRepository;
     }
 
-    //@Override
-    //@Transactional  <- keep this with the "//"
-    //public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-    //    Optional<AdminEntity> userOptional = adminRepository.findUserByUsernameOrEmail(usernameOrEmail);
-    //    if(userOptional.isEmpty()){
-    //        throw new UsernameNotFoundException("La credencial proporcionada no existe en el sistema");
-    //    }
-    //    boolean enabled = !userOptional.get().isAccountVerified();
-    //    UserDetails user = User.withUsername(userOptional.get().getUsername())
-    //            .password(userOptional.get().getPwd())
-    //            .disabled(enabled)
-    //            .authorities("USER")
-    //            .build();
-    //    return user;
-    //}
+    /*
+    @Override
+    @Transactional  <- keep this with the "//"
+    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+        Optional<AdminEntity> userOptional = adminRepository.findUserByUsernameOrEmail(usernameOrEmail);
+        if(userOptional.isEmpty()){
+            throw new UsernameNotFoundException("La credencial proporcionada no existe en el sistema");
+        }
+        boolean enabled = !userOptional.get().isAccountVerified();
+        UserDetails user = User.withUsername(userOptional.get().getUsername())
+                .password(userOptional.get().getPwd())
+                .disabled(enabled)
+                .authorities("USER")
+                .build();
+        return user;
+    }
+     */
 
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-        //Optional<AdminEntity> userOptional = adminRepository.findUserByUsernameOrEmail(usernameOrEmail);
-        //Optional<VoterEntity> voterOptional = voterRepository.findVoterByUsernameOrEmail(usernameOrEmail);
-        //if(voterOptional.isEmpty()){
-        //    throw new UsernameNotFoundException("La credencial proporcionada no existe en el sistema");
-        //}
-        //if(!userOptional.get().getClass().equals(AdminEntity.class) || userOptional.get() == null){
-        //}
-
+        /*
+        Optional<AdminEntity> userOptional = adminRepository.findUserByUsernameOrEmail(usernameOrEmail);
+        Optional<VoterEntity> voterOptional = voterRepository.findVoterByUsernameOrEmail(usernameOrEmail);
+        if(voterOptional.isEmpty()){
+            throw new UsernameNotFoundException("La credencial proporcionada no existe en el sistema");
+        }
+        if(!userOptional.get().getClass().equals(AdminEntity.class) || userOptional.get() == null){
+        }
+         */
         if(!adminRepository.findUserByUsernameOrEmail(usernameOrEmail).isEmpty()
                 && adminRepository.findUserByUsernameOrEmail(usernameOrEmail).get() instanceof AdminEntity){
             Optional<AdminEntity> adminOptional = adminRepository.findUserByUsernameOrEmail(usernameOrEmail);
@@ -79,20 +82,21 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
 
-    //in case the usernameOrEmail config don't work use this impl v
-    //@Transactional
-    //public UserDetails loadUserByUsername(String username, String email) throws UsernameNotFoundException {
-    //    Optional<AdminEntity> userOptional = adminRepository.findUserByUsername(username);
-    //    if(userOptional.isEmpty()){
-    //        throw new UsernameNotFoundException("La credencial proporcionada no existe en el sistema");
-    //    }
-    //    userOptional = adminRepository.findUserByEmail(email);
-    //    if(userOptional.isEmpty()){
-    //        throw new UsernameNotFoundException("La credencial proporcionada no existe en el sistema");
-    //    }
-    //    UserDetails user = User.withUsername(userOptional.get().getUsername())
-    //            .password(userOptional.get().getPwd())
-    //            .authorities("USER").build();
-    //    return user;
-    //}
+    /* in case the usernameOrEmail config don't work use this impl v
+    @Transactional
+    public UserDetails loadUserByUsername(String username, String email) throws UsernameNotFoundException {
+        Optional<AdminEntity> userOptional = adminRepository.findUserByUsername(username);
+        if(userOptional.isEmpty()){
+            throw new UsernameNotFoundException("La credencial proporcionada no existe en el sistema");
+        }
+        userOptional = adminRepository.findUserByEmail(email);
+        if(userOptional.isEmpty()){
+            throw new UsernameNotFoundException("La credencial proporcionada no existe en el sistema");
+        }
+        UserDetails user = User.withUsername(userOptional.get().getUsername())
+                .password(userOptional.get().getPwd())
+                .authorities("USER").build();
+        return user;
+    }
+     */
 }

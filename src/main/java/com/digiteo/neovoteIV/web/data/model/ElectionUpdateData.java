@@ -30,7 +30,7 @@ public class ElectionUpdateData implements Serializable {
     @DateTimeFormat(pattern = "dd-MM-yyyy, HH:mm")
     private LocalDateTime finishTimestamp;
 
-    @Size(max = 500, message = "El campo 'Detalles' puede tener como máximo 500 caracteres")
+    @Size(max = 700, message = "El campo 'Detalles' puede tener como máximo 500 caracteres")
     private String editableDetails;
 
     private String electionStatus;

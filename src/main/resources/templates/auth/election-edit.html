@@ -4,6 +4,7 @@
       layout:decorate="~{layouts/layout_dash}">
 <head>
     <title>Editar Elección</title>
+    <link rel="stylesheet" th:href="@{/static/css/img_upload.css}">
     <script type="text/javascript" th:inline="javascript">
         var err = [(${proposalRegistrationValidationErrors})];
         if(err){
@@ -12,30 +13,6 @@
             });
         }
     </script>
-    <!--
-    <script type="text/javascript" th:inline="javascript">
-        //let flag = [(${checkboxFlag})]
-        //if(flag){
-        //    $(document).ready(function() {
-        //        //$('#editIsVisibleInput').prop('checked', true);
-        //    });
-        //}
-
-        let proposalName = [[${#strings.replace(checkboxProposalName,' ','')}]];
-        let checkboxInputId = 'checkbox-' + proposalName
-        let checkboxFlag = checkboxInputId
-        //if(checkboxFlag){
-            $(document).ready(function() {
-                if(checkboxFlag){
-                    $(checkboxInputId).prop('checked', true);
-                }else{
-                    $(checkboxInputId).prop('checked', false);
-                }
-            });
-        //}
-
-    </script>
-    -->
     <script type="text/javascript" th:inline="javascript">
         const visibleProposals = [[${visibleProposals}]];
 
@@ -49,6 +26,7 @@
         }
         document.addEventListener('DOMContentLoaded', setCheckboxes);
     </script>
+
     <script type="text/javascript" th:inline="javascript">
         var editErr = [(${proposalEditValidationErrors})];
         var proposalName = [[${#strings.replace(badEditProposalName,' ','')}]];
@@ -61,6 +39,7 @@
             });
         }
     </script>
+
     <script type="text/javascript" th:inline="javascript">
         let hasBegan = [(${hasBegan})];
         if(hasBegan){
@@ -72,6 +51,81 @@
             });
         }
     </script>
+    <script>
+    $(document).ready(function() {
+        //const defaultFile = "/static/img/proposal-default.jpg";
+        $("input[id^='proposalImageInput-']").on('change', function(e) {
+            const proposalName = $(this).attr('data-img-input-id');
+            const imgId = '#proposalImage-' + proposalName;
+            const img = $(imgId);
+            const modalId = '#imgUploadConfirmationModal-' + proposalName;
+            const modal = $(modalId);
+
+            const modalImgLeftId = '#imgModalLeft-' + proposalName;
+            const modalImgLeft = $(modalImgLeftId);
+            const modalImgRightId = '#imgModalRight-' + proposalName;
+            const modalImgRight = $(modalImgRightId);
+            const submitButtonId = '#proposalImageSubmitButton-' + proposalName;
+            const submitButton = $(submitButtonId);
+
+            if (e.target.files[0]) {
+                const imgSizeBytes = e.target.files[0].size;
+                const imgSizeMegabytes = imgSizeBytes / (1024 * 1024);
+                const imgType = e.target.files[0].type;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if(imgSizeMegabytes > 4){
+                        alert('El tamaño de la imagen debe ser menor a 4 MB');
+                        submitButton.prop("disabled", "true");
+                    } else if (imgType != "image/jpeg" && imgType != "image/png"){
+                        alert('El formato del archivo no es válido. Recuerde que pueden ser imagenes con extensión .jpeg o .png');
+                        submitButton.prop("disabled", "true");
+                    } else {
+                        img.prop("src", e.target.result);
+                        modalImgLeft.prop("src", e.target.result);
+                        modalImgRight.prop("src", e.target.result);
+                        modal.modal('show');
+                    }
+                }
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+    });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $("#electionImageInput").on('change', function(e) {
+                const electionImg = $("img[id^='electionImage-']"); // try with class election-img
+                const electionModal = $("#electionImgUploadConfirmationModal");
+                const electionModalImgLeft = $("#electionImgModalLeft");
+                const electionModalImgRight = $("#electionImgModalRight");
+                const submitButton = $("#electionImageSubmitButton");
+
+                if(e.target.files[0]) {
+                    const imgSizeBytes = e.target.files[0].size;
+                    const imgSizeMegabytes = imgSizeBytes / (1024 * 1024);
+                    const imgType = e.target.files[0].type;
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        if(imgSizeMegabytes > 4){
+                            alert('El tamaño de la imagen debe ser menor a 4 MB');
+                            submitButton.prop("disabled", "true");
+                        } else if (imgType != "image/jpeg" && imgType != "image/png"){
+                            alert('El formato del archivo no es válido. Recuerde que pueden ser imagenes con extensión .jpeg o .png');
+                            submitButton.prop("disabled", "true");
+                        } else {
+                            electionImg.prop("src", e.target.result);
+                            electionModalImgLeft.prop("src", e.target.result);
+                            electionModalImgRight.prop("src", e.target.result);
+                            electionModal.modal('show');
+                        }
+                    }
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+        });
+    </script>
 </head>
 <body style="min-height:100vh;">
 <!--:::: Main ::::-->
@@ -80,9 +134,15 @@
         <!--Section: Propuestas -->
         <section class="content pt-5 mb-9 mx-auto" data-aos="fade-in">
             <h4 class="text-left mb-3 pb-2 text-primary fw-bold">Propuestas</h4>
-            <p class="text-left mb-5">
-                <i class="fa-regular fa-hand-point-right me-1"></i> En esta sección usted, como creador/a del proceso,
+            <p class="text-left mb-1">
+                <i class="fa-regular fa-hand-point-right me-2"></i>En esta sección usted, como creador/a del proceso,
                 podrá <strong>agregar</strong>, <strong>modificar</strong> y <strong>remover</strong> propuestas.
+            </p>
+            <p class="text-left mb-5">
+                <i class="fa-regular fa-hand-point-right me-2"></i>Si desea agregar una imagen de perfil para una
+                propuesta, solo debe hacer click en la imagen que aparece por defecto y seleccionar un archivo desde su
+                dispositivo. La imagen no debe exceder los <strong>4 MB</strong> y debe ser en formato
+                <strong>jpeg</strong> o <strong>png</strong>.
             </p>
 
             <div class="shadow-4 rounded-5 overflow-auto">
@@ -97,21 +157,104 @@
                     </thead>
                     <tbody>
                     <tr th:if="${proposalsList.isEmpty() }">
-                        <td colspan="5">Aún no hay propuestas registradas, haz click en "AGREGAR NUEVA PROPUESTA" para registrar una.</td>
+                        <td colspan="5">Aún no hay propuestas registradas, haz click en "AGREGAR NUEVA PROPUESTA" para
+                            registrar una.
+                        </td>
                     </tr>
                     <tr th:each="proposal : ${proposalsList}">
                         <td>
                             <div class="d-flex align-items-center">
-                                <img
-                                        th:src="@{/static/img/proposal-default.jpg}"
-                                        alt=""
-                                        style="width: 45px; height: 45px"
-                                        class="rounded-circle"
-                                />
+                                <form action="#"
+                                      th:action="@{/auth/election-edit-proposal-img(pid=${proposal.name}, uid=${currentElection.title})}"
+                                      th:method="post"
+                                      enctype="multipart/form-data">
+                                    <!--<label for="proposalImageInput">-->
+                                    <div class="img-wrapper d-grid"
+                                         style="position: relative;border: 2px solid;border-radius: 50%;margin: 10px auto;overflow: hidden;">
+                                        <label class="img-label"
+                                               th:for="'proposalImageInput-' + ${#strings.replace(proposal.name,' ','')}"></label>
+                                        <input type="file" name="file"
+                                               th:id="'proposalImageInput-' + ${#strings.replace(proposal.name,' ','')}"
+                                               th:attr="data-img-input-id=${#strings.replace(proposal.name,' ','')}"
+                                               class="img-input w-100"
+                                               accept="image/png, image/jpeg"
+                                               style="/*position: absolute; bottom: 0;outline: none;color: transparent;box-sizing: border-box;cursor: pointer;transition: 0.5s;background: rgba(0,0,0,0.5);opacity: 0;*/">
+                                        <img
+                                                th:if="${#strings.isEmpty(proposal.profileImagePath)}"
+                                                th:src="@{/static/img/proposal-default.jpg}"
+                                                th:id="'proposalImage-' + ${#strings.replace(proposal.name,' ','')}"
+                                                alt=""
+                                                style="width: 45px; height: 45px; object-fit: cover;"
+                                                class="proposalImages"
+                                        />
+                                        <img
+                                                th:unless="${#strings.isEmpty(proposal.profileImagePath)}"
+                                                th:src="@{${proposal.profileImagePath}}"
+                                                th:id="'proposalImage-' + ${#strings.replace(proposal.name,' ','')}"
+                                                alt=""
+                                                style="width: 45px; height: 45px; object-fit: cover;"
+                                                class="proposalImages"
+                                        />
+                                        <!--</label>-->
+                                        <!--<input type="file" id="proposalImageInput" class="img-input w-100"
+                                               style="/*position: absolute; bottom: 0;outline: none;color: transparent;box-sizing: border-box;cursor: pointer;transition: 0.5s;background: rgba(0,0,0,0.5);opacity: 0;"*/> -->
+                                    </div>
+
+                                    <!-- Image Upload Confirmation Modal -->
+                                    <div class="modal fade"
+                                         th:id="'imgUploadConfirmationModal-' + ${#strings.replace(proposal.name,' ','')}"
+                                         tabindex="-1" aria-labelledby="modalLabel8" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <div class="col-md-5"
+                                                         style="position: relative; overflow: hidden; width: 40%; padding-bottom: 60%;">
+                                                        <img th:src="@{/static/img/proposal-default.jpg}"
+                                                             th:id="'imgModalLeft-' + ${#strings.replace(proposal.name,' ','')}"
+                                                             class="img-fluid p-1"
+                                                             style="position: absolute; height: 100%; object-fit: cover;">
+                                                    </div>
+                                                    <div class="col-md-2 d-flex" style="height: 188px; min-width: 8%;">
+                                                        <!--<span class="badge mx-auto bg-secondary text-dark rounded-circle">-->
+                                                        <hr style="border-left: 1px solid #000;height: 100%;margin: auto">
+                                                        <!--</span>-->
+                                                    </div>
+                                                    <div class="col-md-5"
+                                                         style="position: relative; overflow: hidden; width: 45%; padding-bottom: 45%;">
+                                                        <img th:src="@{/static/img/proposal-default.jpg}"
+                                                             th:id="'imgModalRight-' + ${#strings.replace(proposal.name,' ','')}"
+                                                             class="img-fluid rounded-circle p-1"
+                                                             style="position: absolute; height: 100%; object-fit: cover;">
+                                                    </div>
+                                                    <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                                            aria-label="Close"
+                                                            style="position: absolute;top: 0;right: 0;padding: inherit;"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>
+                                                        Si desea establecer ésta como la imagen de perfil para la
+                                                        propuesta, haga
+                                                        <em>click</em> en <strong>Cargar Imagen</strong>.
+                                                    </p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-mdb-dismiss="modal">Volver
+                                                    </button>
+                                                    <button type="submit" th:id="'proposalImageSubmitButton-' + ${#strings.replace(proposal.name,' ','')}"
+                                                            class="btn btn-primary">Cargar Imagen</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Image Upload Confirmation Modal -->
+
+                                </form>
                                 <div class="ms-3">
                                     <p class="fw-bold mb-1" th:text="${proposal.name}"></p>
                                     <div>
-                                        <p class="badge badge-light text-muted mb-0" th:text="${proposal.contactEmail}"></p>
+                                        <p class="badge badge-light text-muted mb-0"
+                                           th:text="${proposal.contactEmail}"></p>
                                     </div>
                                 </div>
                             </div>
@@ -123,7 +266,8 @@
                         </td>
                         <td>
                             <span class="badge badge-secondary rounded-pill"
-                                  style="font-size: 13px;" th:text="${#temporals.format(proposal.createdAt, 'dd-MM-yyyy HH:mm')}"></span>
+                                  style="font-size: 13px;"
+                                  th:text="${#temporals.format(proposal.createdAt, 'dd-MM-yyyy HH:mm')}"></span>
                         </td>
                         <td>
                             <button type="button"
@@ -135,8 +279,10 @@
                                 <i class="fa fa-marker ms-4"></i>
                             </button>
                             <!-- Edit Proposal Form Modal -->
-                            <div class="modal fade" th:id="'editProposalModal-' + ${#strings.replace(proposal.name,' ','')}" tabindex="-1" aria-labelledby="proposalModalLabel2"
-                                 aria-hidden="true">
+                            <div class="modal fade"
+                                 th:id="'editProposalModal-' + ${#strings.replace(proposal.name,' ','')}" tabindex="-1"
+                                 aria-labelledby="proposalModalLabel2"
+                                 aria-hidden="true" style="--mdb-modal-width: 610px;">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
 
@@ -147,7 +293,8 @@
                                             <!-- ATTR REMOVED FROM form ABOVE : role="form" -->
                                             <!-- <script th:inline="javascript" th:if="${#fields.hasErrors('*')}">$("#newProposalModal").modal("show");</script> -->
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="proposalModalLabel2">Formulario de Edición</h5>
+                                                <h5 class="modal-title" id="proposalModalLabel2">Formulario de
+                                                    Edición</h5>
                                                 <button type="button" class="btn-close" data-mdb-dismiss="modal"
                                                         aria-label="Close"></button>
                                             </div>
@@ -161,8 +308,10 @@
                                                     </div>
                                                 </div> -->
                                                 <div class="card card-form mt-2 mb-4">
-                                                    <div class="card-body rounded-top darken-4" style="background-color: #008B8B;">
-                                                        <h3 class="font-weight-bold text-center text-uppercase text-light my-4">Editar
+                                                    <div class="card-body rounded-top darken-4"
+                                                         style="background-color: #008B8B;">
+                                                        <h3 class="font-weight-bold text-center text-uppercase text-light my-4">
+                                                            Editar
                                                             Propuesta</h3>
                                                         <!-- <form class="pb-5 px-2"> -->
                                                         <div class="pb-5 px-2">
@@ -178,7 +327,8 @@
                                                             </p> -->
 
                                                             <!-- validation error display WITHOUT THE th:text="${err}"-->
-                                                            <div class="alert alert-danger" th:if="${#fields.hasErrors('name')}">
+                                                            <div class="alert alert-danger"
+                                                                 th:if="${#fields.hasErrors('name')}">
                                                                 <p th:errors="*{name}" th:text="${err}"></p>
                                                             </div>
 
@@ -201,7 +351,8 @@
 
                                                                            th:placeholder="${proposal.name}"
                                                                     />
-                                                                    <label class="form-label" for="editProposalNameInput">Nombre
+                                                                    <label class="form-label"
+                                                                           for="editProposalNameInput">Nombre
                                                                         Propuesta</label>
                                                                 </div>
                                                             </div>
@@ -212,7 +363,8 @@
                                                             </div> -->
 
                                                             <!-- validation error display - Trying with the th:text="${err}" -->
-                                                            <div class="alert alert-danger" th:if="${#fields.hasErrors('contactEmail')}">
+                                                            <div class="alert alert-danger"
+                                                                 th:if="${#fields.hasErrors('contactEmail')}">
                                                                 <p th:errors="*{contactEmail}" th:text="${err}"></p>
                                                             </div>
 
@@ -233,23 +385,99 @@
                                                                            th:placeholder="${proposal.contactEmail}"
 
                                                                     />
-                                                                    <label class="form-label" for="editEmailInput">Correo de
+                                                                    <label class="form-label" for="editEmailInput">Correo
+                                                                        de
                                                                         Contacto</label>
                                                                 </div>
                                                             </div>
 
-                                                            <!-- validation error display THIS BLOCK WAS MOVED BELLOW
-                                                            <div class="alert alert-danger" th:if="${#fields.hasErrors('details')}">
-                                                                <p th:errors="*{details}"></p>
+
+                                                            <div class="d-flex justify-content-start align-items-center mb-0">
+                                                                <i class="fa-solid fa-globe fa-lg text-white fa-fw me-3"></i>
+                                                                <div class="form-outline form-white w-100">
+                                                                    <input type="text" id="editWebInput" class="form-control"
+                                                                           th:field="*{webId}" th:placeholder="${proposal.webId}"/>
+                                                                    <label class="form-label" for="editWebInput">Página Web URL</label>
+                                                                </div>
                                                             </div>
-                                                            -->
+                                                            <div class="detail-box form-text text-white ms-5 mt-0 mb-4" style="font-size: 14px;">
+                                                                En caso de tener una página web puede indicar la URL aquí.
+                                                                <strong>Campo Opcional</strong>.
+                                                            </div>
+
+                                                            <div class="d-flex justify-content-start align-items-center mb-0">
+                                                                <i class="fa-brands fa-facebook fa-lg text-white fa-fw me-3"></i>
+                                                                <span class="input-group-text me-2 text-white" data-target="editFacebookIdInput">
+                                                  facebook.com/
+                                              </span>
+                                                                <div class="form-outline form-white w-100">
+                                                                    <input type="text" id="editFacebookIdInput" class="form-control"
+                                                                           th:field="*{facebookId}" th:placeholder="${proposal.facebookId}"/>
+                                                                    <label class="form-label" for="editFacebookIdInput">Facebook</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="detail-box form-text text-white ms-5 mt-0 mb-4" style="font-size: 14px;">
+                                                                Puede indicar su perfil de Facebook (URL) aquí.
+                                                                <strong>Campo Opcional</strong>.
+                                                            </div>
+
+                                                            <div class="d-flex justify-content-start align-items-center mb-0">
+                                                                <i class="fa-brands fa-linkedin fa-lg text-white fa-fw me-3"></i>
+                                                                <span class="input-group-text me-2 text-white" data-target="editLinkedinIdInput">
+                                                  linkedin.com/
+                                              </span>
+                                                                <div class="form-outline form-white w-100">
+                                                                    <input type="text" id="editLinkedinIdInput" class="form-control"
+                                                                           th:field="*{linkedinId}" th:placeholder="${proposal.facebookId}"/>
+                                                                    <label class="form-label" for="editLinkedinIdInput">LinkedIn</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="detail-box form-text text-white ms-5 mt-0 mb-4" style="font-size: 14px;">
+                                                                Puede indicar su perfil de Linkedin (URL) aquí.
+                                                                <strong>Campo Opcional</strong>.
+                                                            </div>
+
+                                                            <div class="d-flex justify-content-start align-items-center mb-0">
+                                                                <i class="fa-brands fa-x-twitter fa-lg text-white fa-fw me-3"></i>
+                                                                <span class="input-group-text me-2 text-white" data-target="editXIdInput">
+                                                                    @
+                                                                </span>
+                                                                <div class="form-outline form-white w-100">
+                                                                    <input type="text" id="editXIdInput" class="form-control"
+                                                                           th:field="*{xId}" th:placeholder="${proposal.xId}"/>
+                                                                    <label class="form-label" for="editXIdInput">X (ex-Twitter)</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="detail-box form-text text-white ms-5 mt-0 mb-4" style="font-size: 14px;">
+                                                                Puede indicar su perfil de X (Nombre de Usuario) aquí.
+                                                                <strong>Campo Opcional</strong>.
+                                                            </div>
+
+                                                            <div class="d-flex justify-content-start align-items-center mb-0">
+                                                                <!--<img src="img/threads-logo-edit2.png" class="me-3"
+                                                                     style="width: 23px; height: 23px">-->
+                                                                <i class="fa-brands fa-instagram fa-lg text-white fa-fw me-3"></i>
+                                                                <span class="input-group-text me-2 text-white" data-target="editInstagramIdInput">
+                                                                    @
+                                                                </span>
+                                                                <div class="form-outline form-white w-100">
+                                                                    <input type="text" id="editInstagramIdInput" class="form-control"
+                                                                           th:field="*{instagramId}" th:placeholder="${proposal.instagramId}"/>
+                                                                    <label class="form-label" for="editInstagramIdInput">Instagram</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="detail-box form-text text-white ms-5 mt-0 mb-4" style="font-size: 14px;">
+                                                                Puede indicar su perfil de Instagram (Nombre de Usuario) aquí.
+                                                                <strong>Campo Opcional</strong>.
+                                                            </div>
 
                                                             <!-- validation error display - Trying with the th:text="${err}" -->
-                                                            <div class="alert alert-danger" th:if="${#fields.hasErrors('details')}">
+                                                            <div class="alert alert-danger"
+                                                                 th:if="${#fields.hasErrors('details')}">
                                                                 <p th:errors="*{details}" th:text="${err}"></p>
                                                             </div>
 
-                                                            <div class="d-flex justify-content-start align-items-center pb-3">
+                                                            <div class="d-flex justify-content-start align-items-center pb-3 mb-4">
                                                                 <!-- validation error display - CHANGE 3: MOVE THE DIV INSIDE THE CONTAINER DIV -->
                                                                 <!-- <div class="alert alert-danger" th:if="${#fields.hasErrors('details')}">
                                                                     <p th:errors="*{details}"></p>
@@ -261,7 +489,6 @@
                                                             id="editProposalDetailsInput"
                                                             rows="7"
                                                             th:field="*{details}"
-
                                                             th:placeholder="${proposal.details}"
                                                   >
                                                   </textarea>
@@ -270,7 +497,8 @@
                                                                     <div class="form-helper text-white">
                                                                         <i class="fa-regular fa-lightbulb me-1"></i>
                                                                         Aquí puede incluir una identificación de
-                                                                        la propuesta, ideas, problemas que se tengan en vista,
+                                                                        la propuesta, ideas, problemas que se tengan en
+                                                                        vista,
                                                                         soluciones,
                                                                         etc.
                                                                     </div>
@@ -297,17 +525,21 @@
                                                                        th:id="'editIsVisibleInput-' + ${#strings.replace(proposal.name,' ','')}"
                                                                        th:field="*{visible}"
                                                                 />
-                                                                <label class="form-check-label" th:for="'editIsVisibleInput-' + ${#strings.replace(proposal.name,' ','')}">
-                                                                    Mostrar como <strong>propuesta activa</strong> a los votantes
+                                                                <label class="form-check-label"
+                                                                       th:for="'editIsVisibleInput-' + ${#strings.replace(proposal.name,' ','')}">
+                                                                    Mostrar como <strong>propuesta activa</strong> a los
+                                                                    votantes
                                                                 </label>
                                                             </div>
 
                                                             <hr>
 
                                                             <p>
-                                                                Al hacer click en <em>APLICAR CAMBIOS</em> todos los campos editados
+                                                                Al hacer click en <em>APLICAR CAMBIOS</em> todos los
+                                                                campos editados
                                                                 sobreescribirán los valores registrados previamente.
-                                                                Para hacer modificaciones en esta propuesta haga click en la
+                                                                Para hacer modificaciones en esta propuesta haga click
+                                                                en la
                                                                 opción <strong class="text-primary">EDITAR<i
                                                                     class="fa fa-marker ms-1"></i></strong>
                                                             </p>
@@ -316,8 +548,12 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Volver</button>
-                                                <button type="submit" style="background-color: #008B8B;" class="btn text-light">Aplicar Cambios</button>
+                                                <button type="button" class="btn btn-secondary"
+                                                        data-mdb-dismiss="modal">Volver
+                                                </button>
+                                                <button type="submit" style="background-color: #008B8B;"
+                                                        class="btn text-light">Aplicar Cambios
+                                                </button>
                                             </div>
                                         </form>
                                     </div>
@@ -334,11 +570,15 @@
                                 <i class="fa-solid fa-circle-xmark ms-2"></i>
                             </button>
                             <!-- Delete Proposal Confirmation Modal -->
-                            <div class="modal fade" th:id="'deleteConfirmationModal-' + ${#strings.replace(proposal.name,' ','')}" tabindex="-1"
+                            <div class="modal fade"
+                                 th:id="'deleteConfirmationModal-' + ${#strings.replace(proposal.name,' ','')}"
+                                 tabindex="-1"
                                  aria-labelledby="modalLabel2" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-                                        <form action="#" th:action="@{/auth/election-edit(uid=${currentElection.title}, pid=${proposal.name})}" th:method="delete">
+                                        <form action="#"
+                                              th:action="@{/auth/election-edit(uid=${currentElection.title}, pid=${proposal.name})}"
+                                              th:method="delete">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="modalLabel2">Remover Propuesta</h5>
                                                 <button type="button" class="btn-close" data-mdb-dismiss="modal"
@@ -369,16 +609,14 @@
                     data-mdb-target="#newProposalModal">
                 Agregar Nueva Propuesta
             </button>
-            <!-- </th:if>
-            <script th:inline="javascript">$('#newProposalModal').modal('show');</script>
-            </th:if> -->
             <!-- Register Proposal Form Modal -->
             <div class="modal fade" id="newProposalModal" tabindex="-1" aria-labelledby="proposalModalLabel"
-                 aria-hidden="true">
+                 aria-hidden="true" style="--mdb-modal-width: 610px;">
                 <div class="modal-dialog">
                     <div class="modal-content">
 
-                        <form action="#" th:action="@{/auth/election-edit(uid=${currentElection.title})}" th:object="${proposalData}" method="post" role="form">
+                        <form action="#" th:action="@{/auth/election-edit(uid=${currentElection.title})}"
+                              th:object="${proposalData}" method="post" role="form">
                             <!-- <script th:inline="javascript" th:if="${#fields.hasErrors('*')}">$("#newProposalModal").modal("show");</script> -->
                             <div class="modal-header">
                                 <h5 class="modal-title" id="proposalModalLabel">Formulario Registro</h5>
@@ -419,14 +657,7 @@
                                             <div class="d-flex justify-content-start align-items-center mb-4">
                                                 <i class="fa fa-tag fa-lg text-white fa-fw me-3"></i>
                                                 <div class="form-outline form-white w-100">
-                                                    <!-- validation error display - CHANGE 5:
-                                                    INCLUDE: @ModelAttribute IN CONTROLLER
-                                                    INCLUDE: th:text AND PUT DIV INSIDE form-outline CONTAINER
-                                                    INCLUDE: invalid-feedback IN CLASS
-                                                    INCLUDE: th:classappend="${#fields.hasErrors('name')} ? is-invalid : ''" IN <input> -->
-                                                    <!-- <div class="alert alert-danger" th:if="${#fields.hasErrors('name')}">
-                                                        <p th:errors="*{name}" th:text="${err}"></p>
-                                                    </div> -->
+
                                                     <input type="text"
                                                            id="proposalNameInput"
                                                            class="form-control"
@@ -438,13 +669,9 @@
                                                 </div>
                                             </div>
 
-                                            <!-- validation error display THIS BLOCK WAS MOVED BELLOW
-                                            <div class="alert alert-danger" th:if="${#fields.hasErrors('contactEmail')}">
-                                                <p th:errors="*{contactEmail}"></p>
-                                            </div> -->
-
                                             <!-- validation error display - Trying with the th:text="${err}" -->
-                                            <div class="alert alert-danger" th:if="${#fields.hasErrors('contactEmail')}">
+                                            <div class="alert alert-danger"
+                                                 th:if="${#fields.hasErrors('contactEmail')}">
                                                 <p th:errors="*{contactEmail}" th:text="${err}"></p>
                                             </div>
 
@@ -467,11 +694,79 @@
                                                 </div>
                                             </div>
 
-                                            <!-- validation error display THIS BLOCK WAS MOVED BELLOW
-                                            <div class="alert alert-danger" th:if="${#fields.hasErrors('details')}">
-                                                <p th:errors="*{details}"></p>
+                                            <div class="d-flex justify-content-start align-items-center mb-0">
+                                                <i class="fa-solid fa-globe fa-lg text-white fa-fw me-3"></i>
+                                                <div class="form-outline form-white w-100">
+                                                    <input type="text" id="webIdInput" class="form-control" th:field="*{webId}"/>
+                                                    <label class="form-label" for="webIdInput">Página Web URL</label>
+                                                </div>
                                             </div>
-                                            -->
+                                            <div class="detail-box form-text text-white ms-5 mt-0 mb-4" style="font-size: 14px;">
+                                                En caso de tener una página web puede indicar la URL aquí.
+                                                <strong>Campo Opcional</strong>.
+                                            </div>
+
+                                            <div class="d-flex justify-content-start align-items-center mb-0">
+                                                <i class="fa-brands fa-facebook fa-lg text-white fa-fw me-3"></i>
+                                                <span class="input-group-text me-2 text-white" data-target="facebookIdInput">
+                                                  facebook.com/
+                                              </span>
+                                                <div class="form-outline form-white w-100">
+                                                    <input type="text" id="facebookIdInput" class="form-control" th:field="*{facebookId}"/>
+                                                    <label class="form-label" for="facebookIdInput">Facebook</label>
+                                                </div>
+                                            </div>
+                                            <div class="detail-box form-text text-white ms-5 mt-0 mb-4" style="font-size: 14px;">
+                                                Puede indicar su perfil de Facebook (URL) aquí.
+                                                <strong>Campo Opcional</strong>.
+                                            </div>
+
+                                            <div class="d-flex justify-content-start align-items-center mb-0">
+                                                <i class="fa-brands fa-linkedin fa-lg text-white fa-fw me-3"></i>
+                                                <span class="input-group-text me-2 text-white" data-target="linkedinIdInput">
+                                                  linkedin.com/
+                                              </span>
+                                                <div class="form-outline form-white w-100">
+                                                    <input type="text" id="linkedinIdInput" class="form-control" th:field="*{linkedinId}"/>
+                                                    <label class="form-label" for="linkedinIdInput">LinkedIn</label>
+                                                </div>
+                                            </div>
+                                            <div class="detail-box form-text text-white ms-5 mt-0 mb-4" style="font-size: 14px;">
+                                                Puede indicar su perfil de Linkedin (URL) aquí.
+                                                <strong>Campo Opcional</strong>.
+                                            </div>
+
+                                            <div class="d-flex justify-content-start align-items-center mb-0">
+                                                <i class="fa-brands fa-x-twitter fa-lg text-white fa-fw me-3"></i>
+                                                <span class="input-group-text me-2 text-white" data-target="xIdInput">
+                                                  @
+                                              </span>
+                                                <div class="form-outline form-white w-100">
+                                                    <input type="text" id="xIdInput" class="form-control" th:field="*{xId}"/>
+                                                    <label class="form-label" for="xIdInput">X (ex-Twitter)</label>
+                                                </div>
+                                            </div>
+                                            <div class="detail-box form-text text-white ms-5 mt-0 mb-4" style="font-size: 14px;">
+                                                Puede indicar su perfil de X (Nombre de Usuario) aquí.
+                                                <strong>Campo Opcional</strong>.
+                                            </div>
+
+                                            <div class="d-flex justify-content-start align-items-center mb-0">
+                                                <!--<img src="img/threads-logo-edit2.png" class="me-3"
+                                                     style="width: 23px; height: 23px">-->
+                                                <i class="fa-brands fa-instagram fa-lg text-white fa-fw me-3"></i>
+                                                <span class="input-group-text me-2 text-white" data-target="instagramIdInput">
+                                                  @
+                                              </span>
+                                                <div class="form-outline form-white w-100">
+                                                    <input type="text" id="instagramIdInput" class="form-control" th:field="*{instagramId}"/>
+                                                    <label class="form-label" for="instagramIdInput">Instagram</label>
+                                                </div>
+                                            </div>
+                                            <div class="detail-box form-text text-white ms-5 mt-0 mb-4" style="font-size: 14px;">
+                                                Puede indicar su perfil de Instagram (Nombre de Usuario) aquí.
+                                                <strong>Campo Opcional</strong>.
+                                            </div>
 
                                             <!-- validation error display - Trying with the th:text="${err}" -->
                                             <div class="alert alert-danger" th:if="${#fields.hasErrors('details')}">
@@ -517,7 +812,7 @@
                                     <div class="card card-form-2 mb-0 z-depth-0">
                                         <div class="card-body text-center">
                                             <!-- <form class="text-center"> -->
-                                            <div class="form-check red-checkbox my-3">
+                                            <div class="form-check red-checkbox my-3" style="display: inline-block;">
                                                 <input class="form-check-input ms-2"
                                                        type="checkbox"
                                                        id="isVisibleInput"
@@ -569,213 +864,314 @@
                 Esto con el fin de ofrecer una buena experiencia a los votantes registrados.
             </p>
 
-            <form action="#" th:action="@{/auth/election-edit(uid=${currentElection.title})}" th:object="${editableElection}" th:method="patch">
-                <!-- ATTR REMOVED FROM form ABOVE : role="form" -->
-                <!-- title input -->
-                <label class="form-label w-100" for="titleInput">
-                <span class="d-grid me-2 rounded-top border border-1 text-muted w-100 mb-1"
+
+            <div class="row d-flex">
+                <div class="col-md-2 my-auto mh-100">
+                    <form action="#"
+                          th:action="@{/auth/election-edit-img(uid=${currentElection.title})}"
+                          th:method="post"
+                          enctype="multipart/form-data">
+                        <div class="card p-2 h-100">
+                            <div class="img-wrapper d-grid"
+                                 style="position: relative;border: 1px solid;border-radius: 0%;margin: 10px auto;overflow: hidden;">
+                                <label class="election-img-label" for="electionImageInput"></label>
+                                <input type="file" name="file" id="electionImageInput"
+                                       class="img-input w-100"
+                                       accept="image/png, image/jpeg"
+                                       style="/*position: absolute; bottom: 0;outline: none;color: transparent;box-sizing: border-box;cursor: pointer;transition: 0.5s;background: rgba(0,0,0,0.5);opacity: 0;*/">
+                                <img th:if="${#strings.isEmpty(currentElection.profileImagePath)}"
+                                     th:src="@{/static/img/election-default.jpg}"
+                                     id="electionImage-default"
+                                     alt=""
+                                     style="/*width: 65px; height: 65px;*/ object-fit: cover;"
+                                     class="election-img img-fluid">
+                                <img th:unless="${#strings.isEmpty(currentElection.profileImagePath)}"
+                                     th:src="@{${currentElection.profileImagePath}}"
+                                     id="electionImage-custom"
+                                     alt="imagen proceso"
+                                     style="/*width: 65px; height: 65px;*/ object-fit: cover;"
+                                     class="election-img img-fluid">
+                            </div>
+                        </div>
+
+                        <!-- Image Upload Confirmation Modal -->
+                        <div class="modal fade" id="electionImgUploadConfirmationModal" tabindex="-1"
+                             aria-labelledby="modalLabel9" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <div class="col-md-5"
+                                             style="position: relative; overflow: hidden; width: 45%; padding-bottom: 45%;">
+                                            <img th:src="@{/static/img/election-default.jpg}"
+                                                 id="electionImgModalLeft"
+                                                 class="img-fluid p-1"
+                                                 style="position: absolute;/* width: 100%;*/ height: 100%; object-fit: cover;">
+                                        </div>
+                                        <div class="col-md-1 d-flex" style="height: 188px;min-width: 8%;">
+                                            <hr style="border-left: 1px solid #000;height: 100%;margin: auto">
+                                        </div>
+                                        <div class="col-md-5"
+                                             style="position: relative; overflow: hidden; width: 45%; padding-bottom: 45%;">
+                                            <img th:src="@{/static/img/election-default.jpg}"
+                                                 id="electionImgModalRight"
+                                                 class="img-fluid rounded-circle p-1"
+                                                 style="position: absolute;/* width: 100%;*/ height: 100%; object-fit: cover;">
+                                        </div>
+                                        <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                                aria-label="Close"
+                                                style="position: absolute;top: 0;right: 0;padding: inherit;"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>
+                                            Si desea establecer ésta como la imagen de perfil para el proceso, haga
+                                            <em>click</em> en <strong>ESTABLECER IMAGEN DE PERFIL</strong>.
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">
+                                            Volver
+                                        </button>
+                                        <button type="submit" id="electionImageSubmitButton" class="btn btn-primary">ESTABLECER IMAGEN DE PERFIL
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Image Upload Confirmation Modal -->
+
+                    </form>
+                </div>
+                <div class="col-md-10 mh-100">
+                    <div class="card p-2 h-100">
+                        <p class="p-2 mb-0">
+                            Si desea establecer una <strong>imagen de perfil</strong> para el proceso, puede seleccionar
+                            un archivo (<strong>jpg</strong> o <strong>png</strong>) desde su computadora o dispositivo móvil haciendo click en la imagen
+                            y luego en <em>ESTABLECER IMAGEN DE PERFIL</em>.
+                        </p>
+                        <p class="p-2">
+                            La imagen debe pesar como máximo <strong>4 MB</strong>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+            <form action="#" th:action="@{/auth/election-edit(uid=${currentElection.title})}"
+                  th:object="${editableElection}" th:method="patch">
+                <div class="card p-4 my-3">
+                    <!-- ATTR REMOVED FROM form ABOVE : role="form" -->
+                    <!-- title input -->
+                    <label class="form-label w-100" for="titleInput">
+                <span class="d-grid me-2 rounded-top border-1 text-muted w-100 mb-1"
                       data-target="titleInput"
                       th:text="'&#8203' + ' Título : ' + ${currentElection.title}">
                 </span>
-                </label>
-                <!-- validation error display -->
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('editableTitle')}">
-                    <p th:errors="*{editableTitle}"></p>
-                </div>
-                <div class="input-group mw-100 mb-5">
-                    <div class="w-100">
-                        <input type="text" id="titleInput" class="form-control" th:field="*{editableTitle}" th:errorclass="is-invalid"/>
-                        <!-- <label class="form-label" for="titleInput"></label> -->
+                    </label>
+                    <!-- validation error display -->
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('editableTitle')}">
+                        <p th:errors="*{editableTitle}"></p>
                     </div>
-                </div>
+                    <div class="input-group mw-100 mb-5">
+                        <div class="w-100">
+                            <input type="text" id="titleInput" class="form-control" th:field="*{editableTitle}"
+                                   th:errorclass="is-invalid"/>
+                            <!-- <label class="form-label" for="titleInput"></label> -->
+                        </div>
+                    </div>
 
-                <!-- topic input -->
-                <label class="form-label w-100" for="topicsInput">
-                <span class="d-grid me-2 rounded-top border border-1 text-muted w-100"
+                    <!-- topic input -->
+                    <label class="form-label w-100" for="topicsInput">
+                <span class="d-grid me-2 rounded-top border-1 text-muted w-100"
                       data-target="topicsInputs"
                       th:text="'&#8203' + ' Tópicos : ' + ${#strings.toUpperCase(currentElection.topics)}">
                 </span>
-                </label>
-                <!-- <span class="d-grid me-2 rounded-top border border-1 text-muted w-100"
-                      data-target="topicsInputs"
-                      th:text="'&#8203' + ' Tópicos : ' + ${currentElection.topics}"><span class="text-muted text-uppercase" th:text="${currentElection.topics}"></span>
-                    </span> -->
-                <div id="passwordHelpBlock" class="form-text mb-1">
-                    El/Los <em>Tópico(s)</em> que eliga ahora sobreescribirán a los indicados en la casilla de arriba.
-                    Si no ingresa ninguno, no se hará ningun cambio.
-                </div>
-                <!-- validation error display -->
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('topics')}">
-                    <p th:errors="*{topics}"></p>
-                </div>
-                <div class="input-group mw-100">
-                    <!-- <span class="input-group-text me-2 rounded-start border border-1 text-uppercase text-muted w-100"
+                    </label>
+                    <!-- <span class="d-grid me-2 rounded-top border border-1 text-muted w-100"
                           data-target="topicsInputs"
-                          th:text="'Tópicos : ' + ${currentElection.topics}">
-                    </span> -->
-                    <!-- <span class="input-group-text me-2" data-target="topicsInputs"><i class="fa-solid fa-hashtag"></i></span> -->
-                    <div class="form-floating input-group mb-5">
-                        <!-- <input type="text" id="topicInput" class="form-control"/> -->
-                        <select class="select-picker form-control"
-                                style="width: 100%;"
-                                name="topicsInput"
-                                id="topicsInput"
-                                multiple=""
-                                tabindex="-1"
-                                th:field="*{topics}"
-                                th:errorclass="is-invalid"
-                        >
-                            <option th:value="política">POLÍTICA</option>
-                            <option th:value="social">SOCIAL</option>
-                            <option th:value="salud">SALUD</option>
-                            <option th:value="ambiental">AMBIENTAL</option>
-                            <option th:value="administración">ADMINISTRACIÓN</option>
-                            <option th:value="educación">EDUCACIÓN</option>
-                            <option th:value="seguridad">SEGURIDAD</option>
-                            <option th:value="entretención">ENTRETENCIÓN</option>
-                            <option th:value="institucional">INSTITUCIONAL</option>
-                            <option th:value="laboral">LABORAL</option>
-                            <option th:value="florayfauna">FLORA Y FAUNA</option>
-                            <option th:value="urbano">URBANO</option>
-                            <option th:value="rural">RURAL</option>
-                        </select>
-                        <!-- <label class="form-label" for="topicsInput"></label> -->
+                          th:text="'&#8203' + ' Tópicos : ' + ${currentElection.topics}"><span class="text-muted text-uppercase" th:text="${currentElection.topics}"></span>
+                        </span> -->
+                    <div id="passwordHelpBlock" class="form-text mb-1">
+                        El/Los <em>Tópico(s)</em> que eliga ahora sobreescribirán a los indicados en la casilla de
+                        arriba.
+                        Si no ingresa ninguno, no se hará ningun cambio.
                     </div>
-                </div>
+                    <!-- validation error display -->
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('topics')}">
+                        <p th:errors="*{topics}"></p>
+                    </div>
+                    <div class="input-group mw-100">
+                        <!-- <span class="input-group-text me-2 rounded-start border border-1 text-uppercase text-muted w-100"
+                              data-target="topicsInputs"
+                              th:text="'Tópicos : ' + ${currentElection.topics}">
+                        </span> -->
+                        <!-- <span class="input-group-text me-2" data-target="topicsInputs"><i class="fa-solid fa-hashtag"></i></span> -->
+                        <div class="form-floating input-group mb-5">
+                            <!-- <input type="text" id="topicInput" class="form-control"/> -->
+                            <select class="select-picker form-control"
+                                    style="width: 100%;"
+                                    name="topicsInput"
+                                    id="topicsInput"
+                                    multiple=""
+                                    tabindex="-1"
+                                    th:field="*{topics}"
+                                    th:errorclass="is-invalid"
+                            >
+                                <option th:value="política">POLÍTICA</option>
+                                <option th:value="social">SOCIAL</option>
+                                <option th:value="salud">SALUD</option>
+                                <option th:value="ambiental">AMBIENTAL</option>
+                                <option th:value="administración">ADMINISTRACIÓN</option>
+                                <option th:value="educación">EDUCACIÓN</option>
+                                <option th:value="seguridad">SEGURIDAD</option>
+                                <option th:value="entretención">ENTRETENCIÓN</option>
+                                <option th:value="institucional">INSTITUCIONAL</option>
+                                <option th:value="laboral">LABORAL</option>
+                                <option th:value="florayfauna">FLORA Y FAUNA</option>
+                                <option th:value="urbano">URBANO</option>
+                                <option th:value="rural">RURAL</option>
+                            </select>
+                            <!-- <label class="form-label" for="topicsInput"></label> -->
+                        </div>
+                    </div>
 
 
-                <!-- briefDescription input -->
-                <label class="form-label w-100" for="briefDescriptionInput">
-                <span class="d-grid me-2 rounded-top border border-1 text-muted w-100 mb-1"
+                    <!-- briefDescription input -->
+                    <label class="form-label w-100" for="briefDescriptionInput">
+                <span class="d-grid me-2 rounded-top border-1 text-muted w-100 mb-1"
                       data-target="briefDescriptionInput"
                       th:text="'&#8203' + ' Descripción Breve : ' + ${currentElection.briefDescription}">
                 </span>
-                </label>
-                <!-- validation error display -->
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('briefDescription')}">
-                    <p th:errors="*{briefDescription}"></p>
-                </div>
-                <div class="input-group mw-100 mb-5">
-                    <div class="w-100">
-                        <input type="text" id="briefDescriptionInput" class="form-control" th:field="*{briefDescription}" th:errorclass="is-invalid"/>
-                        <!-- <label class="form-label" for="briefDescriptionInput"></label> -->
+                    </label>
+                    <!-- validation error display -->
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('briefDescription')}">
+                        <p th:errors="*{briefDescription}"></p>
                     </div>
-                </div>
+                    <div class="input-group mw-100 mb-5">
+                        <div class="w-100">
+                            <input type="text" id="briefDescriptionInput" class="form-control"
+                                   th:field="*{briefDescription}" th:errorclass="is-invalid"/>
+                            <!-- <label class="form-label" for="briefDescriptionInput"></label> -->
+                        </div>
+                    </div>
 
 
-                <!-- 2 column grid layout with text inputs for initTimestamp and finishTimestamp -->
-                <div class="row mb-4">
-                    <div class="col-sm-6">
-                        <!-- initTimestamp input -->
-                        <label for="initTimestampInput" class="form-label">
-                            <span class="d-grid border border-1 rounded-top px-3 py-1 w-100"
+                    <!-- 2 column grid layout with text inputs for initTimestamp and finishTimestamp -->
+                    <div class="row mb-4">
+                        <div class="col-sm-6">
+                            <!-- initTimestamp input -->
+                            <label for="initTimestampInput" class="form-label">
+                            <span class="d-grid border-1 rounded-top px-3 py-1 w-100"
                                   th:text="${'Fecha y Hora Inicio : ' + currentElection.initTimestamp}">
                             </span>
-                        </label>
-                        <!-- validation error display -->
-                        <div class="alert alert-danger" th:if="${#fields.hasErrors('initTimestamp')}">
-                            <p th:errors="*{initTimestamp}"></p>
-                        </div>
-                        <div
-                                class="input-group log-event mb-4"
-                                id="linkedPickers1"
-                                data-td-target-input="nearest"
-                                data-td-target-toggle="nearest"
-                        >
-                            <input
-                                    id="initTimestampInput"
-                                    type="text"
-                                    class="form-control"
-                                    data-td-target="#linkedPickers1"
-                                    placeholder="dd-mm-aaaa, hh:mm"
-                                    th:field="*{initTimestamp}"
-                                    th:errorclass="is-invalid"
-                            />
-                            <span
-                                    class="input-group-text"
-                                    data-td-target="#linkedPickers1"
-                                    data-td-toggle="datetimepicker"
+                            </label>
+                            <!-- validation error display -->
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('initTimestamp')}">
+                                <p th:errors="*{initTimestamp}"></p>
+                            </div>
+                            <div
+                                    class="input-group log-event mb-4"
+                                    id="linkedPickers1"
+                                    data-td-target-input="nearest"
+                                    data-td-target-toggle="nearest"
                             >
+                                <input
+                                        id="initTimestampInput"
+                                        type="text"
+                                        class="form-control"
+                                        data-td-target="#linkedPickers1"
+                                        placeholder="dd-mm-aaaa, hh:mm"
+                                        th:field="*{initTimestamp}"
+                                        th:errorclass="is-invalid"
+                                />
+                                <span
+                                        class="input-group-text"
+                                        data-td-target="#linkedPickers1"
+                                        data-td-toggle="datetimepicker"
+                                >
 	                      <span class="fa-solid fa-calendar"></span>
 	                      </span>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-sm-6">
-                        <!-- finishTimestamp input -->
-                        <label for="finishTimestampInput" class="form-label">
-                            <span class="d-grid border border-1 rounded-top px-3 py-1 w-100"
+                        <div class="col-sm-6">
+                            <!-- finishTimestamp input -->
+                            <label for="finishTimestampInput" class="form-label">
+                            <span class="d-grid border-1 rounded-top px-3 py-1 w-100"
                                   th:text="${'Fecha y Hora Término : ' + currentElection.finishTimestamp}">
                             </span>
-                        </label>
-                        <!-- validation error display -->
-                        <div class="alert alert-danger" th:if="${#fields.hasErrors('finishTimestamp')}">
-                            <p th:errors="*{finishTimestamp}"></p>
-                        </div>
-                        <div
-                                class="input-group log-event mb-4"
-                                id="linkedPickers2"
-                                data-td-target-input="nearest"
-                                data-td-target-toggle="nearest"
-                        >
-                            <input
-                                    id="finishTimestampInput"
-                                    type="text"
-                                    class="form-control"
-                                    data-td-target="#linkedPickers2"
-                                    placeholder="dd-mm-aaaa, hh:mm"
-                                    th:field="*{finishTimestamp}"
-                                    th:errorclass="is-invalid"
-                            />
-                            <span
-                                    class="input-group-text"
-                                    data-td-target="#linkedPickers2"
-                                    data-td-toggle="datetimepicker"
+                            </label>
+                            <!-- validation error display -->
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('finishTimestamp')}">
+                                <p th:errors="*{finishTimestamp}"></p>
+                            </div>
+                            <div
+                                    class="input-group log-event mb-4"
+                                    id="linkedPickers2"
+                                    data-td-target-input="nearest"
+                                    data-td-target-toggle="nearest"
                             >
+                                <input
+                                        id="finishTimestampInput"
+                                        type="text"
+                                        class="form-control"
+                                        data-td-target="#linkedPickers2"
+                                        placeholder="dd-mm-aaaa, hh:mm"
+                                        th:field="*{finishTimestamp}"
+                                        th:errorclass="is-invalid"
+                                />
+                                <span
+                                        class="input-group-text"
+                                        data-td-target="#linkedPickers2"
+                                        data-td-toggle="datetimepicker"
+                                >
 	                      <span class="fa-solid fa-calendar"></span>
 	                      </span>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Text input -->
-                <label class="form-label" for="detailsInput">
-                <span class="d-grid me-2 border border-1 rounded-top text-muted mb-1" data-target="detailsInput"
+                    <!-- Text input -->
+                    <label class="form-label" for="detailsInput">
+                <span class="d-grid me-2 border-1 rounded-top text-muted mb-1" data-target="detailsInput"
                       th:text="'&#8203' + ' Detalles : ' + ${currentElection.details}">
                 </span>
-                </label>
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('editableDetails')}">
-                    <p th:errors="*{editableDetails}" th:text="${err}"></p>
-                </div>
-                <div class="input-group mw-100">
-                    <!-- <span class="input-group-text me-2 border border-1 rounded-start text-muted" data-target="detailsInput">Detalles :</span> -->
-                    <!-- validation error display
-                    <div class="alert alert-danger" th:if="${#fields.hasErrors('details')}">
-                        <p th:errors="*{details}" th:text="${err}"></p>
+                    </label>
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('editableDetails')}">
+                        <p th:errors="*{editableDetails}" th:text="${err}"></p>
                     </div>
-                    -->
-                    <div class="w-100 mb-3">
-                        <textarea class="form-control" id="detailsInput" rows="7" th:field="*{editableDetails}" th:errorclass="is-invalid"></textarea>
-                        <!-- <label class="form-label" for="detailsInput"></label> -->
-                    </div>
-                </div>
+                    <div class="input-group mw-100">
 
-                <!-- Modal Patch Submit button --> <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary btn-block mb-4" id="applyChanges" data-mdb-toggle="modal" data-mdb-target="#editConfirmationModal">
-                    Aplicar Cambios</button>
-                <!-- Confirmation Modal -->
-                <div class="modal fade" id="editConfirmationModal" tabindex="-1" aria-labelledby="modalLabel1" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalLabel1">Confirmación</h5>
-                                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">¿Está seguro/a que desea aplicar los cambios?
-                                Se sobreescribirán todos los campos modificados.</div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Volver</button>
-                                <button type="submit" class="btn btn-primary">Aplicar Cambios</button>
+                        <div class="w-100 mb-3">
+                            <textarea class="form-control" id="detailsInput" rows="7" th:field="*{editableDetails}"
+                                      th:errorclass="is-invalid"></textarea>
+                            <!-- <label class="form-label" for="detailsInput"></label> -->
+                        </div>
+                    </div>
+
+                    <!-- Modal Patch Submit button --> <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary btn-block mb-4" id="applyChanges"
+                            data-mdb-toggle="modal"
+                            data-mdb-target="#editConfirmationModal">
+                        Aplicar Cambios
+                    </button>
+                    <!-- Confirmation Modal -->
+                    <div class="modal fade" id="editConfirmationModal" tabindex="-1" aria-labelledby="modalLabel1"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalLabel1">Confirmación</h5>
+                                    <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">¿Está seguro/a que desea aplicar los cambios?
+                                    Se sobreescribirán todos los campos modificados.
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Volver
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">Aplicar Cambios</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -786,16 +1182,18 @@
                 <span th:if="${currentElection.electionStatus != 'SUSPENDIDO'}">
                 <!-- Suspension Patch Submit button --> <!-- Button trigger modal -->
                 <button type="button" class="btn btn-secondary btn-block mb-2" value="suspend" data-mdb-toggle="modal"
-                      data-mdb-target="#suspendConfirmationModal">
+                        data-mdb-target="#suspendConfirmationModal">
                   Suspender Proceso</button>
                 </span>
                 <!-- Confirmation Modal -->
-                <div class="modal fade" id="suspendConfirmationModal" tabindex="-1" aria-labelledby="modalLabel7" aria-hidden="true">
+                <div class="modal fade" id="suspendConfirmationModal" tabindex="-1" aria-labelledby="modalLabel7"
+                     aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="modalLabel7">Confirmación</h5>
-                                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                        aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <strong>¿Está seguro/a que desea suspender el proceso?</strong>
@@ -814,7 +1212,8 @@
                                 <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Volver</button>
                                 <button type="submit" value="suspend"
                                         th:formaction="@{/auth/election-edit/suspend(uid=${currentElection.title})}"
-                                        class="btn btn-primary">Suspender Proceso</button>
+                                        class="btn btn-primary">Suspender Proceso
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -827,19 +1226,22 @@
                   Activar Proceso</button>
                 </span>
                 <!-- Confirmation Modal -->
-                <div class="modal fade" id="activationConfirmationModal" tabindex="-1" aria-labelledby="modalLabel8" aria-hidden="true">
+                <div class="modal fade" id="activationConfirmationModal" tabindex="-1" aria-labelledby="modalLabel8"
+                     aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="modalLabel8">Confirmación</h5>
-                                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                        aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <strong>¿Desea activar el proceso?</strong>
                                 <p class="mt-2">
                                     La elección cambiará a estado activo, esto significa que aparecerá como
                                     disponible para todos los usuarios con una cuenta en el sistema.
-                                    Solo los votantes que se registren en el <em>padrón electoral</em> del proceso podrán
+                                    Solo los votantes que se registren en el <em>padrón electoral</em> del proceso
+                                    podrán
                                     ver los detalles de éste, esto incluye revisar las propuestas agregadas y solo si la
                                     elección esta en status '<strong>EN PROGRESO</strong>', podrán emitir su voto.
                                 </p>
@@ -852,16 +1254,18 @@
                                 <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Volver</button>
                                 <button type="submit" value="suspend"
                                         th:formaction="@{/auth/election-edit/suspend(uid=${currentElection.title})}"
-                                        class="btn btn-primary">Activar Proceso</button>
+                                        class="btn btn-primary">Activar Proceso
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
 
             </form>
-            <form action="#" th:action="@{/auth/election-edit/remove(uid=${currentElection.title})}" th:object="${currentElection}"
+            <form action="#" th:action="@{/auth/election-edit/remove(uid=${currentElection.title})}"
+                  th:object="${currentElection}"
                   th:method="delete">
-                  <!-- ATTR REMOVED FROM form ABOVE : role="form" -->
+                <!-- ATTR REMOVED FROM form ABOVE : role="form" -->
                 <!-- Delete Submit button --> <!-- Button trigger modal -->
                 <button type="button" class="btn btn-danger btn-block mb-4" data-mdb-toggle="modal"
                         data-mdb-target="#removeConfirmationModal">

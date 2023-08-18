@@ -19,14 +19,27 @@ public class ProposalData implements Serializable {
     @Size(min = 2, message = "{proposal.registration.validation.name}")
     private String name;
 
+    private String profileImagePath;
+
     @Pattern(
             regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z\\d-]+\\.)+[a-zA-Z]{2,6}$",
             message = "{proposal.registration.validation.contactEmail}"
     )
     private String contactEmail;
 
+    //check how to add validation constraints for each "(...)Id" field
+    private String webId;
+
+    private String facebookId;
+
+    private String linkedinId;
+
+    private String xId;
+
+    private String instagramId;
+
     @NotBlank(message = "{proposal.registration.validation.details}")
-    @Size(max = 300, message = "{proposal.registration.validation.details}")
+    @Size(max = 900, message = "{proposal.registration.validation.details}")
     private String details;
 
     private boolean visible;

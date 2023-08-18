@@ -118,4 +118,10 @@ public class DefaultVoterService implements VoterService {
         secureTokenService.removeToken(secureToken);
         return true;
     }
+
+    @Override
+    public void deleteVoter(String username){
+        VoterEntity v = getVoterByUsernameOrEmail(username);
+        voterRepository.delete(v);
+    }
 }

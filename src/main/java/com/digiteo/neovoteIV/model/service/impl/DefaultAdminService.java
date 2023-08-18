@@ -29,9 +29,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service("adminService")
-@AllArgsConstructor // check if this auto-wire the fields, if not,
-// try 'onConstructor' attribute, if still not work,
-// create custom constructor with @Autowired annotation
+@AllArgsConstructor
 public class DefaultAdminService implements AdminService {
 
     private final AdminRepository adminRepository;
@@ -62,12 +60,7 @@ public class DefaultAdminService implements AdminService {
         checkIfUserExist(user.getUsername(), user.getEmail());
         AdminEntity adminEntity = new AdminEntity();
         BeanUtils.copyProperties(user, adminEntity);
-        //adminEntity.setFirstName(user.getFirstName());
-        //adminEntity.setLastName(user.getLastName());
-        //adminEntity.setUsername(user.getUsername());
-        //adminEntity.setEmail(user.getEmail());
         encodePwd(user, adminEntity);
-        //adminEntity.setGender(user.getGender());
         adminRepository.save(adminEntity);
         sendRegistrationConfirmationEmail(adminEntity);
     }
@@ -131,7 +124,7 @@ public class DefaultAdminService implements AdminService {
 
     /*
     if this method works, eliminate 'UsernameAlreadyExistException' and 'EmailAlreadyExistException' and create a 'UserAlreadyExistException'.
-    UPDATE: In terms of UX the 'register' method works better so this one it'll be commented along with all the methods related to it
+    UPDATE: the 'register' method works better so this one it'll be commented along with all the methods related to it
     @Override
     @Transactional
     public void registerPlus(AdminData user) throws UsernameAlreadyExistException{
@@ -161,6 +154,17 @@ public class DefaultAdminService implements AdminService {
             }
         }
         return isCorrect;
+    }
+
+    @Override
+    public void deleteAdminProfile(String username) throws Exception {
+        if(!Objects.equals(username, "admin")){
+            AdminEntity a = getUserByUsernameOrEmail(username);
+            adminRepository.delete(a);
+        } else {
+            throw new Exception("|==================================| LA CUENTA DEL SUPER ADMINISTRADOR NO PUEDE " +
+                    "SER ELIMINADA DEL SISTEMA |==================================|");
+        }
     }
 
 }

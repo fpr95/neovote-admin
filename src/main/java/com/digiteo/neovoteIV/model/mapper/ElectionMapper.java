@@ -4,6 +4,7 @@ import com.digiteo.neovoteIV.model.jpa.data.Election;
 import com.digiteo.neovoteIV.model.jpa.data.ElectionStatus;
 import com.digiteo.neovoteIV.web.data.model.ElectionData;
 import com.digiteo.neovoteIV.web.data.model.ElectionUpdateData;
+import jakarta.annotation.Nullable;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 

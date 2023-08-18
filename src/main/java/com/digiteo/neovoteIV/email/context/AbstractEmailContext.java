@@ -26,11 +26,11 @@ public abstract class AbstractEmailContext {
     }
 
     public <T> void init(T context){
-        //here can be setting up the base URL and context(admin entity instance)
+        //here goes the base URL and context(admin entity instance)
     }
 
     public <T> void initVoter(T context){
-        //here can be setting up the base URL and context(voter entity instance)
+        //here goes the base URL and context(voter entity instance)
     }
 
     public void put(String key, Object value){

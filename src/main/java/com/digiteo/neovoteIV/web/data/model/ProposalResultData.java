@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class ProposalResultData implements Serializable {
 
     private String name;
+    private String profileImagePath;
     private String email;
     private boolean isVisible;
     private int votes;

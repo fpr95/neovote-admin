@@ -1,12 +1,15 @@
 package com.digiteo.neovoteIV.web.controller;
 
+import com.digiteo.neovoteIV.model.jpa.data.AdminEntity;
 import com.digiteo.neovoteIV.model.jpa.data.Election;
 import com.digiteo.neovoteIV.model.jpa.data.ElectionRoll;
+import com.digiteo.neovoteIV.model.service.AdminService;
 import com.digiteo.neovoteIV.model.service.ElectionRollService;
 import com.digiteo.neovoteIV.model.service.ElectionService;
 import com.digiteo.neovoteIV.model.service.VoterService;
 import com.digiteo.neovoteIV.system.exception.EmailAlreadyExistException;
 import com.digiteo.neovoteIV.system.exception.UsernameAlreadyExistException;
+import com.digiteo.neovoteIV.web.data.model.AdminData;
 import com.digiteo.neovoteIV.web.data.model.ElectionListData;
 import com.digiteo.neovoteIV.web.data.model.ElectionRollData;
 import com.digiteo.neovoteIV.web.data.model.RollRegistrationData;
@@ -31,14 +34,19 @@ public class RollsController {
 
     private ElectionService electionService;
     private ElectionRollService electionRollService;
+    private AdminService adminService;
 
     @GetMapping("/rolls")
-    public String rollsView(final Model model){
+    public String rollsView(final Model model, Principal principal){
+        AdminEntity ae = adminService.getUserByUsernameOrEmail(principal.getName());
+        AdminData data = new AdminData();
+        data.setProfileImagePath(ae.getProfileImagePath());
         List<ElectionListData> eld = electionService.getElectionsList();
         for(ElectionListData e:eld){
             Election election = electionService.getElectionByTitle(e.getTitle());
             e.setRoll(election.getRoll().size());
         }
+        model.addAttribute("adminData", data);
         model.addAttribute("electionsList", eld);
         return "auth/rolls";
     }
@@ -46,35 +54,36 @@ public class RollsController {
     @GetMapping("/election-roll")
     public String electionRollView(@RequestParam(value = "uid", required = false) String title,
                                    @RequestParam(value = "errorInPassword", required = false) boolean flag,
-                                   //@RequestParam(value = "eliminatedUsername", required = false) String eliminatedUsername,
-                                   final Model model) throws EmailAlreadyExistException, UsernameAlreadyExistException {
+                                   final Model model,
+                                   Principal principal){
+        AdminEntity ae = adminService.getUserByUsernameOrEmail(principal.getName());
+        AdminData data = new AdminData();
+        data.setProfileImagePath(ae.getProfileImagePath());
         Election e = electionService.getElectionByTitle(title);
         Collection<ElectionRoll> electionRoll = e.getRoll();
+        System.out.println(electionRoll.toString());
         Set<ElectionRollData> rollSet = new HashSet<>();
         for(ElectionRoll er:electionRoll){
             ElectionRollData erd = new ElectionRollData();
             erd.setVoterUsername(er.getVoterUsername());
-            erd.setEmail(er.getEmail());
+            //erd.setEmail(er.getEmail());
             if(!er.isRegistered()){
-                if(electionRollService.checkIfUserIsRegistered(erd.getVoterUsername(), erd.getEmail())){
+                if(electionRollService.checkIfUserIsRegisteredPlus(erd.getVoterUsername())){
                     erd.setRegistered(true);
+                    erd.setEmail(electionRollService.returnEmailIfUserIsRegistered(erd.getVoterUsername()));
                 } else {
                     erd.setRegistered(false);
+                    erd.setEmail(er.getEmail());
                 }
             } else {
                 erd.setRegistered(er.isRegistered());
+                erd.setEmail(er.getEmail());
             }
             erd.setCreatedAt(er.getCreationTimestamp());
             rollSet.add(erd);
         }
-        //delete this block if don't work the redirect of the flag and the eliminatedUsername
-        //if(eliminatedUsername != null){
-        //    model.addAttribute("eliminatedUsername", eliminatedUsername);
-        //}
 
-        //model.addAttribute("eliminatedUserFlag", flag);
-        //delete this block if don't work the redirect of the flag and the eliminatedUsername
-
+        model.addAttribute("adminData", data);
         model.addAttribute("errorInPassword", flag);
         model.addAttribute("rollData", new RollRegistrationData());
         model.addAttribute("electionTitle", e.getTitle());
@@ -114,7 +123,7 @@ public class RollsController {
             model.addAttribute("rollRegistrationValidationErrors", true);
             model.addAttribute("electionTitle", electionTitle);
             model.addAttribute("rollData", rrd);
-            //find another way to do all this if there's an error!
+
             return "auth/election-roll";
         }
         boolean flag = electionRollService.addToRoll(rrd, e, principal);
@@ -129,7 +138,7 @@ public class RollsController {
     public String deleteUserFromRoll(@RequestParam(value = "et", required = false) String electionTitle,
                                      @RequestParam(value = "uname", required = false) String username,
                                      Model model,
-                                     RedirectAttributes redirectAttr) throws EmailAlreadyExistException, UsernameAlreadyExistException {
+                                     RedirectAttributes redirectAttr){
         electionRollService.deleteUserInRoll(username);
         boolean flag = true;
 
@@ -139,15 +148,17 @@ public class RollsController {
         for(ElectionRoll er:electionRoll){
             ElectionRollData erd = new ElectionRollData();
             erd.setVoterUsername(er.getVoterUsername());
-            erd.setEmail(er.getEmail());
             if(!er.isRegistered()){
-                if(electionRollService.checkIfUserIsRegistered(erd.getVoterUsername(), erd.getEmail())){
+                if(electionRollService.checkIfUserIsRegisteredPlus(erd.getVoterUsername())){
                     erd.setRegistered(true);
+                    erd.setEmail(electionRollService.returnEmailIfUserIsRegistered(erd.getVoterUsername()));
                 } else {
                     erd.setRegistered(false);
+                    erd.setEmail(er.getEmail());
                 }
             } else {
                 erd.setRegistered(er.isRegistered());
+                erd.setEmail(er.getEmail());
             }
             erd.setCreatedAt(er.getCreationTimestamp());
             rollSet.add(erd);
@@ -161,10 +172,4 @@ public class RollsController {
 
         return "auth/election-roll";
     }
-
-    //redirectAttr.addAttribute("eliminatedUserFlag", flag);
-    //redirectAttr.addAttribute("eliminatedUsername", username);
-    //redirectAttr.addAttribute("uid", electionTitle);
-    //redirectAttr.addAttribute(model); // idk if it's possible to redirect the model so test this
-    //redirectAttr.addFlashAttribute(model);
 }

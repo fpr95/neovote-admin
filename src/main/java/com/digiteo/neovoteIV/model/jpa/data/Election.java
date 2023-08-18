@@ -7,8 +7,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-//@Setter
 //@EqualsAndHashCode(callSuper = true)
+@Getter
 @NoArgsConstructor
 @ToString
 @Entity(name = "election")
@@ -20,21 +20,20 @@ import java.util.*;
 )
 public class Election extends BaseEntity {
 
-    //TRY2: SET creatorUsername USING A CUSTOM UserDetails IMPLEMENTATION FOR AdminEntity
-    //@Autowired
-    //UserDetails userDetails;
-
     @Column(
             name = "title",
             nullable = false
     )
-    @Getter
     @Setter
     private String title;
 
-    // when modifying an election creation to have multiple topics, this should be changed to an array
+    @Column(
+            name = "image_path"
+    )
+    @Setter
+    private String profileImagePath;
+
     @Column( name = "topics" )
-    @Getter
     @Setter
     private String topics;
 
@@ -45,21 +44,18 @@ public class Election extends BaseEntity {
             name = "brief_description",
             nullable = false
     )
-    @Getter
     @Setter
     private String briefDescription;
 
     // To avoid mapping breaks in case of changing ElectionStatus, the persisting is managed by an AttributeConverter
     @Column( name = "current_status" )
     @Setter
-    @Getter
     private ElectionStatus electionStatus;
 
     @Column(
             name = "init_timestamp",
             columnDefinition = "TIMESTAMP"
     )
-    @Getter
     @Setter
     private LocalDateTime initTimestamp;
 
@@ -67,7 +63,6 @@ public class Election extends BaseEntity {
             name = "finish_timestamp",
             columnDefinition = "TIMESTAMP"
     )
-    @Getter
     @Setter
     private LocalDateTime finishTimestamp;
 
@@ -75,7 +70,6 @@ public class Election extends BaseEntity {
             name = "details",
             columnDefinition = "TEXT"
     )
-    @Getter
     @Setter
     private String details;
 
@@ -87,36 +81,34 @@ public class Election extends BaseEntity {
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
     )
     @Setter(AccessLevel.PRIVATE)
-    @Getter
     private LocalDateTime creationTimestamp;
 
     //@Transient // This annotation is temporary while find a way to bind the user's username to the new Election
     //@ManyToOne(fetch = FetchType.LAZY)
     //@JoinColumn(name="admin_id")
-    @Getter
     @Setter
     private String creatorUsername;
 
-    //ORDER:no, UNIQUENESS:yep, UPDATES:few, SIZE:10 elements max, OWNING:no, ACCESS:field(@Id on model.BaseEntity.id)
+    //ORDER:no, UNIQUENESS:yep, UPDATES:few, SIZE:10-20, OWNING:no, ACCESS:field(@Id on model.BaseEntity.id)
     @ToString.Exclude
     @OneToMany(
             mappedBy = "bindingProcess",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL
     )
-    @Getter
     private List<Proposal> proposals = new ArrayList<Proposal>();
 
+    /*
     //ORDER:no, UNIQUENESS:yes, UPDATES:could b many, SIZE:undefined, OWNING:yes, ACCESS:field(@Id on model.BaseEntity.id)
-    //@ToString.Exclude
-    //@ManyToMany(
-    //        //mappedBy = "rolls",
-    //        fetch = FetchType.LAZY,
-    //        cascade = CascadeType.ALL
-    //)
-    //@Getter
-    //private List<VoterEntity> electoralRoll = new ArrayList<VoterEntity>();
-
+    @ToString.Exclude
+    @ManyToMany(
+            //mappedBy = "rolls",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL
+    )
+    @Getter
+    private List<VoterEntity> electoralRoll = new ArrayList<VoterEntity>();
+     */
 
     //ORDER:no, UNIQUENESS:yes, UPDATES:should b few, SIZE:undefined, OWNING:no, ACCESS:field(@Id on model.BaseEntity.id)
     @ToString.Exclude
@@ -125,7 +117,6 @@ public class Election extends BaseEntity {
             cascade = CascadeType.ALL,
             mappedBy = "targetElection"
     )
-    @Getter
     private Set<ElectionRoll> roll = new HashSet<>();
 
     public Election (
@@ -206,6 +197,14 @@ public class Election extends BaseEntity {
         proposals.remove(p);
         p.setBindingProcess(null);
     }
+
+    //public void setProfileImagePath(byte[] imageBytes){
+    //    this.profileImagePath = imageBytes.toString();
+    //}
+
+    //public byte[] getProfileImageFromPath(String imagePath){
+        //imagePath;
+    //}
 
     // CUSTOM IMPL TO CONVERT topics INTO AN ARRAY AND VICE VERSA
     //public String[] getTopics() {

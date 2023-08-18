@@ -72,7 +72,15 @@
                         <td>
                             <div class="d-flex align-items-center">
                                 <img
+                                        th:if="${#strings.isEmpty(election.profileImagePath)}"
                                         th:src="@{/static/img/election-default.jpg}"
+                                        alt="election-default"
+                                        style="width: 45px; height: 45px"
+                                        class="rounded-circle"
+                                />
+                                <img
+                                        th:unless="${#strings.isEmpty(election.profileImagePath)}"
+                                        th:src="${election.profileImagePath}"
                                         alt="election-default"
                                         style="width: 45px; height: 45px"
                                         class="rounded-circle"
@@ -118,17 +126,6 @@
                                 Ver Proceso
                                 <i class="fa-solid fa-eye ms-3"></i>
                             </a>
-                            <!--
-                            <a
-                                    th:case="'SUSPENDIDO'"
-                                    th:href="@{/auth/election-edit(uid=${election.title})}"
-                                    type="button"
-                                    class="btn btn-link btn-rounded btn-sm fs-7 d-flex"
-                                    data-mdb-ripple-color="dark">
-                                Editar
-                                <i class="fa fa-marker ms-24 ms-2"></i>
-                            </a>
-                            -->
                             <a
                                     th:case="'EN PROGRESO'"
                                     th:href="@{/auth-voter/user-ballot-box(uid=${election.title})}"
@@ -152,8 +149,6 @@
                     </tbody>
                 </table>
             </div>
-
-
 
         </section>
         <!--Section: Lista Elecciones -->

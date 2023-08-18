@@ -28,13 +28,6 @@
         });
     }
     </script>
-    <!--
-    <script type="text/javascript" th:inline="javascript">
-        function selectedProposal(proposalName){
-            document.getElementById('selectedProposal').value = proposalName;
-        }
-    </script>
-    -->
 </head>
 <body style="min-height:100vh;">
 <!--:::: Main ::::-->
@@ -81,8 +74,16 @@
                         <div class="card h-100">
                             <div class="row g-0 h-100">
                                 <div class="col-md-4 d-flex">
-                                    <img th:src="@{/static/img/proposal-default.jpg}" alt=""
-                                         class="img-fluid rounded-start my-auto h-100" style="object-fit:cover;">
+                                    <img th:if="${#strings.isEmpty(proposal.profileImagePath)}"
+                                         th:src="@{/static/img/proposal-default.jpg}"
+                                         alt="imagen propuesta"
+                                         class="img-fluid rounded-start my-auto h-100"
+                                         style="object-fit:cover;">
+                                    <img th:unless="${#strings.isEmpty(proposal.profileImagePath)}"
+                                         th:src="${proposal.profileImagePath}"
+                                         alt="imagen propuesta"
+                                         class="img-fluid rounded-start my-auto h-100"
+                                         style="object-fit:cover;">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body">

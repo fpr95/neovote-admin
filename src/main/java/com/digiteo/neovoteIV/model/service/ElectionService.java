@@ -13,15 +13,19 @@ public interface ElectionService {
 
     void addElection(ElectionData electionData, Principal principal)
             throws ElectionAlreadyExistException;
+
     void checkIfElectionExist(String title)
             throws ElectionAlreadyExistException;
+
     Election getElectionByTitle(String title);
+
     String partialUpdate(Long id, ElectionUpdateData electionUpdateData)
             throws ElectionAlreadyExistException;
-    //------------------------------------------------------------------------------------------------------------------
-    public Election partialUpdatePlus(Long id, ElectionUpdateData electionUpdateData);
-    //------------------------------------------------------------------------------------------------------------------
+
+    Election partialUpdatePlus(Long id, ElectionUpdateData electionUpdateData);
+
     void deleteElection(Long id);
+
     List<ElectionListData> getElectionsList();
 
     void suspendElection(Election e);
@@ -29,6 +33,5 @@ public interface ElectionService {
     void activateElection(Election e);
 
     // Voters layer related methods  -----------------------------------------------------------------------------------
-
     List<ElectionListData> getVotersElectionsList(Principal principal);
 }

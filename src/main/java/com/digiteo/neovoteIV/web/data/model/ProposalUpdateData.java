@@ -1,7 +1,6 @@
 package com.digiteo.neovoteIV.web.data.model;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,7 +26,18 @@ public class ProposalUpdateData implements Serializable {
     )
     private String contactEmail;
 
-    @Size(max = 300, message = "{proposal.registration.validation.details}")
+    //add validation constraints for each "(...)Id" field
+    private String webId;
+
+    private String facebookId;
+
+    private String linkedinId;
+
+    private String xId;
+
+    private String instagramId;
+
+    @Size(max = 700, message = "{proposal.registration.validation.details}")
     private String details;
 
     private boolean visible;

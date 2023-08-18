@@ -26,6 +26,10 @@ public class AdminEntity extends BaseEntity {
     private String firstName;
     private String lastName;
     private String username;
+    @Column(
+            name = "image_path"
+    )
+    private String profileImagePath;
     @Column(name = "email")
     private String email;
     private String pwd;
@@ -51,14 +55,8 @@ public class AdminEntity extends BaseEntity {
     @OneToMany(mappedBy = "adminEntity")
     private Set<SecureToken> tokens = new HashSet<>();
 
-    // @OneToMany( // <--- define cascade type
-    //       mappedBy = "voter",
-    //       fetch = FetchType.LAZY
-    //)
-    //private List<Vote> votes = new ArrayList<Vote>();
-    // private String token;
-    // private int failedLoginAttempts;
-    // private String loginDisabled;
+    //private int failedLoginAttempts;
+    //private String loginDisabled;
 
     public AdminEntity(
             String firstName,
@@ -78,7 +76,7 @@ public class AdminEntity extends BaseEntity {
 
     @Override
     public Long getId() { return super.id; }
-    //Change modifier to PUBLIC as Mapstruct need it that way to achieve the DTO-entity mapping.
+    //Change the id modifier to PUBLIC as Mapstruct need it that way to achieve the DTO-entity mapping.
     @Override
     public void setId(Long id) { super.setId(id); }
 

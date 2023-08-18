@@ -12,6 +12,53 @@
         <!--Section: Inicio Votante -->
         <section class="content pt-5 mb-9 mx-auto">
             <h3 class="text-left mb-4 pb-2 text-primary fw-bold">Bienvenido/a Votante</h3>
+            <p class="text-left mb-5">
+                Aquí le explicaremos brevemente como funciona la aplicación y
+                dónde debe dirigirse en caso e tener dudas
+            </p>
+
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <h6 class="mb-3 text-primary"><i class="fas fa-tachometer-alt text-primary pe-2"></i> Inicio</h6>
+                    <p>
+                        Esta es la sección en la que se encuentra
+                        ahora mismo y solo explica detalles generales de como funciona el panel del votante y las opciones
+                        del menú.
+                    </p>
+                </div>
+
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <h6 class="mb-3 text-primary"><i class="fas fa-chart-bar text-primary pe-2"></i> Elecciones</h6>
+                    <p>
+                        Aquí podrá ver todos los procesos de elección activos en los cuales usted figure como parte del
+                        <strong>padrón electoral*</strong>. En la lista podrá visualizar los procesos en 3 posibles estados:
+                        <em>NO INICIADO</em> : Esto indica que usted es parte del padrón de la elección pero debe esperar a la
+                        <strong>fecha y hora de inicio</strong> estipulada por el/la administrador/a a cargo para poder votar.
+                        Mientras, podrá ingresar a ver los detalles del proceso como las propuestas registradas y qué es
+                        lo que éstas ofrecen para ganar la elección.
+                        <em>EN PROGRESO</em> : Esto se verá cuando el proceso haya iniciado y por lo tanto usted podrá ingresar
+                        a votar por su propuesta de preferencia. <em>FINALIZADO</em> : Cuando se alcance la
+                        <strong>fecha y hora de término</strong> establecida para el proceso, pasará a este estado, donde usted podrá ver
+                        los resultados de la votación (y solicitar un informe con los resultados de la misma).
+                    <hr class="my-0">
+                    <small><strong>*</strong> Para saber más sobre qué es y cómo funciona el padrón electoral, puede revisar
+                        la sección de <em>Preguntas Frecuentes</em> haciendo click arriba en el botón
+                        <img th:src="@{/static/img/faq-btn-img.png}" style="width: 55px; height: 30px;" alt="imagen FAQ"></small>
+                    </p>
+                </div>
+
+                <!-- Enable this section when the ".../user-rolls" view is created
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <h6 class="mb-3 text-primary"><i class="fas fa-users text-primary pe-2"></i> Mi Padrón Electoral
+                    </h6>
+                    <p>
+                        Esta sección incluye un historial con el listado de las elecciones en las que usted es o fue
+                        (para los procesos ya finalizados) parte del padrón electoral oficial.
+                    </p>
+                </div>
+                -->
+
+            </div>
         </section>
         <!--Section: Inicio Votante-->
     </div>

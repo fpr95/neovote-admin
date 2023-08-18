@@ -56,8 +56,10 @@ public class ResetPasswordController {
     }
 
     @GetMapping("/change")
-    public String changePassword(@RequestParam(required = false) String token,@RequestParam(value = "invalidPassword", required = false) String invalidPassword, final RedirectAttributes redirectAttr, final Model model){
-
+    public String changePassword(@RequestParam(required = false) String token,
+                                 @RequestParam(value = "invalidPassword", required = false) String invalidPassword,
+                                 final RedirectAttributes redirectAttr,
+                                 final Model model){
         /* CHANGE ALL THIS FOR A try-catch WITH DefaultUserAccountService#verifyResetPasswordToken METHOD
         if(token.isEmpty()){
             redirectAttr.addFlashAttribute(MSG2,
@@ -74,20 +76,21 @@ public class ResetPasswordController {
             userAccountService.verifyResetPasswordToken(token);
         } catch (InvalidTokenException ex) {
             redirectAttr.addFlashAttribute(MSG2,
-                    messageSource.getMessage("user.registration.verification.email.invalidToken", null, LocaleContextHolder.getLocale()));
+                    messageSource.getMessage("user.registration.verification.email.invalidToken",
+                            null, LocaleContextHolder.getLocale()));
             return LOGIN_REDIRECT;
         }
-
         if(invalidPassword != null && !invalidPassword.isEmpty()){
             model.addAttribute("invalidPassword", invalidPassword);
         }
-
         ResetPasswordData data = new ResetPasswordData();
         data.setToken(token);
         setResetPasswordFrom(data, model);
+
         return "/account/change-password";
     }
 
+    //------------------------------------------------------------------------------------------------------------------
     @PostMapping(value = "/change")
     public String changePassword(final @Valid ResetPasswordData data, final BindingResult bindingResult, final Model model) {
         if(bindingResult.hasErrors()){

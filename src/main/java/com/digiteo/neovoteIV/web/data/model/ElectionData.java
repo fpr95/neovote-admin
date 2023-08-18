@@ -18,6 +18,8 @@ public class ElectionData implements Serializable {
     @Size(min = 2, max = 70, message = "El Título debe tener de 2 a 70 caracteres")
     private String title;
 
+    private String profileImagePath;
+
     @NotNull(message = "{election.registration.validation.topic}")
     //@Size(min = 2, message = "Debe contener al menos 2 caracteres.")
     private String topics;
@@ -36,7 +38,7 @@ public class ElectionData implements Serializable {
     @DateTimeFormat(pattern = "dd-MM-yyyy, HH:mm")
     private LocalDateTime finishTimestamp;
 
-    @Size(min = 10, max = 500, message = "{election.registration.validation.details}")
+    @Size(min = 10, max = 700, message = "{election.registration.validation.details}")
     private String details;
 
     private String electionStatus;

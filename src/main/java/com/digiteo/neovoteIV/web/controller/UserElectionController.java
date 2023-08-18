@@ -3,15 +3,13 @@ package com.digiteo.neovoteIV.web.controller;
 import com.digiteo.neovoteIV.model.jpa.data.Election;
 import com.digiteo.neovoteIV.model.jpa.data.Proposal;
 import com.digiteo.neovoteIV.model.jpa.data.Vote;
+import com.digiteo.neovoteIV.model.jpa.data.VoterEntity;
 import com.digiteo.neovoteIV.model.mapper.ElectionMapper;
 import com.digiteo.neovoteIV.model.service.ElectionService;
 import com.digiteo.neovoteIV.model.service.ProposalService;
 import com.digiteo.neovoteIV.model.service.VoteService;
 import com.digiteo.neovoteIV.model.service.VoterService;
-import com.digiteo.neovoteIV.web.data.model.ElectionData;
-import com.digiteo.neovoteIV.web.data.model.ElectionListData;
-import com.digiteo.neovoteIV.web.data.model.ProposalData;
-import com.digiteo.neovoteIV.web.data.model.ProposalResultData;
+import com.digiteo.neovoteIV.web.data.model.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,12 +35,21 @@ public class UserElectionController {
     @GetMapping("/user-elections-list")
     public String electionsListView(final Model model, Principal principal){
         List<ElectionListData> eld = electionService.getVotersElectionsList(principal);
+        VoterEntity v = voterService.getVoterByUsernameOrEmail(principal.getName());
+        VoterData data = new VoterData();
+        data.setProfileImagePath(v.getProfileImagePath());
+
+        model.addAttribute("voterData", data);
         model.addAttribute("voterElectionsList", eld);
         return "auth-voter/user-elections-list";
     }
 
     @GetMapping("/user-election-details")
-    public String electionDetailsView(@RequestParam(value = "uid", required = false) String title, final Model model) {
+    public String electionDetailsView(@RequestParam(value = "uid", required = false) String title, final Model model, Principal principal) {
+        VoterEntity v = voterService.getVoterByUsernameOrEmail(principal.getName());
+        VoterData data = new VoterData();
+        data.setProfileImagePath(v.getProfileImagePath());
+
         Election e = electionService.getElectionByTitle(title);
         ElectionData ed = electionMapper.toDto(e);
         boolean flag = false; // check if this flag is necessary, if not, take it out
@@ -51,7 +58,19 @@ public class UserElectionController {
         for(Proposal p : proposals) {
             ProposalData pd = new ProposalData();
             pd.setName(p.getName());
+            if(p.getProfileImagePath() != null){
+                pd.setProfileImagePath(p.getProfileImagePath());
+            } else {
+                pd.setProfileImagePath(null);
+            }
             pd.setContactEmail(p.getContactEmail());
+            //check if it's necessary a null check for the web and rrss fields
+            pd.setWebId(p.getWebId());
+            pd.setFacebookId(p.getFacebookId());
+            pd.setLinkedinId(p.getLinkedinId());
+            pd.setXId(p.getXId());
+            pd.setInstagramId(p.getInstagramId());
+
             pd.setDetails(p.getDetails());
             pd.setVisible(p.isVisible());
             pd.setCreatedAt(p.getTimestamp());
@@ -60,6 +79,7 @@ public class UserElectionController {
                 proposalsData.add(pd);
             }
         }
+        model.addAttribute("voterData", data);
         model.addAttribute("checkboxFlag", flag); // check if this flag is necessary, if not, take it out
         model.addAttribute("currentElection", ed);
         model.addAttribute("proposalsList", proposalsData);
@@ -69,6 +89,10 @@ public class UserElectionController {
 
     @GetMapping("/user-ballot-box")
     public String ballotBoxView(@RequestParam(value = "uid", required = false) String title, final Model model, Principal principal){
+        VoterEntity ve = voterService.getVoterByUsernameOrEmail(principal.getName());
+        VoterData data = new VoterData();
+        data.setProfileImagePath(ve.getProfileImagePath());
+
         Election e = electionService.getElectionByTitle(title);
         ElectionData ed = electionMapper.toDto(e);
         boolean hasVoted = false;
@@ -78,6 +102,11 @@ public class UserElectionController {
         for(Proposal p : proposals) {
             ProposalData pd = new ProposalData();
             pd.setName(p.getName());
+            if(p.getProfileImagePath() != null){
+                pd.setProfileImagePath(p.getProfileImagePath());
+            } else {
+                pd.setProfileImagePath(null);
+            }
             pd.setContactEmail(p.getContactEmail());
             pd.setDetails(p.getDetails());
             pd.setVisible(p.isVisible());
@@ -100,6 +129,7 @@ public class UserElectionController {
             model.addAttribute("proposalsList", proposalsData);
         }
 
+        model.addAttribute("voterData", data);
         model.addAttribute("hasVoted", hasVoted);
         model.addAttribute("checkboxFlag", flag);
         model.addAttribute("currentElection", ed);
@@ -107,15 +137,20 @@ public class UserElectionController {
         return "auth-voter/user-ballot-box";
     }
 
+    //------------------------------------------------------------------------------------------------------------------
     @PostMapping(value = "/user-ballot-box")
     public String voteEmission(@RequestParam(value = "selectedProposal", required = false) String proposal, Principal principal){
         voteService.addVote(proposal, principal);
         return "redirect:/auth-voter/user-elections-list?success";
     }
 
-    //take off exception handling after resolve the 2+ winners scenario
+    //------------------------------------------------------------------------------------------------------------------
     @GetMapping(value = "/user-election-results")
-    public String electionResultsView(@RequestParam(value = "uid", required = false) String title, final Model model) throws Exception {
+    public String electionResultsView(@RequestParam(value = "uid", required = false) String title, final Model model, Principal principal) {
+        VoterEntity ve = voterService.getVoterByUsernameOrEmail(principal.getName());
+        VoterData data = new VoterData();
+        data.setProfileImagePath(ve.getProfileImagePath());
+
         Election e = electionService.getElectionByTitle(title);
         int totalVoters = e.getRoll().size();
         int totalVotes = 0;
@@ -128,17 +163,19 @@ public class UserElectionController {
         Comparator<ProposalResultData> comparator
                 = Comparator.comparing(ProposalResultData::getVotes);
 
+        model.addAttribute("voterData", data);
         model.addAttribute("currentElection", ed);
-        for(String s:mostVoted){
-            System.out.println("|||======================================| " + s + " |======================================|||");
-        }
 
         if(mostVoted.length > 1){
-            //throw new Exception("Hay más de un/a ganadoor/a");
             if(mostVoted.length == 2){
                 for(Proposal p:proposals){
                     ProposalResultData prd = new ProposalResultData();
                     prd.setName(p.getName());
+                    if(p.getProfileImagePath() != null){
+                        prd.setProfileImagePath(p.getProfileImagePath());
+                    } else {
+                        prd.setProfileImagePath(null);
+                    }
                     prd.setEmail(p.getContactEmail());
                     prd.setVotes(p.getVotes().size());
                     prd.setPercent(prd.getVotes()*100/totalVoters); //limit to 2 the digits or cast to Integer
@@ -153,19 +190,29 @@ public class UserElectionController {
                 Proposal p1 = proposalService.findProposal(mostVoted[0]);
                 ProposalResultData tieProposalOne = new ProposalResultData();
                 tieProposalOne.setName(p1.getName());
+                if(p1.getProfileImagePath() != null){
+                    tieProposalOne.setProfileImagePath(p1.getProfileImagePath());
+                } else {
+                    tieProposalOne.setProfileImagePath(null);
+                }
                 tieProposalOne.setVotes(p1.getVotes().size());
-                tieProposalOne.setPercent(tieProposalOne.getVotes()*100/totalVoters); //limit to 2 the digits or cast to Integer
+                tieProposalOne.setPercent(tieProposalOne.getVotes()*100/totalVoters);
                 tieProposalOne.setCreatedAt(p1.getTimestamp());
 
                 Proposal p2 = proposalService.findProposal(mostVoted[1]);
                 ProposalResultData tieProposalTwo = new ProposalResultData();
                 tieProposalTwo.setName(p2.getName());
+                if(p2.getProfileImagePath() != null){
+                    tieProposalTwo.setProfileImagePath(p2.getProfileImagePath());
+                } else {
+                    tieProposalTwo.setProfileImagePath(null);
+                }
                 tieProposalTwo.setVotes(p2.getVotes().size());
-                tieProposalTwo.setPercent(tieProposalOne.getVotes()*100/totalVoters); //limit to 2 the digits or cast to Integer
+                tieProposalTwo.setPercent(tieProposalOne.getVotes()*100/totalVoters);
                 tieProposalTwo.setCreatedAt(p2.getTimestamp());
 
                 totalVotes = totalVotes + tieProposalOne.getVotes() + tieProposalTwo.getVotes();
-                participationPercent = totalVotes*100/totalVoters; //limit to 2 the digits or cast to Integer
+                participationPercent = totalVotes*100/totalVoters;
 
                 Collections.sort(proposalsResultsList, comparator);
                 Collections.reverse(proposalsResultsList);
@@ -176,18 +223,23 @@ public class UserElectionController {
                     rankingIndexes[index] = index + 3;
                 }
 
+                model.addAttribute("rankingIndexes", rankingIndexes);
                 model.addAttribute("tieProposalOne", tieProposalOne);
                 model.addAttribute("tieProposalTwo", tieProposalTwo);
                 model.addAttribute("totalVotes", totalVotes);
                 model.addAttribute("participationPercent", participationPercent);
                 model.addAttribute("otherProposals", proposalsResultsList);
-                //model.addAttribute("currentElection", ed);
 
                 return "auth-voter/user-election-results";
             } else {
                 for(Proposal p:proposals){
                     ProposalResultData prd = new ProposalResultData();
                     prd.setName(p.getName());
+                    if(p.getProfileImagePath() != null){
+                        prd.setProfileImagePath(p.getProfileImagePath());
+                    } else {
+                        prd.setProfileImagePath(null);
+                    }
                     prd.setEmail(p.getContactEmail());
                     prd.setVotes(p.getVotes().size());
                     prd.setPercent(prd.getVotes()*100/totalVoters); //limit to 2 the digits or cast to Integer
@@ -210,21 +262,25 @@ public class UserElectionController {
                     rankingIndexes[index] = index + 1;
                 }
 
+                model.addAttribute("rankingIndexes", rankingIndexes);
                 model.addAttribute("totalVotes", totalVotes);
                 model.addAttribute("participationPercent", participationPercent);
                 model.addAttribute("otherProposals", proposalsResultsList);
-                //model.addAttribute("currentElection", ed);
 
                 return "auth-voter/user-election-results";
             }
         }
-
         for(Proposal p:proposals){
             ProposalResultData prd = new ProposalResultData();
             prd.setName(p.getName());
+            if(p.getProfileImagePath() != null){
+                prd.setProfileImagePath(p.getProfileImagePath());
+            } else {
+                prd.setProfileImagePath(null);
+            }
             prd.setEmail(p.getContactEmail());
             prd.setVotes(p.getVotes().size());
-            prd.setPercent(prd.getVotes()*100/totalVoters); //limit to 2 the digits or cast to Integer
+            prd.setPercent(prd.getVotes()*100/totalVoters);
             prd.setCreatedAt(p.getTimestamp());
             prd.setVisible(p.isVisible());
             if(prd.isVisible() && prd.getName() != mostVoted[0]){
@@ -236,8 +292,13 @@ public class UserElectionController {
         Proposal p = proposalService.findProposal(mostVoted[0]);
         ProposalResultData winner = new ProposalResultData();
         winner.setName(p.getName());
+        if(p.getProfileImagePath() != null){
+            winner.setProfileImagePath(p.getProfileImagePath());
+        } else {
+            winner.setProfileImagePath(null);
+        }
         winner.setVotes(p.getVotes().size());
-        winner.setPercent(winner.getVotes()*100/totalVoters); //limit to 2 the digits or cast to Integer
+        winner.setPercent(winner.getVotes()*100/totalVoters);
         winner.setCreatedAt(p.getTimestamp());
 
         totalVotes = totalVotes + winner.getVotes();
@@ -250,16 +311,13 @@ public class UserElectionController {
         for(ProposalResultData prd:proposalsResultsList){
             int index = proposalsResultsList.indexOf(prd);
             rankingIndexes[index] = index + 2;
-            //System.out.println(index);
         }
 
-        //System.out.println(rankingIndexes.toString());
         model.addAttribute("rankingIndexes", rankingIndexes);
         model.addAttribute("totalVotes", totalVotes);
         model.addAttribute("participationPercent", participationPercent);
         model.addAttribute("winnerProposal", winner);
         model.addAttribute("otherProposals", proposalsResultsList);
-        //model.addAttribute("currentElection", ed);
 
         return "auth-voter/user-election-results";
     }

@@ -16,7 +16,7 @@
                 <i class="fa-regular fa-hand-point-right me-1"></i> Rellene <strong>todos</strong> los campos
                 indicados en el formulario debajo para crear un nuevo proceso electoral.
             </p>
-            <p class="text-left mb-5">
+            <p class="text-left mb-2">
                 <i class="fa-regular fa-hand-point-right me-1"></i> Éste tendrá por defecto un status
                 <strong>SUSPENDIDO</strong>, con el propósito de tener un espacio para poder
                 agregar las propuestas o editar cualquier detalle antes de mostrar la elección como disponible al
@@ -26,6 +26,11 @@
                 '<strong>Fecha y Hora Inicio</strong>' indicada en el formulario. En este punto, la elección
                 cambiará su status a <strong>EN PROGRESO</strong>, y una vez alcance el momento
                 establecido en el campo '<strong>Fecha y Hora Término</strong>' pasará a <strong>FINALIZADO</strong>.
+            </p>
+            <p class="text-left mb-5">
+                <i class="fa-regular fa-hand-point-right me-1"></i> Si desea establecer una
+                <strong>imagen de perfil</strong> para el proceso, esto se hace ingresando a
+                la sección <em>Editar</em> y haciendo click sobre la imagen que aparecerá por defecto.
             </p>
 
             <form action="#" th:action="@{/auth/election-new}" th:object="${electionData}" method="post" role="form">
@@ -101,7 +106,7 @@
                     <input type="text" id="briefDescriptionInput" class="form-control" th:field="*{briefDescription}" th:errorclass="is-invalid"/>
                     <label class="form-label" for="briefDescriptionInput">Descripción Breve</label>
                 </div>
-                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
                 <div class="row mb-4">
                     <!-- initTimestamp input -->
                     <!-- validation error display -->
@@ -167,7 +172,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
                 <!-- details input -->
                 <!-- validation error display -->

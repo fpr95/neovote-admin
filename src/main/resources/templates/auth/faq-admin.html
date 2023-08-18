@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout_dash}">
+<head>
+    <title>Preguntas Frecuentes</title>
+</head>
+<body style="min-height:100vh;">
+<!--:::: Main ::::-->
+<main>
+    <div layout:fragment="body" class="container">
+
+        <!--Section: Principal -->
+        <section class="content pt-1 mb-5 mx-auto">
+            <div class="row pt-0 pb-5">
+                <div class="col-md-9 d-wrap mx-auto">
+                    <div class="text-left col-mx-2 px-3 py-5 mt-2" data-aos="fade-up" data-aos-duration="700">
+                        <h2 class="body-brand mx-auto mb-1">
+                <span class="border border-primary border-2 rounded-pill d-flex justify-content-center">
+                <span class="bg-light text-primary badge rounded-pill mx-auto p-5 py-1 my-3 fs-3 d-grid justify-content-center"
+                      style="font-weight: bold; font-size: 10px;">Preguntas Frecuentes</span>
+                </span>
+                        </h2>
+                        <hr class="h-color mx-4">
+                        <div class="d-wrap">
+                            <p class="mx-3 fs-6 mt-4">
+                                <i class="fa-regular fa-hand-point-right me-1"></i> Este espacio tiene por objetivo
+                                resolver las dudas
+                                y consultas que puedan surgir en su ejercicio como administrador/a del sistema.
+                            </p>
+                        </div>
+                        <p class="mx-3 fs-6 mb-3">
+                            <i class="fa-regular fa-paper-plane me-1"></i> En caso de que su consulta no se
+                            encuentre aquí, ésta puede ser enviada<strong>*</strong> al correo administrativo de Digiteo
+                            <strong>neovote@digiteo.cl</strong>.
+                        <hr class="mt-0 pt-0 mx-4">
+                        <div class="mx-auto w-75 mb-4">
+                            <small><strong>*</strong> Desde el equipo de <em>Digiteo</em> le pedimos que el correo solo sea
+                                usado con el fin mencionado, para todo lo demás puede contactarse a través de nuestras
+                                redes sociales.</small>
+                        </div>
+                        </p>
+                        <!-- <p class="mx-5 fs-5">Simple. Seguro.</p> -->
+                        <div class="list-group w-100">
+
+                            <a href="#shortAnswer1collapse" data-mdb-toggle="collapse" aria-expanded="false"
+                               aria-controls="shortAnswer1collapse"
+                               class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h4 class="mt-2"><i class="fa-solid fa-circle-question me-1"></i>¿Qué es neovote?
+                                    </h4>
+                                </div>
+                                <p class="mb-1">
+                                    neovote es un sistema de votación en línea.
+                                </p>
+                                <small><u>Más información</u></small>
+                                <!-- Collapsed content -->
+                                <div class="collapse mt-3" id="shortAnswer1collapse">
+                                    <p>
+                                        A grandes rasgos, neovote es un sistema de votación separado en 2 partes:
+                                    </p>
+                                    <p>
+                                        Una es para los <strong>administradores</strong> quienes se encargan de la
+                                        creación de elecciones, el ingreso de
+                                        las propuestas para estas elecciones, el registro del padrón electoral oficial
+                                        para cada proceso, entre otras cosas.
+                                        La otra parte es para los <strong>votantes</strong>, quienes pueden crear una
+                                        cuenta en la
+                                        aplicación y de esta forma ver las elecciones disponibles y los detalles de
+                                        cada una, emitir votos y solicitar informes donde pueden ver resultados y
+                                        estadísticas
+                                        una vez los procesos hayan finalizado.
+                                    </p>
+                                </div>
+                            </a>
+
+                            <a href="#shortAnswer2collapse" data-mdb-toggle="collapse" aria-expanded="false"
+                               aria-controls="shortAnswer2collapse"
+                               class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h4 class="mt-1"><i class="fa-solid fa-circle-question me-1"></i>
+                                        Como crear un proceso de elección desde 0
+                                    </h4>
+                                </div>
+                                <p class="mb-1">
+                                    Ingresando a la sección <em>Nueva Elección</em> del menú.
+                                </p>
+                                <small class="text-muted"><u>Más Información</u></small>
+                                <!-- Collapsed content -->
+                                <div class="collapse mt-3" id="shortAnswer2collapse">
+                                    <p>
+                                        Al ingresar a la sección <em>Nueva Elección</em> podrá ver un formulario el
+                                        cual debe ser rellenado con los datos solicitados, entre ellos están el título
+                                        (éste debe ser único en el sistema), fecha y hora de inicio y término del
+                                        proceso, entre otros. Una vez creada, deberá ingresar a la sección <em>Elecciones</em>
+                                        buscar en la lista el proceso y hacer click en <em>EDITAR</em>, aquí podrá modificar
+                                        los campos ingresados al momento del registro, además de poder seleccionar una
+                                        <strong>imagen de perfil</strong> para la elección.
+                                    </p>
+                                </div>
+                            </a>
+
+                            <a href="#shortAnswer3collapse" data-mdb-toggle="collapse" aria-expanded="false"
+                               aria-controls="shortAnswer3collapse"
+                               class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h4 class="my-1"><i class="fa-solid fa-circle-question me-1"></i>
+                                        ¿Cómo puedo agregar propuestas a un proceso de elección ya creado?
+                                    </h4>
+                                </div>
+                                <p class="mb-1">
+                                    Debe ingresar a <em>EDITAR</em> y luego hacer click en <em>AGREGAR NUEVA PROPUESTA</em>.
+                                </p>
+                                <small class="text-muted"><u>Más información</u></small>
+                                <!-- Collapsed content -->
+                                <div class="collapse mt-3" id="shortAnswer3collapse">
+                                    <p>
+                                        En la sección <em>Elecciones</em> del menú podrá ver una lista con las
+                                        elecciones creadas, debe buscar el proceso en el cual desee agregar propuestas
+                                        y hacer click en <em>EDITAR</em>. Una vez dentro, podrá ver un botón que dice
+                                        <em>AGREGAR NUEVA PROPUESTA</em>, éste despliega un formulario que deberá
+                                        rellenar (al menos los campos obligatorios que son <em>Nombre</em>,
+                                        <em>Correo de Contacto</em> y <em>Detalles</em>) para poder agregar una
+                                        propuesta al proceso. En la misma tabla donde se despliegan las propuestas ingresadas,
+                                        tendrá la opción de modificar los campos estipulados al momento del registro
+                                        y de seleccionar una <strong>imagen de perfil</strong> para dicha propuesta.
+                                        <strong>Tenga presente que tanto la creación de nuevas propuestas como la
+                                            edición de las existentes no se podrá efectuar en un proceso que ya haya iniciado</strong>.
+                                    </p>
+                                </div>
+                            </a>
+
+                            <a href="#shortAnswer4collapse" data-mdb-toggle="collapse" aria-expanded="false"
+                               aria-controls="shortAnswer4collapse"
+                               class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h4 class="mt-1"><i class="fa-solid fa-circle-question me-1"></i>
+                                        ¿Qué es el padrón electoral? ¿Cómo funciona?
+                                    </h4>
+                                </div>
+                                <p class="mb-1">
+                                    Es el registro de votantes habilitados para votar en un proceso.
+                                </p>
+                                <small class="text-muted"><u>Más Información</u></small>
+                                <!-- Collapsed content -->
+                                <div class="collapse mt-3" id="shortAnswer4collapse">
+                                    <p>
+                                        Toda elección cuenta con su correspondiente <em>padrón electoral</em>, este es
+                                        un registro donde usted deberá ingresar a tod@s l@s votantes involucrad@s en dicho proceso.
+                                        Los usuarios ingresados en la lista estarán habilitados para:
+                                    <hr class="my-1" style="width: 0px;">
+                                    <i class="fa-solid fa-chevron-right me-1"></i> Ver el proceso en la sección <em>Elecciones</em>
+                                    <hr class="my-1" style="width: 0px;">
+                                    <i class="fa-solid fa-chevron-right me-1"></i> Revisar los detalles de dicho proceso, como las propuestas registradas.
+                                    <hr class="my-1" style="width: 0px;">
+                                    <i class="fa-solid fa-chevron-right me-1"></i> Votar por su propuesta de preferencia.
+                                    <hr class="my-1" style="width: 0px;">
+                                    <i class="fa-solid fa-chevron-right me-1"></i> Enterarse de los resultados del proceso una vez llegue la <strong>fecha y hora de término</strong> estipulada.
+                                    <hr class="my-1" style="width: 0px;">
+                                    Una vez un (o muchos) usuario(s) sean ingresados en el padrón de un proceso,
+                                    será su responsabilidad dar pronto aviso a los mismos sobre dicho suceso, además
+                                    deberá recordar información relevante como lo son las fechas y horas de inicio y término.
+                                    <strong>Se recomienda avisar a los usuarios de su registro en el padrón con un plazo no
+                                        mayor a 60 minutos previos a la fecha y hora de inicio de la elección</strong>.
+                                    </p>
+                                </div>
+                            </a>
+
+                            <a href="#shortAnswer5collapse" data-mdb-toggle="collapse" aria-expanded="false"
+                               aria-controls="shortAnswer5collapse"
+                               class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h4 class="my-1"><i class="fa-solid fa-circle-question me-1"></i>
+                                        ¿Puedo votar en una elección si soy el/la administrador/a a cargo de ella?
+                                    </h4>
+                                </div>
+                                <p class="mb-1">
+                                    Se puede registrando una cuenta como votante.
+                                </p>
+                                <small class="text-muted"><u>Más información</u></small>
+                                <!-- Collapsed content -->
+                                <div class="collapse mt-3" id="shortAnswer5collapse">
+                                    <p>
+                                        <strong>Siempre se recomienda que el administrador a cargo del proceso no sea un
+                                            participante del mismo por el evidente conflicto de intereses que se puede generar</strong>.
+                                        Solo si no se cuenta con nadie más para este puesto, usted podrá participar
+                                        de una elección a su cargo, solo que no desde su cuenta de administrador.
+                                        Debe registrarse con una cuenta de votante y luego,
+                                        desde su cuenta de administrador auto agregarse al padrón de la elección en la
+                                        que desee participar. Una vez hecho esto, inicie sesión con su cuenta de votante
+                                        y en la sección <em>Elecciones</em>, verá el proceso disponible.
+                                        Una vez llegue la <strong>fecha y hora de inicio</strong> que haya estipulado
+                                        para el proceso, podrá ingresar a la <em>URNA VIRTUAL</em> haciendo click en
+                                        <em>VOTAR</em>. Una vez dentro, solo debe seleccionar la propuesta de su preferencia,
+                                        y finalmente hacer click en <em>EMITIR VOTO</em>.
+                                    </p>
+                                </div>
+                            </a>
+
+                            <!-- Show this question after the section <<+ NUEVO ADMINISTRADOR(A)>> is created
+
+                            <a href="#shortAnswer6collapse" data-mdb-toggle="collapse" aria-expanded="false"
+                               aria-controls="shortAnswer6collapse"
+                               class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h4 class="my-1"><i class="fa-solid fa-circle-question me-1"></i>
+                                        ¿Pueden haber más administradores en el sistema?
+                                    </h4>
+                                </div>
+                                <p class="mb-1">
+                                    Sí, pero cada proceso solo puede tener uno a cargo.
+                                </p>
+                                <small class="text-muted"><u>Más información</u></small>
+                                <!- Collapsed content ->
+                                <div class="collapse mt-3" id="shortAnswer6collapse">
+                                    <p>
+                                        La cuenta del super-administrador o administrador principal (la que tiene por
+                                        nombre de usuario 'admin') está facultada para ingresar más administradores en
+                                        el sistema. En la sección <em>+ NUEVO ADMINISTRADOR(A)</em> que
+                                        está disponible desde la página principal de la aplicación, encontrará las
+                                        instrucciones para poder registrar un nuevo administrador o administradora.
+                                    <hr class="mb-2">
+                                    Tenga en consideración que para cada proceso de elección solo puede haber un/a
+                                    administrador/a, por lo que si se requiere de más personas a cargo de una
+                                    elección, tod@s deberán compartir las credenciales de la cuenta con la que se
+                                    haya creado el proceso.
+                                    </p>
+                                </div>
+                            </a>
+                            -->
+
+                            <a href="#shortAnswer7collapse" data-mdb-toggle="collapse" aria-expanded="false"
+                               aria-controls="shortAnswer7collapse"
+                               class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h4 class="my-1"><i class="fa-solid fa-circle-question me-1"></i>
+                                        ¿Cómo elimino mi perfil del sistema?
+                                    </h4>
+                                </div>
+                                <p class="mb-1">
+                                    Haciendo click en <em>Actualizar Perfil</em><i class="fa-solid fa-arrow-right ms-1"></i>
+                                    <em>Eliminar Perfil</em>.
+                                </p>
+                                <small class="text-muted"><u>Más información</u></small>
+                                <!-- Collapsed content -->
+                                <div class="collapse mt-3" id="shortAnswer7collapse">
+                                    <p>
+                                        La cuenta del super-administrador o administrador principal (la que tiene por
+                                        nombre de usuario 'admin') no puede ser eliminada del sistema, no obstante, los
+                                        perfiles de administradores que el super-administrador pueda crear sí. Para ello
+                                        deberá iniciar sesión con uno de estos perfiles, en la parte superior de la pantalla debe
+                                        hacer click en
+                                        <img th:src="@{/static/img/admin-logo-test3.png}" style="width: 20px;height: 20px;">, ingrese a la sección
+                                        <em>Actualizar Perfil</em> y una vez allí seleccione <em>Eliminar Perfil</em>.
+                                    </p>
+                                </div>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</main>
+<!--:::: Main ::::-->
+</body>
+</html>

@@ -19,5 +19,5 @@ public interface ProposalService {
     void partialUpdatePlus(String name, ProposalUpdateData pud);
     void deleteProposal(String proposalName);
     List<ProposalData> getProposalList();
-    public Proposal findProposal(String proposalName);
+    Proposal findProposal(String proposalName);
 }

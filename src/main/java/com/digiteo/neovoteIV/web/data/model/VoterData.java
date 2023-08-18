@@ -22,6 +22,8 @@ public class VoterData implements Serializable {
     @Size(min = 3, message = "{user.registration.validation.username}") //, message = "Ingrese un nombre de usuario de al menos 2 caracteres, por favor")
     private String username;
 
+    private String profileImagePath;
+
     @Pattern(
             regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z\\d-]+\\.)+[a-zA-Z]{2,6}$",
             message = "{user.registration.validation.email}"

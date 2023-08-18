@@ -27,13 +27,29 @@ public class Proposal extends BaseEntity {
     private String name;
 
     @Column(
+            name = "image_path"
+    )
+    private String profileImagePath;
+
+    @Column(
             name = "contact_email"
     )
     private String contactEmail;
 
+    private String webId;
+
+    private String facebookId;
+
+    private String linkedinId;
+
+    private String xId;
+
+    private String instagramId;
+
     @Column(
             name = "details",
-            nullable = false
+            nullable = false,
+            columnDefinition = "TEXT"
     )
     private String details;
 
@@ -69,6 +85,7 @@ public class Proposal extends BaseEntity {
     @Setter(AccessLevel.PRIVATE)
     private LocalDateTime timestamp;
 
+    /* this constructor works
     public Proposal(
             String name,
             String contactEmail,
@@ -76,6 +93,29 @@ public class Proposal extends BaseEntity {
             boolean visible){
         this.name = name;
         this.contactEmail = contactEmail;
+        this.details = details;
+        this.visible = visible;
+        this.timestamp = LocalDateTime.now();
+    }
+    */
+
+    public Proposal(
+            String name,
+            String contactEmail,
+            String webId,
+            String facebookId,
+            String linkedinId,
+            String xId,
+            String instagramId,
+            String details,
+            boolean visible){
+        this.name = name;
+        this.contactEmail = contactEmail;
+        this.webId = webId;
+        this.facebookId = facebookId;
+        this.linkedinId = linkedinId;
+        this.xId = xId;
+        this.instagramId = instagramId;
         this.details = details;
         this.visible = visible;
         this.timestamp = LocalDateTime.now();

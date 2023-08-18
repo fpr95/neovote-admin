@@ -12,6 +12,9 @@ public interface ElectionRollService {
     boolean checkIfUserIsRegistered(String username, String email) throws EmailAlreadyExistException, UsernameAlreadyExistException;
 
     boolean checkIfUserIsRegisteredPlus(String username);
+
+    String returnEmailIfUserIsRegistered(String userId);
+
     boolean addToRoll(RollRegistrationData rrd, Election election, Principal principal);
 
     void deleteUserInRoll(String username);

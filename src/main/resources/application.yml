@@ -2,13 +2,21 @@ server:
   port: 8080
   error:
     include-message: always
+  tomcat:
+    max-swallow-size: -1 # this config is not recommended for production environments
 
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/neovote_demo_iv #NOMBRE_BD
-    username: root #PLACEHOLDER
-    password: 852456msql #PLACEHOLDER
+    url: jdbc:mysql://localhost:3306/ #NOMBRE_BD
+    username: #PLACEHOLDER
+    password: #PLACEHOLDER
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 4000KB
+  #    max-request-size: 4100KB
 
   jpa:
     database: mysql
@@ -44,8 +52,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587 # port 587 is for encrypted sessions, 25 is for plain/text
-    username: lautaro.pipe@gmail.com #HERE GOES THE GMAIL USERNAME
-    password: paay qfjt agmg afoz #HERE GOES THE 'APPLICATION PASSWORD' FOR THE GMAIL
+    username: #HERE GOES THE GMAIL USERNAME
+    password: #HERE GOES THE 'APPLICATION PASSWORD' FOR THE GMAIL
     transport:
       protocol: smtp
     properties:

@@ -40,7 +40,6 @@ public class DefaultElectionRollService implements ElectionRollService {
         return false;
     }
 
-    //this impl doesn't need to handle exceptions
     @Override
     public boolean checkIfUserIsRegisteredPlus(String username){
         boolean isRegistered = false;
@@ -50,6 +49,16 @@ public class DefaultElectionRollService implements ElectionRollService {
             }
         }
         return isRegistered;
+    }
+
+    @Override
+    public String returnEmailIfUserIsRegistered(String userId){
+        if(userId != null){
+            if(voterRepository.findVoterByUsernameOrEmail(userId).isPresent()){
+                return voterRepository.findVoterByUsernameOrEmail(userId).get().getEmail();
+            }
+        }
+        return "";
     }
 
     @Override

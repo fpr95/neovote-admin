@@ -1,0 +1,52 @@
+        .img-label{
+            position: absolute; bottom: 0;outline: none;box-sizing: border-box;cursor: pointer;transition: 0.5s;background: rgba(0,0,0,0.5);opacity: 0;
+            color: transparent;
+            padding: 5px 16px;
+        }
+        .img-input{
+            position: absolute;
+            color: transparent;
+        }
+        .img-input::file-selector-button{
+            display: none;
+        }
+        .img-label::file-selector-button{
+            display: none;
+        }
+        .img-label::before {
+            content: "\f030"; /*  */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: #fff;
+            display: inline-block;
+            position: relative;
+            /*-webkit-user-select: none;*/
+        }
+        .img-label:hover{
+            opacity: 1;
+        }
+        /* ==========  Election related ========== */
+                .election-img-label{
+                    position: absolute; bottom: 0;outline: none;box-sizing: border-box;cursor: pointer;transition: 0.5s;background: rgba(0,0,0,0.5);opacity: 0;
+                    color: transparent;
+                    width: 100%;
+                    height: 50%;
+                    display: grid;
+                    justify-content: center;
+                }
+                .election-img-label:hover{
+                    opacity: 1;
+                }
+                .election-img-label::file-selector-button{
+                    display: none;
+                }
+                .election-img-label::before {
+                    content: "\f030"; /*"";*/
+                    font-family: "Font Awesome 6 Free";
+                    font-weight: 900;
+                    color: #fff;
+                    font-size: xx-large;
+                    display: inline-block;
+                    position: relative;
+                }
+        /* ========== Election related ========== */

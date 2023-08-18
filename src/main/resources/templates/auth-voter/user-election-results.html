@@ -15,24 +15,6 @@
         }
     </style>
     <style>
-        #my-canvas{
-            position: fixed;
-            top: 0;
-            left: 0;
-            /* width: 100%;
-            height: 100vh; */
-            z-index: 1000000;
-            /* visibility: hidden; */
-            pointer-events: none;
-        }
-        /*
-        #my-canvas.active{
-            visibility: visible;
-        }
-        */
-    </style>
-
-    <style>
         #tumbleweed-container {
             max-width: 100%;
             width: 100%;
@@ -99,11 +81,6 @@
         var end = Date.now() + (5 * 1000);
         var colors = ['#bb0000', '#ffffff'];
 
-        //let conf = document.querySelector("#my-canvas");
-        //let confettiSettings = { target: 'my-canvas' };
-        //let confetti = new ConfettiGenerator(confettiSettings);
-        //confetti.render();
-
         $(document).ready(function(){
             if(winnerProposal != null){
                 $("#winnerProposalModal").focus();
@@ -115,14 +92,16 @@
                         angle: 60,
                         spread: 55,
                         origin: { x: 0 },
-                        colors: colors
+                        colors: colors,
+                        zIndex: 200
                     });
                     confetti({
                         particleCount: 2,
                         angle: 120,
                         spread: 55,
                         origin: { x: 1 },
-                        colors: colors
+                        colors: colors,
+                        zIndex: 200
                     });
 
                     if (Date.now() < end) {
@@ -130,18 +109,6 @@
                     }
                 }());
 
-                //confetti();
-                //confetti.render();
-                //conf.classList.add('active');
-
-                function onModalClosed() {
-                    //conf.classList.remove('active');
-                    //confetti.clear();
-                }
-
-                $("#winnerProposalModal").on("hidden.bs.modal", function() {
-                    onModalClosed();
-                });
             }
             if(tieProposalOne != null && tieProposalTwo != null){
                 $("#tieModal").focus();
@@ -165,7 +132,7 @@
 <main>
     <div layout:fragment="body" class="container">
         <!-- Confetti animation element -->
-        <canvas id="my-canvas"></canvas>
+        <!-- <canvas id="my-canvas"></canvas> -->
         <!-- Section: Introducción -->
         <section class="content pt-5 mb-5 mx-auto">
             <h3 class="text-left mb-4 pb-2 text-primary fw-bold">Resultados</h3>
@@ -179,7 +146,10 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <img th:src="@{/static/img/proposal-default.jpg}" class="img-fluid rounded-circle p-5">
+                        <img th:if="${#strings.isEmpty(winnerProposal.profileImagePath)}"
+                             th:src="@{/static/img/proposal-default.jpg}" class="img-fluid rounded-circle p-5">
+                        <img th:unless="${#strings.isEmpty(winnerProposal.profileImagePath)}"
+                             th:src="${winnerProposal.profileImagePath}" class="img-fluid rounded-circle p-5">
                         <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"
                                 style="position: absolute;top: 0;right: 0;padding: inherit;"></button>
                     </div>
@@ -203,20 +173,30 @@
         </div>
         <!-- Section: Modal Propuesta Ganadora -->
 
-        <!-- Section: Modal Empate TRIED: totalVotes == 0, < 0, > 0, -->
+        <!-- Section: Modal Empate -->
         <div class="modal fade" id="tieModal" tabindex="-1"
-             aria-labelledby="modalLabel2" aria-hidden="true" th:if="${winnerProposal == null and totalVotes > 0}">
+             aria-labelledby="modalLabel2" aria-hidden="true" th:if="${winnerProposal == null and totalVotes > 0 and tieProposalOne != null}">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <div class="col-md-5">
-                            <img th:src="@{/static/img/proposal-default.jpg}" class="img-fluid rounded-circle p-2">
+                            <img th:if="${#strings.isEmpty(tieProposalOne.profileImagePath)}"
+                                 th:src="@{/static/img/proposal-default.jpg}"
+                                 class="img-fluid rounded-circle p-2">
+                            <img th:unless="${#strings.isEmpty(tieProposalOne.profileImagePath)}"
+                                 th:src="${tieProposalOne.profileImagePath}"
+                                 class="img-fluid rounded-circle p-2">
                         </div>
                         <div class="col-md-2">
                             <span class="badge w-100 bg-warning text-dark rounded-pill"><i class="fa-solid fa-bolt"></i></span>
                         </div>
                         <div class="col-md-5">
-                            <img th:src="@{/static/img/proposal-default.jpg}" class="img-fluid rounded-circle p-2">
+                            <img th:if="${#strings.isEmpty(tieProposalTwo.profileImagePath)}"
+                                 th:src="@{/static/img/proposal-default.jpg}"
+                                 class="img-fluid rounded-circle p-2">
+                            <img th:unless="${#strings.isEmpty(tieProposalTwo.profileImagePath)}"
+                                 th:src="${tieProposalTwo.profileImagePath}"
+                                 class="img-fluid rounded-circle p-2">
                         </div>
                         <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"
                                 style="position: absolute;top: 0;right: 0;padding: inherit;"></button>
@@ -255,18 +235,9 @@
                         <h3 class="text-center mb-0">
                             <strong>Baia Baia</strong>
                         </h3>
-                        <!--
-                        <h5 class="text-center mb-3">
-                            <strong th:text="${winnerProposal.name}"></strong>
-                        </h5>
-                        -->
                         <hr class="w-75 mx-auto">
                         <p class="text-center">
                             ¡Al parecer <strong>nadie</strong> voto en esta elección!
-                            <!--
-                            <span class="text-success" th:text="${#strings.concat(winnerProposal.percent, '%')}"></span>
-                            de preferencia.
-                            -->
                         </p>
                     </div>
                     <div class="modal-footer"></div>
@@ -287,7 +258,10 @@
                     <h4 class="mb-3">Propuesta Ganadora</h4>
                     <div class="card">
                         <div class="card-header">
-                            <img class="img-fluid p-5" th:src="@{/static/img/proposal-default.jpg}" alt="">
+                            <img th:if="${#strings.isEmpty(winnerProposal.profileImagePath)}"
+                                 class="img-fluid p-5" th:src="@{/static/img/proposal-default.jpg}" alt="imagen propuesta ganadora">
+                            <img th:unless="${#strings.isEmpty(winnerProposal.profileImagePath)}"
+                                 class="img-fluid p-5" th:src="${winnerProposal.profileImagePath}" alt="imagen propuesta ganadora">
                         </div>
                         <ul class="list-group list-group-light">
                             <li class="list-group-item px-3 d-flex justify-content-between"><strong>ID:</strong>
@@ -316,8 +290,12 @@
                     <div class="card d-flex">
                         <div class="row g-0">
                             <div class="col-md-4 d-flex">
-                                <img th:src="@{/static/img/proposal-default.jpg}" style="object-fit: cover;"
-                                     class="img-fluid rounded-start" alt="...">
+                                <img th:if="${#strings.isEmpty(tieProposalOne.profileImagePath)}"
+                                     th:src="@{/static/img/proposal-default.jpg}" style="object-fit: cover;"
+                                     class="img-fluid rounded-start" alt="imagen propuesta empate 1">
+                                <img th:unless="${#strings.isEmpty(tieProposalOne.profileImagePath)}"
+                                     th:src="${tieProposalOne.profileImagePath}" style="object-fit: cover;"
+                                     class="img-fluid rounded-start" alt="imagen propuesta empate 1">
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
@@ -349,8 +327,12 @@
                     <div class="card">
                         <div class="row g-0">
                             <div class="col-md-4 d-flex">
-                                <img th:src="@{/static/img/proposal-default.jpg}" style="object-fit: cover;"
-                                     class="img-fluid rounded-start" alt="...">
+                                <img th:if="${#strings.isEmpty(tieProposalTwo.profileImagePath)}"
+                                     th:src="@{/static/img/proposal-default.jpg}" style="object-fit: cover;"
+                                     class="img-fluid rounded-start" alt="imagen propuesta empate 2">
+                                <img th:unless="${#strings.isEmpty(tieProposalTwo.profileImagePath)}"
+                                     th:src="${tieProposalTwo.profileImagePath}" style="object-fit: cover;"
+                                     class="img-fluid rounded-start" alt="imagen propuesta empate 2">
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
@@ -401,9 +383,17 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <img
+                                                th:if="${#strings.isEmpty(p.profileImagePath)}"
                                                 th:src="@{/static/img/proposal-default.jpg}"
                                                 alt=""
-                                                style="width: 45px; height: 45px"
+                                                style="width: 45px; height: 45px; object-fit: cover;"
+                                                class="rounded-circle"
+                                        />
+                                        <img
+                                                th:unless="${#strings.isEmpty(p.profileImagePath)}"
+                                                th:src="${p.profileImagePath}"
+                                                alt=""
+                                                style="width: 45px; height: 45px; object-fit: cover;"
                                                 class="rounded-circle"
                                         />
                                         <div class="ms-3">
@@ -418,7 +408,7 @@
                                 </td>
                                 <!-- data still not included(Ranking) -->
                                 <td>
-                                    <span th:if="${p.votes > 0}" class="fw-bold" th:text="${rankingIndexes[iter.index]}"></span>
+                                    <span th:if="${p.votes > 0 and iter != null}" class="fw-bold" th:text="${rankingIndexes[iter.index]}"></span>
                                     <span th:if="${p.votes == 0}" class="fw-bold">-</span>
                                 </td>
                                 <!-- data still not included(Ranking) -->
@@ -448,8 +438,12 @@
                     <div class="card d-flex">
                         <div class="card-header election-card-header d-flex">
                             <div class="col-sm-3 my-auto">
-                                <img class="img-fluid rounded-circle p-5" th:src="@{/static/img/election-default.jpg}"
-                                     alt="">
+                                <img th:if="${#strings.isEmpty(currentElection.profileImagePath)}"
+                                     class="img-fluid rounded-circle p-5" th:src="@{/static/img/election-default.jpg}"
+                                     alt="imagen proceso">
+                                <img th:unless="${#strings.isEmpty(currentElection.profileImagePath)}"
+                                     class="img-fluid rounded-circle p-5" th:src="${currentElection.profileImagePath}"
+                                     alt="imagen proceso">
                             </div>
                             <div class="col-sm-9 my-auto">
                                 <text class="my-auto px-4">

@@ -21,23 +21,21 @@ public class ForgotPasswordEmailContext extends AbstractEmailContext {
 
     @Override
     public <T> void init(T context){
-        //change name of the obj to voter once implemented the voters layer
-        AdminEntity user = (AdminEntity)context; //here goes the voter/admin information
+        AdminEntity user = (AdminEntity)context; //here goes the admin information
         put("firstName", user.getFirstName());
         setTemplateLocation("/emails/email-forgot-password");
         setSubject("Reestablecer contraseña");
-        setFrom("lautaro.pipe@gmail.com"); // this email account should be placed in the application.yml and should be like 'no-responder@neovote.cl'
+        setFrom("lautaro.pipe@gmail.com"); // this could be placed in the application.yml and should be like 'no-responder@neovote.cl'
         setTo(user.getEmail());
     }
 
     @Override
     public <T> void initVoter(T context) {
-        //change name of the obj to voter once implemented the voters layer
-        VoterEntity voter = (VoterEntity) context; //here goes the voter/admin information
+        VoterEntity voter = (VoterEntity) context; //here goes the voter information
         put("firstName", voter.getFirstName());
         setTemplateLocation("/emails/email-forgot-password");
         setSubject("Reestablecer contraseña");
-        setFrom("neovote"); // this email account should be placed in the application.yml and should be like 'no-reply@neovote.cl'
+        setFrom("neovote");
         setTo(voter.getEmail());
     }
 

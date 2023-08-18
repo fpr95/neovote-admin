@@ -12,7 +12,7 @@
   <!-- Font Awesome -->
   <link
           rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
   <!-- Google Fonts Roboto -->
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"/>
@@ -61,17 +61,25 @@
       <!-- Collapsible wrapper -->
       <div class="collapse navbar-collapse multi-collapse" id="navbarButtonsExample">
         <!-- Left links -->
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <div class="d-flex me-auto">
+        <ul class="navbar-nav me-1 mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="#">Panel Administrador/a</a>
+            <span class="nav-link">Panel Administrador(a)</span>
           </li>
         </ul>
+          <ul class="navbar-nav ms-1 me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <span class="nav-link fw-bold">Bienvenido(a) <span th:text="${#authentication.principal.username}" class="text-danger"></span></span>
+            </li>
+          </ul>
+        </div>
         <!-- Left links -->
 
         <!-- Right links -->
         <div class="d-flex align-items-center px-2">
           <ul class="navbar-nav ms-auto d-flex flex-row px-2">
             <!-- Notification dropdown -->
+            <!--
             <li class="nav-item dropdown mt-2 mb-2">
               <a
                       class="nav-link me-4 me-lg-3 dropdown-toggle hidden-arrow"
@@ -92,13 +100,9 @@
               >
                 <li><a class="dropdown-item" href="#">1 Elección Finalizada</a></li>
                 <li><a class="dropdown-item" href="#">2 mensajes FAQ</a></li>
-                <!--
-                <li>
-                  <a class="dropdown-item" href="#">Ootra notificación</a>
-                </li>
-                -->
               </ul>
             </li>
+            -->
             <!-- Avatar -->
             <li class="nav-item dropdown mt-1 mb-1 px-1 mx-2" >
               <a
@@ -109,9 +113,29 @@
                       data-mdb-toggle="dropdown"
                       aria-expanded="false" >
                 <img
-                        th:src="@{/static/img/admin-logo-test2.png}"
+                        th:unless="${adminData != null}"
+                        th:src="@{/static/img/admin-logo-test3.png}"
                         class="rounded-circle"
                         height="32"
+                        style="width: 30px; height: 30px; object-fit: cover;"
+                        alt=""
+                        loading="lazy"
+                />
+                <img
+                        th:if="${adminData != null and #strings.isEmpty(adminData.profileImagePath)}"
+                        th:src="@{/static/img/admin-logo-test3.png}"
+                        class="rounded-circle"
+                        height="32"
+                        style="width: 30px; height: 30px; object-fit: cover;"
+                        alt=""
+                        loading="lazy"
+                />
+                <img
+                        th:unless="${adminData != null and #strings.isEmpty(adminData.profileImagePath)}"
+                        th:src="@{${adminData.profileImagePath}}"
+                        class="rounded-circle"
+                        height="32"
+                        style="width: 30px; height: 30px; object-fit: cover;"
                         alt=""
                         loading="lazy"
                 />
@@ -120,7 +144,7 @@
                       class="dropdown-menu dropdown-menu-end"
                       aria-labelledby="navbarDropdownMenuLink"
               >
-                <li><a class="dropdown-item" href="#">Actualizar Perfil</a></li>
+                <li><a class="dropdown-item" href="admin-profile">Actualizar Perfil</a></li>
                 <li><a class="dropdown-item" th:href="@{/logout}">Cerrar Sesión</a></li>
               </ul>
             </li>
@@ -128,7 +152,7 @@
           <!-- FAQ -->
           <a
                   class="btn btn-dark px-3 me-lg-3 mt-0"
-                  href="#"
+                  href="faq-admin"
                   role="button"
                   style="color: white; font-weight: bold;"
           ><i class="fa fa-question-circle"></i> FAQ</a>
@@ -178,12 +202,14 @@
                 class="list-group-item list-group-item-action py-2 ripple"
         ><i class="fas fa-users fa-fw me-3"></i><span>Padrón Electoral</span></a
         >
+        <!--
         <a
                 href="#"
                 class="list-group-item list-group-item-action py-2 ripple"
         ><i class="fas fa-chart-line fa-fw me-3"></i
         ><span>Estadísticas</span></a
         >
+        -->
       </div>
     </div>
   </nav>

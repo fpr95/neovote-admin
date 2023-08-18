@@ -15,12 +15,11 @@ public class AccountVerificationEmailContext extends AbstractEmailContext {
 
     @Override
     public <T> void init(T context){
-        //change name of the obj to 'admin entity' once implemented the voters layer
-        AdminEntity user = (AdminEntity) context; //here goes the admin information
+        AdminEntity user = (AdminEntity) context; //admin information
         put("firstName", user.getFirstName());
         setTemplateLocation("/emails/email-verification");
         setSubject("Verifique su cuenta para continuar");
-        setFrom("neovote"); // this email account should be placed in the application.yml and should be like 'no-reply@neovote.cl'
+        setFrom("neovote"); // this could be placed in the application.yml and should be like 'no-reply@neovote.cl'
         setTo(user.getEmail());
     }
 
@@ -30,7 +29,7 @@ public class AccountVerificationEmailContext extends AbstractEmailContext {
         put("firstName", voter.getFirstName());
         setTemplateLocation("/emails/email-verification");
         setSubject("Verifique su cuenta para continuar");
-        setFrom("neovote"); // this email account should be placed in the application.yml and should be like 'no-reply@neovote.cl'
+        setFrom("neovote");
         setTo(voter.getEmail());
     }
 

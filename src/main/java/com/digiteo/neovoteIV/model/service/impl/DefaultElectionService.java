@@ -11,7 +11,6 @@ import com.digiteo.neovoteIV.web.data.model.ElectionData;
 import com.digiteo.neovoteIV.web.data.model.ElectionListData;
 import com.digiteo.neovoteIV.web.data.model.ElectionUpdateData;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ import java.security.Principal;
 import java.util.*;
 
 @Service
-//@AllArgsConstructor
 public class DefaultElectionService implements ElectionService {
 
     private final ElectionRepository repository;
@@ -45,11 +43,6 @@ public class DefaultElectionService implements ElectionService {
     }
 
     public Election getElectionByTitle(String title){
-        //Optional<Election> e = repository.findElectionByTitle(title);
-        //if(!e.isPresent()){
-        //    throw new NullPointerException("");
-        //}
-        //return e.get();
         return repository.findElectionByTitle(title).get();
     }
 
@@ -72,11 +65,9 @@ public class DefaultElectionService implements ElectionService {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-
     @Override
     @Transactional
     public Election partialUpdatePlus(Long id, ElectionUpdateData electionUpdateData) {
-        //Election e = repository.findById(id).get();
         Election newElection = mapper.patchToEntity(repository.findById(id).get(), electionUpdateData);
         repository.save(newElection);
         return newElection;
@@ -158,8 +149,4 @@ public class DefaultElectionService implements ElectionService {
         }
         return votersElectionList;
     }
-
-    //public Collection<T> getRollCollection(String title){
-    //    Election e = repository.findElectionByTitle(title).get();
-    //}
 }

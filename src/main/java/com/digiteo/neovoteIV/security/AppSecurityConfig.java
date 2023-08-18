@@ -28,7 +28,6 @@ public class AppSecurityConfig {
     private CustomUserDetailsService userDetailsService;
 
     @Configuration
-    //@Order(1)
     public static class VoterConfigurationAdapter {
         @Bean
         public SecurityFilterChain voterSecurityFilterChain(HttpSecurity http) throws Exception{
@@ -70,6 +69,8 @@ public class AppSecurityConfig {
                     .securityMatcher("/login-admin", "/auth/**")
                     .authorizeHttpRequests()
                     //.requestMatchers("/register", "/login").permitAll()
+                    .requestMatchers("/uploads/**").permitAll()
+                    .requestMatchers("/static/**").permitAll()
                     .requestMatchers("/resources/**").permitAll()
                     .requestMatchers("/auth/**")
                     //.authenticated()
@@ -81,7 +82,7 @@ public class AppSecurityConfig {
                             .defaultSuccessUrl("/auth/welcome-admin", true)
                             .loginPage("/login-admin")
                             .loginProcessingUrl("/login-admin")
-                            .failureUrl("/login?error=true")
+                            .failureUrl("/login-admin?error=true")
                     ).logout(logout -> logout
                             .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                             .permitAll()
@@ -93,7 +94,7 @@ public class AppSecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/resources/**", "/templates/**", "/static/**");
+        return (web) -> web.ignoring().requestMatchers("/resources/**", "/uploads/**", "/templates/**", "/static/**", "/img-usr/**");
     }
 
     //@Bean
@@ -109,6 +110,7 @@ public class AppSecurityConfig {
     //    return configuration.getAuthenticationManager();
     //}
 
+    //the bcrypt hashing function should be used only in dev and testing enviroments, for production this must be changed
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();

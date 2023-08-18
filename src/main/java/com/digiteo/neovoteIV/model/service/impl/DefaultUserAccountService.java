@@ -65,13 +65,7 @@ public class DefaultUserAccountService implements UserAccountService {
         }
     }
 
-    //@Override
-    //public void forgottenPasswordVoter(String email) throws UnknownIdentifierException {
-    //    VoterEntity voter = voterService.getVoterByUsernameOrEmail(email);
-    //    sendResetPasswordVoter(voter);
-    //}
-
-    //here there's a chance to send a new email notifying the user that the account(the password) has been modified
+    //here's a chance to send a new email notifying the user that the account(the password) has been modified
     @Override
     public void updatePassword(String password, String token) throws InvalidTokenException, UnknownIdentifierException {
         SecureToken secureToken = secureTokenService.findByToken(token);
@@ -97,20 +91,22 @@ public class DefaultUserAccountService implements UserAccountService {
         }
     }
 
-    //@Override
-    //public void updatePasswordVoter(String password, String token) throws InvalidTokenException, UnknownIdentifierException {
-    //    SecureToken secureToken = secureTokenService.findByToken(token);
-    //    if(Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken()) || secureToken.isExpired()){
-    //        throw new InvalidTokenException("El token proporcionado no es válido");
-    //    }
-    //    VoterEntity voter = voterRepository.getReferenceById(secureToken.getVoterEntity().getId());
-    //    if(Objects.isNull(voter)){
-    //        throw new UnknownIdentifierException("Error al buscar al votante asociado al token proporcionado");
-    //    }
-    //    secureTokenService.removeToken(secureToken);
-    //    voter.setPwd(passwordEncoder.encode(password));
-    //    voterRepository.save(voter);
-    //}
+    /*
+    @Override
+    public void updatePasswordVoter(String password, String token) throws InvalidTokenException, UnknownIdentifierException {
+        SecureToken secureToken = secureTokenService.findByToken(token);
+        if(Objects.isNull(secureToken) || !StringUtils.equals(token, secureToken.getToken()) || secureToken.isExpired()){
+            throw new InvalidTokenException("El token proporcionado no es válido");
+        }
+        VoterEntity voter = voterRepository.getReferenceById(secureToken.getVoterEntity().getId());
+        if(Objects.isNull(voter)){
+            throw new UnknownIdentifierException("Error al buscar al votante asociado al token proporcionado");
+        }
+        secureTokenService.removeToken(secureToken);
+        voter.setPwd(passwordEncoder.encode(password));
+        voterRepository.save(voter);
+    }
+     */
 
     protected void sendResetPassword(AdminEntity user) {
         SecureToken secureToken = secureTokenService.createSecureToken();

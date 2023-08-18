@@ -24,6 +24,8 @@ public interface AdminService {
     boolean verifyUser(String token) throws InvalidTokenException;
 
     boolean authenticateAdminPassword(Principal principal, String pwd);
+
+    void deleteAdminProfile(String username) throws Exception;
     /*
     void registerPlus(final AdminData user)
         throws UsernameAlreadyExistException;

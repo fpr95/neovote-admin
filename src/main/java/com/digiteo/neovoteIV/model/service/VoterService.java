@@ -16,7 +16,8 @@ public interface VoterService {
 
     public void sendRegistrationConfirmationEmail(VoterEntity voter);
 
-    VoterEntity getVoterByUsernameOrEmail(String username); // throws UnknownIdentifierException;
+    VoterEntity getVoterByUsernameOrEmail(String username);
 
     boolean verifyVoter(String token) throws InvalidTokenException;
+    void deleteVoter(String username);
 }

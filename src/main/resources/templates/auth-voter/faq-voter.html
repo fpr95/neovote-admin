@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout-dash-voter}">
+<head>
+    <title>Preguntas Frecuentes</title>
+</head>
+<body style="min-height:100vh;">
+<!--:::: Main ::::-->
+<main>
+    <div layout:fragment="body" class="container">
+        <!--Section: Principal -->
+        <section class="content pt-5 mb-5 mx-auto">
+            <div class="row pt-0 pb-5">
+                <div class="col-md-9 d-wrap mx-auto">
+                    <div class="text-left col-mx-2 px-3 py-5 mt-2" data-aos="fade-up" data-aos-duration="700">
+                        <h2 class="body-brand mx-auto mb-1">
+                <span class="border border-primary border-2 rounded-pill d-flex justify-content-center">
+                <span class="bg-light text-primary badge rounded-pill mx-auto p-5 py-1 my-3 fs-3 d-grid justify-content-center"
+                      style="font-weight: bold; font-size: 10px;">Preguntas Frecuentes</span>
+                </span>
+                        </h2>
+                        <hr class="h-color mx-4">
+                        <div class="d-wrap">
+                            <p class="mx-3 fs-6 mt-4" mb-1>
+                                <i class="fa-regular fa-hand-point-right me-1"></i> Este espacio tiene por objetivo
+                                resolver las dudas
+                                y consultas que mas se repiten por parte de nuestros usuarios.
+                            </p>
+                        </div>
+                        <p class="mx-3 fs-6 mb-5">
+                            <i class="fa-regular fa-paper-plane me-1"></i> En caso de que su consulta no se
+                            encuentre aquí, ésta puede ser enviada al área de administración a través del correo
+                            <strong>admin@neovote.cl</strong>.
+                        </p>
+                        <!-- <p class="mx-5 fs-5">Simple. Seguro.</p> -->
+                        <div class="list-group w-100">
+
+                            <a href="#shortAnswer1collapse" data-mdb-toggle="collapse" aria-expanded="false"
+                               aria-controls="shortAnswer1collapse"
+                               class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h4 class="mt-2"><i class="fa-solid fa-circle-question me-1"></i>¿Qué es neovote?
+                                    </h4>
+                                </div>
+                                <p class="mb-1">
+                                    neovote es un sistema de votación en línea.
+                                </p>
+                                <small><u>Más información</u></small>
+                                <!-- Collapsed content -->
+                                <div class="collapse mt-3" id="shortAnswer1collapse">
+                                    <p>
+                                        A grandes rasgos, neovote es un sistema de votación separado en 2 partes:
+                                    </p>
+                                    <p>
+                                        Una es para los <strong>administradores</strong> quienes se encargan de la
+                                        creación de elecciones, el ingreso de
+                                        las propuestas para estas elecciones, el registro del padrón electoral oficial
+                                        para cada proceso, entre otras cosas.
+                                        La otra parte es para los <strong>votantes</strong>, quienes pueden crear una
+                                        cuenta en la
+                                        aplicación y de esta forma ver las elecciones disponibles y los detalles de
+                                        cada una, emitir votos y solicitar informes donde pueden ver resultados y
+                                        estadísticas
+                                        una vez los procesos hayan finalizado.
+                                    </p>
+                                </div>
+                            </a>
+
+                            <a href="#shortAnswer2collapse" data-mdb-toggle="collapse" aria-expanded="false"
+                               aria-controls="shortAnswer2collapse"
+                               class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h4 class="mt-1"><i class="fa-solid fa-circle-question me-1"></i>¿Dónde y cómo puedo
+                                        ver las elecciones?</h4>
+                                </div>
+                                <p class="mb-1">
+                                    Accediendo a la sección <em>Elecciones</em>.
+                                </p>
+                                <small class="text-muted"><u>Más Información</u></small>
+                                <!-- Collapsed content -->
+                                <div class="collapse mt-3" id="shortAnswer2collapse">
+                                    <p>
+                                        Todo usuario que desee ver los procesos disponibles en el sistema debe
+                                        acceder a la sección <em>Elecciones</em> del
+                                        menú.
+                                        Aquí aparecerán las elecciones, las cuales indicarán 3 posibles estados<strong>*</strong>:
+                                        <strong>NO INICIADO</strong>, esto significa que el proceso ya fue creado pero
+                                        que aún no inicia, podrá ver los detalles de éste y de las propuestas registradas
+                                        haciendo click en <em>VER PROCESO</em>; <strong>EN PROGRESO</strong>, esto
+                                        aparecerá cuando la elección ya haya iniciado, por lo que usted como votante
+                                        registrado en el padrón, podrá ingresar y emitir su voto por la propuesta de su
+                                        preferencia; <strong>FINALIZADO</strong>, este estado indica que el período para
+                                        emitir votos ha llegado a su fin, haciendo click en <em>VER RESULTADOS</em> podrá
+                                        saber detalles como si hubo una propuesta más votada o si hay un empate, el
+                                        porcentaje de participación y más.
+                                    </p>
+                                </div>
+                            </a>
+
+                            <a href="#shortAnswer3collapse" data-mdb-toggle="collapse" aria-expanded="false"
+                               aria-controls="shortAnswer3collapse"
+                               class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h4 class="mt-1"><i class="fa-solid fa-circle-question me-1"></i>
+                                        ¿Qué es el padrón electoral?
+                                    </h4>
+                                </div>
+                                <p class="mb-1">
+                                    Es el registro de votantes habilitados para votar en un proceso.
+                                </p>
+                                <small class="text-muted"><u>Más Información</u></small>
+                                <!-- Collapsed content -->
+                                <div class="collapse mt-3" id="shortAnswer3collapse">
+                                    <p>
+                                        Toda elección cuenta con su correspondiente <em>padrón electoral</em>, este es
+                                        un registro donde se ingresan tod@s l@s votantes involucrados en dicho proceso.
+                                        El encargado de este registro es el o la administrador/a a cargo del proceso y
+                                        habilita a los votantes para:
+                                    <hr class="my-1" style="width: 0px;">
+                                    <i class="fa-solid fa-chevron-right me-1"></i> Ver el proceso en la sección <em>Elecciones</em>
+                                    <hr class="my-1" style="width: 0px;">
+                                    <i class="fa-solid fa-chevron-right me-1"></i> Revisar los detalles de dicho proceso, como las propuestas registradas.
+                                    <hr class="my-1" style="width: 0px;">
+                                    <i class="fa-solid fa-chevron-right me-1"></i> Votar por su propuesta de preferencia.
+                                    <hr class="my-1" style="width: 0px;">
+                                    <i class="fa-solid fa-chevron-right me-1"></i> Enterarse de los resultados del proceso una vez llegue la <strong>fecha y hora de término</strong> estipulada.
+                                    </p>
+                                </div>
+                            </a>
+
+                            <a href="#shortAnswer4collapse" data-mdb-toggle="collapse" aria-expanded="false"
+                               aria-controls="shortAnswer4collapse"
+                               class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h4 class="my-1"><i class="fa-solid fa-circle-question me-1"></i>¿Cómo puedo votar?
+                                    </h4>
+                                </div>
+                                <p class="mb-1">
+                                    Ingresando a la <em>URNA VIRTUAL</em> de una elección <strong>EN PROCESO</strong>.
+                                </p>
+                                <small class="text-muted"><u>Más información</u></small>
+                                <!-- Collapsed content -->
+                                <div class="collapse mt-3" id="shortAnswer4collapse">
+                                    <p>
+                                        Una vez iniciada su sesión, en la sección <em>Elecciones</em>, verá todos los
+                                        procesos disponibles en los cuales usted figure como parte del <em>padrón electoral</em>
+                                        oficial. Una vez llegue la <strong>fecha y hora de inicio</strong> estipulada
+                                        para el proceso, podrá ingresar a la <em>URNA VIRTUAL</em> haciendo click en
+                                        <em>VOTAR</em>. Una vez dentro, solo debe seleccionar la propuesta de su preferencia,
+                                        hacer click en <em>EMITIR VOTO</em> ¡y ya está!
+                                    </p>
+                                </div>
+                            </a>
+
+                            <a href="#shortAnswer5collapse" data-mdb-toggle="collapse" aria-expanded="false"
+                               aria-controls="shortAnswer5collapse"
+                               class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h4 class="my-1"><i class="fa-solid fa-circle-question me-1"></i>
+                                        Otras personas han podido votar pero yo ni siquiera veo el proceso en la lista de elecciones ¿Por qué?
+                                    </h4>
+                                </div>
+                                <p class="mb-1">
+                                    Debe asegurarse de estar registrado en el <em>padrón electoral</em> de dicho proceso.
+                                </p>
+                                <small class="text-muted"><u>Más información</u></small>
+                                <!-- Collapsed content -->
+                                <div class="collapse mt-3" id="shortAnswer5collapse">
+                                    <p>
+                                        Los procesos activos solo son visibles para los usuarios registrados en el
+                                        <em>padrón electoral</em> de dichos procesos, por lo que si otros usuarios han
+                                        podido ver y votar en el proceso que usted busca y usted aún no puede verlo en
+                                        la lista, probablemente se deba a que no está registrado en el padrón. En este
+                                        caso le recomendamos corroborar su <em>Nombre de Usuario</em> y solicitar al o la
+                                        administrador/a a cargo del proceso que verifique si su nombre está en el padrón,
+                                        de no estarlo, debe registrar su nombre y con esto ya podrá ver el proceso
+                                        desplegado en la sección <em>Elecciones</em> del menú.
+                                    </p>
+                                </div>
+                            </a>
+
+                            <a href="#shortAnswer6collapse" data-mdb-toggle="collapse" aria-expanded="false"
+                               aria-controls="shortAnswer6collapse"
+                               class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h4 class="my-1"><i class="fa-solid fa-circle-question me-1"></i>
+                                        No alcancé a votar, ¿Qué puedo hacer?
+                                    </h4>
+                                </div>
+                                <p class="mb-1">
+                                    En dicho caso, le recomendamos contactar al o la administrador/a a cargo.
+                                </p>
+                                <small class="text-muted"><u>Más información</u></small>
+                                <!-- Collapsed content -->
+                                <div class="collapse mt-3" id="shortAnswer6collapse">
+                                    <p>
+                                        Cuando un proceso es creado y se registra su correspondiente padrón, es parte
+                                        de las responsabilidades del o la administrador/a dar pronto aviso a quienes
+                                        registró en dicho padrón, de las <strong>fechas y horas de inicio y término</strong>
+                                        del proceso, debido a esto, no hay forma de emitir un voto para un proceso que ya finalizó.
+                                        En el caso excepcional de que usted <strong>no</strong> haya sido avisado con suficiente
+                                        anticipación<strong>*</strong> del plazo definido para emitir su voto, le recomendamos contactarse
+                                        con quien esté a cargo para buscar una solución alternativa.
+                                    <hr class="my-0">
+                                    <small><strong>*</strong> Por suficiente anticipación nos referimos a 60 minutos mínimo.</small>
+                                    </p>
+                                </div>
+                            </a>
+
+                            <a href="#shortAnswer7collapse" data-mdb-toggle="collapse" aria-expanded="false"
+                               aria-controls="shortAnswer7collapse"
+                               class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h4 class="my-1"><i class="fa-solid fa-circle-question me-1"></i>
+                                        ¿Cómo elimino mi perfil del sistema?
+                                    </h4>
+                                </div>
+                                <p class="mb-1">
+                                    Haciendo click en <em>Actualizar Perfil</em><i class="fa-solid fa-arrow-right ms-1"></i>
+                                    <em>Eliminar Perfil</em>.
+                                </p>
+                                <small class="text-muted"><u>Más información</u></small>
+                                <!- Collapsed content ->
+                                <div class="collapse mt-3" id="shortAnswer7collapse">
+                                    <p>
+                                        Una vez inicie sesión, en la parte superior de la pantalla debe
+                                        hacer click en
+                                        <img th:src="@{/static/img/user-logo-test-1.png}" style="width: 20px;height: 20px;">
+                                        (esta imagen se establece por defecto para todos los votantes), ingrese a la sección
+                                        <em>Actualizar Perfil</em> y una vez allí seleccione <em>Eliminar Perfil</em>.
+                                    </p>
+                                </div>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--Section: Principal -->
+    </div>
+</main>
+<!--:::: Main ::::-->
+</body>
+</html>

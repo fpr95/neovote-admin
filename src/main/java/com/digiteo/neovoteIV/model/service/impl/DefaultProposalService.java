@@ -41,7 +41,6 @@ public class DefaultProposalService implements ProposalService {
         }
     }
 
-
     @Override
     @Transactional
     public void partialUpdate(String name, ProposalUpdateData pud) throws ProposalNameAlreadyExistException {
@@ -59,7 +58,6 @@ public class DefaultProposalService implements ProposalService {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-
     @Override
     @Transactional
     public void partialUpdatePlus(String name, ProposalUpdateData pud){
@@ -68,7 +66,6 @@ public class DefaultProposalService implements ProposalService {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-
     @Override
     public void deleteProposal(String proposalName) {
         Optional<Proposal> op = repository.findProposalByName(proposalName);

@@ -28,6 +28,10 @@ public class VoterEntity extends BaseEntity {
     private String firstName;
     private String lastName;
     private String username;
+    @Column(
+            name = "image_path"
+    )
+    private String profileImagePath;
     @Column(name = "email")
     private String email;
     private String pwd;
@@ -54,18 +58,20 @@ public class VoterEntity extends BaseEntity {
     private Set<SecureToken> tokens = new HashSet<>();
 
     @ToString.Exclude
-    @OneToMany( // <--- define cascade type
+    @OneToMany( // <--- define cascade type when implementing the blockchain
            mappedBy = "voter",
            fetch = FetchType.LAZY
     )
     private List<Vote> votes = new ArrayList<Vote>();
 
-    //@ToString.Exclude
-    //@ManyToMany( // <--- define cascade type
-    //        mappedBy = "electoralRoll",
-    //        fetch = FetchType.LAZY
-    //)
-    //private List<Election> rolls = new ArrayList<>();
+    /*
+    @ToString.Exclude
+    @ManyToMany(
+            mappedBy = "electoralRoll",
+            fetch = FetchType.LAZY
+    )
+    private List<Election> rolls = new ArrayList<>();
+     */
 
     public VoterEntity(
             String firstName,

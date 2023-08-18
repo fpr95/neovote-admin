@@ -22,7 +22,9 @@
                     <h6 class="mb-3 text-primary"><i class="fas fa-tachometer-alt text-primary pe-2"></i> Inicio</h6>
                     <p>
                         Esta es la sección en la que se encuentra
-                        ahora mismo y solo explica detalles generales de como funciona el panel de control.
+                        ahora mismo y solo explica detalles generales de como funciona el panel de control. En caso de
+                        tener otras dudas o consultas puede dirigirse a la sección de Preguntas y Respuestas haciendo
+                        click en<img th:src="@{/static/img/faq-btn-img.png}" style="width: 55px; height: 30px;" alt="imagen FAQ">
                     </p>
                 </div>
 
@@ -32,7 +34,7 @@
                         Aquí podrá ver todas las elecciones, las que aún no inician, las que están en progreso,
                         las finalizadas y las suspendidas. Podrá igualmente editar campos como la descripción
                         general, suspender o volver a activar el proceso, agregar/editar/remover <strong><u>propuestas</u></strong>
-                        y ver el padrón electoral asociado a cada una.
+                        y agregar una imagen de perfil.
                     </p>
                 </div>
 
@@ -51,8 +53,8 @@
                     <h6 class="mb-3 text-primary"><i class="fas fa-calendar text-primary pe-2"></i> Calendario
                     </h6>
                     <p>
-                        En este espacio encontrará una <strong><u>agenda incorporada</u></strong> con las fechas de
-                        los procesos electorales que se contemplan celebrar en el presente año.
+                        En este espacio encontrará una <strong><u>agenda incorporada</u></strong> cuyo fin es asistir,
+                        a través del registro de "eventos", en su tarea como administrador(a).
                     </p>
                 </div>
 
@@ -60,13 +62,14 @@
                     <h6 class="mb-3 text-primary"><i class="fas fa-users text-primary pe-2"></i> Padrón Electoral
                     </h6>
                     <p>
-                        Esta sección incluye un registro global del padrón electoral para votantes
-                        (tanto habilitados como no habilitados) registrados en la aplicación.
-                        Además de información adicional sobre cada usuario como la fecha de registro o
-                        número de procesos en el que ha participado.
+                        Esta sección incluye un registro global del padrón electoral de cada proceso de elección.
+                        El padrón puede estar conformado con votantes tanto registrados como no registrados en el sistema.
+                        Además, cada padrón incluye información adicional sobre cada usuario como si éste está
+                        registrado o no, la fecha y hora de ingreso en el padrón y correo de contacto.
                     </p>
                 </div>
 
+                <!-- Enable this section when the ".../analytics" view is created
                 <div class="col-md-6 col-lg-4 mb-4">
                     <h6 class="mb-3 text-primary"><i class="fas fa-chart-line text-primary pe-2"></i> Estadísticas
                     </h6>
@@ -75,6 +78,7 @@
                         porcentajes de participación, segmentación y más.
                     </p>
                 </div>
+                -->
             </div>
         </section>
         <!--Section: Inicio -->
